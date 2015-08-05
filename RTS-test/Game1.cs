@@ -11,11 +11,15 @@ namespace RTS_test
 	{
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
+		Texture2D testTexture;
+
+		private InputState _inputState;
 
 		public Game1()
 		{
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
+			_inputState = new InputState();
 		}
 
 		/// <summary>
@@ -26,7 +30,8 @@ namespace RTS_test
 		/// </summary>
 		protected override void Initialize()
 		{
-			// TODO: Add your initialization logic here
+			Global.Camera.ViewportWidth = graphics.GraphicsDevice.Viewport.Width;
+			Global.Camera.ViewportHeight = graphics.GraphicsDevice.Viewport.Height;
 
 			base.Initialize();
 		}
@@ -40,7 +45,7 @@ namespace RTS_test
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			// TODO: use this.Content to load your game content here
+			testTexture = Content.Load<Texture2D>("testTexture");
 		}
 
 		/// <summary>
@@ -59,10 +64,11 @@ namespace RTS_test
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Update(GameTime gameTime)
 		{
-			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+			if (_inputState.IsExitGame(PlayerIndex.One))
 				Exit();
-
-			// TODO: Add your update logic here
+			
+			_inputState.Update();
+			Global.Camera.HandleInput(_inputState, PlayerIndex.One);
 
 			base.Update(gameTime);
 		}
@@ -75,7 +81,10 @@ namespace RTS_test
 		{
 			GraphicsDevice.Clear(Color.CornflowerBlue);
 
-			// TODO: Add your drawing code here
+			spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend,
+	null, null, null, null, Global.Camera.TranslationMatrix);
+			spriteBatch.Draw(testTexture, new Vector2(0, 0), Color.White);
+			spriteBatch.End();
 
 			base.Draw(gameTime);
 		}

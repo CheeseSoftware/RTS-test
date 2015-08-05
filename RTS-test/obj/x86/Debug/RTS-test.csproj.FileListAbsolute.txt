@@ -23,3 +23,4 @@ C:\Users\Gustav\Documents\GitHub\RTS-test\RTS-test\bin\Windows\Debug\SharpDX.Dir
 C:\Users\Gustav\Documents\GitHub\RTS-test\RTS-test\obj\x86\Debug\RTS-test.csprojResolveAssemblyReference.cache
 C:\Users\Gustav\Documents\GitHub\RTS-test\RTS-test\obj\x86\Debug\RTS-test.exe
 C:\Users\Gustav\Documents\GitHub\RTS-test\RTS-test\obj\x86\Debug\RTS-test.pdb
+C:\Users\Gustav\Documents\GitHub\RTS-test\RTS-test\bin\Windows\Debug\Content\testTexture.png
