@@ -58,6 +58,9 @@
     <Reference Include="artemis">
       <HintPath>..\..\..\..\..\..\libs\artemis.dll</HintPath>
     </Reference>
+    <Reference Include="libnoise">
+      <HintPath>..\..\..\..\..\..\libs\libnoise.dll</HintPath>
+    </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>

@@ -33,6 +33,8 @@ namespace RTS_test
 			insertTexture("border");
 			insertTexture("grass");
 			insertTexture("player");
+			insertTexture("sand");
+			insertTexture("water");
 		}
 
 		public Texture2D getTexture(int index)
