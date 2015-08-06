@@ -5,14 +5,16 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Artemis;
 using Microsoft.Xna.Framework.Graphics;
+using Artemis.Attributes;
 
 namespace RTS_test
 {
     namespace component
     {
+        [ArtemisComponentPool(InitialSize = 5, IsResizable = true, ResizeSize = 20, IsSupportMultiThread = false)]
         class Position : ComponentPoolable
         {
-            Vector2 pos;
+            public Vector2 pos;
 
             public Position(Vector2 pos)
             {
@@ -24,9 +26,10 @@ namespace RTS_test
             }
         }
 
+        [ArtemisComponentPool(InitialSize = 5, IsResizable = true, ResizeSize = 20, IsSupportMultiThread = false)]
         class Velocity : ComponentPoolable
         {
-            Vector2 velocity;
+            public Vector2 velocity;
 
             public Velocity(Vector2 velocity)
             {
@@ -38,9 +41,10 @@ namespace RTS_test
             }
         }
 
+        [ArtemisComponentPool(InitialSize = 5, IsResizable = true, ResizeSize = 20, IsSupportMultiThread = false)]
         class Thrust : ComponentPoolable
         {
-            Vector2 thrust;
+            public Vector2 thrust;
 
             public Thrust(Vector2 thrust)
             {
@@ -52,6 +56,7 @@ namespace RTS_test
             }
         }
 
+        [ArtemisComponentPool(InitialSize = 5, IsResizable = true, ResizeSize = 20, IsSupportMultiThread = false)]
         class Unit : ComponentPoolable
         {
             private PathGoal pathGoal = null;
@@ -64,6 +69,7 @@ namespace RTS_test
             }
         }
 
+        [ArtemisComponentPool(InitialSize = 5, IsResizable = true, ResizeSize = 20, IsSupportMultiThread = false)]
         class Drawable : ComponentPoolable
         {
             public Texture2D texture;

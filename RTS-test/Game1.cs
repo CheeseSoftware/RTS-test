@@ -1,4 +1,5 @@
 ﻿using Artemis;
+using Artemis.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -27,6 +28,7 @@ namespace RTS_test
 			tileMap = new TileMap(2000, 2000);
 			textureManager = new TextureManager();
             entityWorld = new EntityWorld();
+            EntitySystem.BlackBoard.SetEntry<SpriteBatch>("SpriteBatch", spriteBatch);
 
             Entity entity = entityWorld.CreateEntity();
             entity.AddComponent(new component.Position(3f, 7f));
@@ -87,6 +89,8 @@ namespace RTS_test
 			_inputState.Update();
 			Global.Camera.HandleInput(_inputState, PlayerIndex.One);
 
+            entityWorld.Update();
+
 			base.Update(gameTime);
 		}
 
@@ -128,6 +132,8 @@ namespace RTS_test
 						spriteBatch.Draw(texture, new Vector2(x * 32, y * 32));
 				}
 			}
+
+            entityWorld.Draw();
 
 			spriteBatch.End();
 
