@@ -24,8 +24,12 @@ namespace RTS_test
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			_inputState = new InputState();
-			tileMap = new TileMap(1280, 1280);
+			tileMap = new TileMap(2000, 2000);
 			textureManager = new TextureManager();
+
+			this.IsFixedTimeStep = false; // Remove fps limit
+			graphics.SynchronizeWithVerticalRetrace = false;
+			graphics.ApplyChanges();
 		}
 
 		/// <summary>
@@ -94,28 +98,27 @@ namespace RTS_test
 			Rectangle tilesVisible = new Rectangle(blabla.X / 32, blabla.Y / 32, blabla.Width / 32, blabla.Height / 32);
 
 			//Draw tilemap
-			for (int x = 0; x < tileMap.getWidth(); x++)
+			for (int x = tilesVisible.X; x < tilesVisible.Right; x++)
 			{
-				for (int y = 0; y < tileMap.getHeight(); y++)
+				for (int y = tilesVisible.Y; y < tilesVisible.Bottom; y++)
 				{
-					if (x >= tilesVisible.X && y >= tilesVisible.Y && x <= tilesVisible.Right && y <= tilesVisible.Bottom)
+					if (x < 0 || y < 0)
+						continue;
+					int tile = tileMap.getTile(x, y);
+					Texture2D texture = textureManager.getTexture(tile);
+
+					if (texture.Width > Global.tileSize || texture.Height > Global.tileSize)
 					{
-						int tile = tileMap.getTile(x, y);
-						Texture2D texture = textureManager.getTexture(tile);
+						// Draw parts of a larger texture to look nice
+						int baseX = x * 32 % texture.Width;
+						int baseY = y * 32 % texture.Height;
 
-						if (texture.Width > Global.tileSize || texture.Height > Global.tileSize)
-						{
-							int baseX = x * 32 % texture.Width;
-							//Console.WriteLine("x " + baseX);
-							int baseY = y * 32 % texture.Height;
+						Rectangle sourceRectangle = new Rectangle(baseX, baseY, Global.tileSize, Global.tileSize);
 
-							Rectangle sourceRectangle = new Rectangle(baseX, baseY, Global.tileSize, Global.tileSize);
-
-							spriteBatch.Draw(texture, new Vector2(x * 32, y * 32), null, sourceRectangle);
-						}
-						else
-							spriteBatch.Draw(texture, new Vector2(x * 32, y * 32));
+						spriteBatch.Draw(texture, new Vector2(x * 32, y * 32), null, sourceRectangle);
 					}
+					else // Draw normally
+						spriteBatch.Draw(texture, new Vector2(x * 32, y * 32));
 				}
 			}
 
