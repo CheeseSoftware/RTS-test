@@ -7,7 +7,7 @@ namespace RTS_test
 {
 	class TileMap
 	{
-		private int[,] tiles;
+		private UInt16[,] tiles;
 		private int width;
 		private int height;
 
@@ -15,7 +15,7 @@ namespace RTS_test
 		{
 			this.width = width;
 			this.height = height;
-			tiles = new int[width, height];
+            tiles = new UInt16[width, height];
 
 			generate();
 		}
@@ -31,7 +31,7 @@ namespace RTS_test
 			}
 		}
 
-		public int getTile(int x, int y)
+        public UInt16 getTile(int x, int y)
 		{
 			return tiles[x, y];
 		}

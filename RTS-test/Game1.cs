@@ -20,6 +20,7 @@ namespace RTS_test
 
 		private InputState _inputState;
 		private TileMap tileMap;
+        private TileManager tileManager;
 		private TextureManager textureManager;
         private EntityWorld entityWorld;
 
@@ -35,6 +36,7 @@ namespace RTS_test
 			Content.RootDirectory = "Content";
 			_inputState = new InputState();
 			tileMap = new TileMap(2000, 2000);
+            tileManager = new TileManager();
 			textureManager = new TextureManager();
 
 			
@@ -76,6 +78,12 @@ namespace RTS_test
 		{
 			font = Content.Load<SpriteFont>("SpriteFont1");
 			textureManager.loadTextures(Content);
+
+            TileData tileNull = new TileData("null", textureManager.getTexture(0), false);
+            TileData tileGrass = new TileData("grass", textureManager.getTexture(1), false);
+            tileManager.registerTile(tileNull);
+            tileManager.registerTile(tileGrass);
+
 
 			Entity entity = entityWorld.CreateEntity();
 			entity.AddComponent(new component.Position(16f, 16f));
@@ -142,8 +150,10 @@ namespace RTS_test
 				{
 					if (x < 0 || y < 0)
 						continue;
-					int tile = tileMap.getTile(x, y);
-					Texture2D texture = textureManager.getTexture(tile);
+					UInt16 tile = tileMap.getTile(x, y);
+                    TileData tileData = tileManager.getTile(tile);
+					Texture2D texture = tileData.Texture;
+
 
 					if (texture.Width > Global.tileSize || texture.Height > Global.tileSize)
 					{
