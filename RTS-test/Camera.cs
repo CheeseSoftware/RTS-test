@@ -59,10 +59,10 @@ namespace RTS_test
 		// 1.0f - 0.5f = 0.5f so everything would be drawn at half size.
 		public void AdjustZoom(float amount)
 		{
-			//Zoom += amount;
+			Zoom += amount;
 			//if (Zoom < 0.25f)
 			{
-				Zoom = 1f;
+				//Zoom = 1f;
 			}
 		}
 
