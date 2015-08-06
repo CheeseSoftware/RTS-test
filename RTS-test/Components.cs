@@ -12,7 +12,7 @@ namespace RTS_test
     namespace component
     {
         [ArtemisComponentPool(InitialSize = 5, IsResizable = true, ResizeSize = 20, IsSupportMultiThread = false)]
-        class Position : ComponentPoolable
+        public class Position : ComponentPoolable
         {
             public Vector2 pos;
 
@@ -27,7 +27,7 @@ namespace RTS_test
         }
 
         [ArtemisComponentPool(InitialSize = 5, IsResizable = true, ResizeSize = 20, IsSupportMultiThread = false)]
-        class Velocity : ComponentPoolable
+		public class Velocity : ComponentPoolable
         {
             public Vector2 velocity;
 
@@ -42,7 +42,7 @@ namespace RTS_test
         }
 
         [ArtemisComponentPool(InitialSize = 5, IsResizable = true, ResizeSize = 20, IsSupportMultiThread = false)]
-        class Thrust : ComponentPoolable
+		public class Thrust : ComponentPoolable
         {
             public Vector2 thrust;
 
@@ -57,7 +57,7 @@ namespace RTS_test
         }
 
         [ArtemisComponentPool(InitialSize = 5, IsResizable = true, ResizeSize = 20, IsSupportMultiThread = false)]
-        class Unit : ComponentPoolable
+		public class Unit : ComponentPoolable
         {
             private PathGoal pathGoal = null;
             private Vector2 direction;
@@ -70,7 +70,7 @@ namespace RTS_test
         }
 
         [ArtemisComponentPool(InitialSize = 5, IsResizable = true, ResizeSize = 20, IsSupportMultiThread = false)]
-        class Drawable : ComponentPoolable
+		public class Drawable : ComponentPoolable
         {
             public Texture2D texture;
 
