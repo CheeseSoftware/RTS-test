@@ -20,12 +20,12 @@ namespace RTS_test
 
 			public EntityRenderer() : base(Aspect.All(typeof(component.Drawable), typeof(component.Position)))
 			{
-			    this.spriteBatch = EntitySystem.BlackBoard.GetEntry<SpriteBatch>("SpriteBatch");
+				spriteBatch = EntitySystem.BlackBoard.GetEntry<SpriteBatch>("SpriteBatch");
             }
 
 			public override void LoadContent()
 			{
-				//this.spriteBatch = BlackBoard.GetEntry<SpriteBatch>("SpriteBatch");
+				this.spriteBatch = BlackBoard.GetEntry<SpriteBatch>("SpriteBatch");
 			}
 
 			protected override void Process(Entity e, component.Position position, component.Drawable drawable)
@@ -37,7 +37,7 @@ namespace RTS_test
 
 			protected override void ProcessEntities(IDictionary<int, Entity> entities)
 			{
-				throw new NotImplementedException();
+				
 			}
 		}
 

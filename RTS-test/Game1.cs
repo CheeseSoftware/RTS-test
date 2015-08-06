@@ -1,8 +1,11 @@
 ﻿using Artemis;
+using Artemis.Manager;
 using Artemis.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using RTS_test.component;
+using RTS_test.system;
 using System;
 
 namespace RTS_test
@@ -33,14 +36,8 @@ namespace RTS_test
 			_inputState = new InputState();
 			tileMap = new TileMap(2000, 2000);
 			textureManager = new TextureManager();
-            entityWorld = new EntityWorld();
-            EntitySystem.BlackBoard.SetEntry<SpriteBatch>("SpriteBatch", spriteBatch);
 
-            Entity entity = entityWorld.CreateEntity();
-            entity.AddComponent(new component.Position(3f, 7f));
-            entity.AddComponent(new component.Velocity());
-            entity.AddComponent(new component.Thrust());
-            entity.AddComponent(new component.Drawable(textureManager.getTexture(0)));
+			
 
 			//this.IsFixedTimeStep = false; // Remove fps limit
 			//graphics.SynchronizeWithVerticalRetrace = false;
@@ -62,6 +59,24 @@ namespace RTS_test
 			Global.Camera.ViewportWidth = graphics.GraphicsDevice.Viewport.Width;
 			Global.Camera.ViewportHeight = graphics.GraphicsDevice.Viewport.Height;
 
+			entityWorld = new EntityWorld();
+			EntitySystem.BlackBoard.SetEntry<SpriteBatch>("SpriteBatch", spriteBatch);
+			this.entityWorld.InitializeAll(true);
+
+
+
+			Entity entity = this.entityWorld.CreateEntity();
+			entity.Group = "SHIPS";
+
+			entity.AddComponent(new component.Position(3f, 7f));
+			entity.AddComponent(new component.Velocity());
+			entity.AddComponent(new component.Thrust());
+			entity.AddComponent(new component.Drawable(textureManager.getTexture(0)));
+
+			entity.Tag = "PLAYER";
+
+
+
 			base.Initialize();
 		}
 
@@ -75,6 +90,13 @@ namespace RTS_test
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 			font = Content.Load<SpriteFont>("SpriteFont1");
 			textureManager.loadTextures(Content);
+
+			Entity entity = entityWorld.CreateEntity();
+			entity.AddComponent(new component.Position(3f, 7f));
+			entity.AddComponent(new component.Velocity());
+			entity.AddComponent(new component.Thrust());
+			entity.AddComponent(new component.Drawable(textureManager.getTexture(0)));
+
 		}
 
 		/// <summary>
@@ -155,9 +177,9 @@ namespace RTS_test
 
 
 			spriteBatch.Begin();
+			entityWorld.Draw();
 			string fps = string.Format("fps: {0}", this.frameRate);
 			spriteBatch.DrawString(font, fps, new Vector2(16, 16), Color.White);
-            entityWorld.Draw();
 			spriteBatch.End();
 
 			base.Draw(gameTime);
