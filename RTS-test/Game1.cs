@@ -129,7 +129,7 @@ namespace RTS_test
 		{
 			GraphicsDevice.Clear(Color.Black);
 
-			spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend,
+			spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
 	null, null, null, null, Global.Camera.TranslationMatrix);
 
 			Rectangle viewportWorldBoundry = Global.Camera.ViewportWorldBoundry();
@@ -159,11 +159,11 @@ namespace RTS_test
 						spriteBatch.Draw(texture, new Vector2(x * 32, y * 32));
 				}
 			}
+			entityWorld.Draw();
 			spriteBatch.End();
 
 
 			spriteBatch.Begin();
-			entityWorld.Draw();
 			string fps = string.Format("fps: {0}", this.frameRate);
 			spriteBatch.DrawString(font, fps, new Vector2(16, 16), Color.White);
 			spriteBatch.End();
