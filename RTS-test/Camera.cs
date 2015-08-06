@@ -145,7 +145,6 @@ namespace RTS_test
 				cameraMovement.Normalize();
 			}
 
-			// scale our movement to move 25 pixels per second
 			cameraMovement *= Global.tileSize;
 
 			MoveCamera(cameraMovement);

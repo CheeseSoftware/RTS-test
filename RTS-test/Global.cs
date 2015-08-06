@@ -8,6 +8,6 @@ namespace RTS_test
 	public static class Global
 	{
 		public static readonly Camera Camera = new Camera();
-		public static readonly int tileSize = 64;
+		public static readonly int tileSize = 32;
 	}
 }
