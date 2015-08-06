@@ -24,6 +24,10 @@ namespace RTS_test
 			_inputState = new InputState();
 			tileMap = new TileMap(2000, 2000);
 			textureManager = new TextureManager();
+
+			this.IsFixedTimeStep = false; // Remove fps limit
+			graphics.SynchronizeWithVerticalRetrace = false;
+			graphics.ApplyChanges();
 		}
 
 		/// <summary>
