@@ -20,6 +20,12 @@ namespace RTS_test
 		private TextureManager textureManager;
         private EntityWorld entityWorld;
 
+		private int frameRate;
+		private TimeSpan elapsedTime;
+		private int frameCounter;
+		private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
+		private SpriteFont font; // Font for fps-counter
+
 		public Game1()
 		{
 			graphics = new GraphicsDeviceManager(this);
@@ -36,9 +42,9 @@ namespace RTS_test
             entity.AddComponent(new component.Thrust());
             entity.AddComponent(new component.Drawable(textureManager.getTexture(0)));
 
-			this.IsFixedTimeStep = false; // Remove fps limit
-			graphics.SynchronizeWithVerticalRetrace = false;
-			graphics.ApplyChanges();
+			//this.IsFixedTimeStep = false; // Remove fps limit
+			//graphics.SynchronizeWithVerticalRetrace = false;
+			//graphics.ApplyChanges();
 		}
 
 		/// <summary>
@@ -49,6 +55,10 @@ namespace RTS_test
 		/// </summary>
 		protected override void Initialize()
 		{
+			graphics.PreferredBackBufferWidth = 1000;  // set this value to the desired width of your window
+			graphics.PreferredBackBufferHeight = 600;	// set this value to the desired height of your window
+			graphics.ApplyChanges();
+
 			Global.Camera.ViewportWidth = graphics.GraphicsDevice.Viewport.Width;
 			Global.Camera.ViewportHeight = graphics.GraphicsDevice.Viewport.Height;
 
@@ -63,7 +73,7 @@ namespace RTS_test
 		{
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
-
+			font = Content.Load<SpriteFont>("SpriteFont1");
 			textureManager.loadTextures(Content);
 		}
 
@@ -90,6 +100,15 @@ namespace RTS_test
 			Global.Camera.HandleInput(_inputState, PlayerIndex.One);
 
             entityWorld.Update();
+			// FPS-counter stuff
+			++this.frameCounter;
+			this.elapsedTime += gameTime.ElapsedGameTime;
+			if (this.elapsedTime > OneSecond)
+			{
+				this.elapsedTime -= OneSecond;
+				this.frameRate = this.frameCounter;
+				this.frameCounter = 0;
+			}
 
 			base.Update(gameTime);
 		}
@@ -100,18 +119,18 @@ namespace RTS_test
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Draw(GameTime gameTime)
 		{
-			GraphicsDevice.Clear(Color.CornflowerBlue);
+			GraphicsDevice.Clear(Color.Black);
 
 			spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend,
 	null, null, null, null, Global.Camera.TranslationMatrix);
 
-			Rectangle blabla = Global.Camera.ViewportWorldBoundry();
-			Rectangle tilesVisible = new Rectangle(blabla.X / 32, blabla.Y / 32, blabla.Width / 32, blabla.Height / 32);
+			Rectangle viewportWorldBoundry = Global.Camera.ViewportWorldBoundry();
+			Rectangle tilesVisible = new Rectangle(viewportWorldBoundry.X / 32, viewportWorldBoundry.Y / 32, viewportWorldBoundry.Width / 32, viewportWorldBoundry.Height / 32);
 
 			//Draw tilemap
-			for (int x = tilesVisible.X; x < tilesVisible.Right; x++)
+			for (int x = tilesVisible.X; x <= tilesVisible.Right + 1; x++)
 			{
-				for (int y = tilesVisible.Y; y < tilesVisible.Bottom; y++)
+				for (int y = tilesVisible.Y; y <= tilesVisible.Bottom + 1; y++)
 				{
 					if (x < 0 || y < 0)
 						continue;
@@ -132,9 +151,13 @@ namespace RTS_test
 						spriteBatch.Draw(texture, new Vector2(x * 32, y * 32));
 				}
 			}
+			spriteBatch.End();
 
+
+			spriteBatch.Begin();
+			string fps = string.Format("fps: {0}", this.frameRate);
+			spriteBatch.DrawString(font, fps, new Vector2(16, 16), Color.White);
             entityWorld.Draw();
-
 			spriteBatch.End();
 
 			base.Draw(gameTime);

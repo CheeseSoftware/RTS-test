@@ -59,10 +59,10 @@ namespace RTS_test
 		// 1.0f - 0.5f = 0.5f so everything would be drawn at half size.
 		public void AdjustZoom(float amount)
 		{
-			Zoom += amount;
-			if (Zoom < 0.25f)
+			//Zoom += amount;
+			//if (Zoom < 0.25f)
 			{
-				Zoom = 0.25f;
+				Zoom = 1f;
 			}
 		}
 
@@ -112,19 +112,19 @@ namespace RTS_test
 		{
 			Vector2 cameraMovement = Vector2.Zero;
 
-			if (inputState.IsLeft(controllingPlayer))
+			if (inputState.CurrentKeyboardStates[(int)PlayerIndex.One].IsKeyDown(Keys.Left))
 			{
 				cameraMovement.X = -1;
 			}
-			else if (inputState.IsRight(controllingPlayer))
+			else if (inputState.CurrentKeyboardStates[(int)PlayerIndex.One].IsKeyDown(Keys.Right))
 			{
 				cameraMovement.X = 1;
 			}
-			if (inputState.IsUp(controllingPlayer))
+			if (inputState.CurrentKeyboardStates[(int)PlayerIndex.One].IsKeyDown(Keys.Up))
 			{
 				cameraMovement.Y = -1;
 			}
-			else if (inputState.IsDown(controllingPlayer))
+			else if (inputState.CurrentKeyboardStates[(int)PlayerIndex.One].IsKeyDown(Keys.Down))
 			{
 				cameraMovement.Y = 1;
 			}
