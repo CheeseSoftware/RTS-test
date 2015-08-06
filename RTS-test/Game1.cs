@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Artemis;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -16,6 +17,7 @@ namespace RTS_test
 		private InputState _inputState;
 		private TileMap tileMap;
 		private TextureManager textureManager;
+        private EntityWorld entityWorld;
 
 		public Game1()
 		{
