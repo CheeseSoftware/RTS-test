@@ -32,6 +32,7 @@ namespace RTS_test
 
 			insertTexture("border");
 			insertTexture("grass");
+			insertTexture("player");
 		}
 
 		public Texture2D getTexture(int index)

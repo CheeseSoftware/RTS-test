@@ -6,17 +6,21 @@ using Microsoft.Xna.Framework;
 using Artemis;
 using Microsoft.Xna.Framework.Graphics;
 using Artemis.Attributes;
+using Artemis.Interface;
 
 namespace RTS_test
 {
     namespace component
     {
-        [ArtemisComponentPool(InitialSize = 5, IsResizable = true, ResizeSize = 20, IsSupportMultiThread = false)]
-        public class Position : ComponentPoolable
-        {
-            public Vector2 pos;
+		[ArtemisComponentPool(InitialSize = 5, IsResizable = true, ResizeSize = 20, IsSupportMultiThread = false)]
+		public class Position : IComponent
+		{
+			public Vector2 pos;
 
-            public Position(Vector2 pos)
+			public float X { get { return pos.X; } set { pos.X = value; } }
+			public float Y { get { return pos.Y; } set { pos.Y = value; } }
+
+			public Position(Vector2 pos)
             {
                 this.pos = pos;
             }
@@ -26,12 +30,14 @@ namespace RTS_test
             }
         }
 
-        [ArtemisComponentPool(InitialSize = 5, IsResizable = true, ResizeSize = 20, IsSupportMultiThread = false)]
-		public class Velocity : ComponentPoolable
-        {
+		public class Velocity : IComponent
+		{
             public Vector2 velocity;
 
-            public Velocity(Vector2 velocity)
+			public float X { get { return velocity.X; } set { velocity.X = value; } }
+			public float Y { get { return velocity.Y; } set { velocity.Y = value; } }
+
+			public Velocity(Vector2 velocity)
             {
                 this.velocity = velocity;
             }
@@ -41,9 +47,8 @@ namespace RTS_test
             }
         }
 
-        [ArtemisComponentPool(InitialSize = 5, IsResizable = true, ResizeSize = 20, IsSupportMultiThread = false)]
-		public class Thrust : ComponentPoolable
-        {
+		public class Thrust : IComponent
+		{
             public Vector2 thrust;
 
             public Thrust(Vector2 thrust)
@@ -56,9 +61,8 @@ namespace RTS_test
             }
         }
 
-        [ArtemisComponentPool(InitialSize = 5, IsResizable = true, ResizeSize = 20, IsSupportMultiThread = false)]
-		public class Unit : ComponentPoolable
-        {
+		public class Unit : IComponent
+		{
             private PathGoal pathGoal = null;
             private Vector2 direction;
 
@@ -69,9 +73,8 @@ namespace RTS_test
             }
         }
 
-        [ArtemisComponentPool(InitialSize = 5, IsResizable = true, ResizeSize = 20, IsSupportMultiThread = false)]
-		public class Drawable : ComponentPoolable
-        {
+		public class Drawable : IComponent
+		{
             public Texture2D texture;
 
             public Drawable(Texture2D texture)

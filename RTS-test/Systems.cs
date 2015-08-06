@@ -34,11 +34,6 @@ namespace RTS_test
 
 				spriteBatch.Draw(drawable.texture, rectangle, Color.White);
 			}
-
-			protected override void ProcessEntities(IDictionary<int, Entity> entities)
-			{
-				
-			}
 		}
 
 

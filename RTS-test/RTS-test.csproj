@@ -41,6 +41,7 @@
     <Compile Include="Camera.cs" />
     <Compile Include="Components.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="MovementSystem.cs" />
     <Compile Include="PathGoal.cs" />
     <Compile Include="PathManager.cs" />
     <Compile Include="Systems.cs" />

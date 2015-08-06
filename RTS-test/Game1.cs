@@ -52,6 +52,8 @@ namespace RTS_test
 		/// </summary>
 		protected override void Initialize()
 		{
+			spriteBatch = new SpriteBatch(GraphicsDevice);
+
 			graphics.PreferredBackBufferWidth = 1000;  // set this value to the desired width of your window
 			graphics.PreferredBackBufferHeight = 600;	// set this value to the desired height of your window
 			graphics.ApplyChanges();
@@ -63,20 +65,6 @@ namespace RTS_test
 			EntitySystem.BlackBoard.SetEntry<SpriteBatch>("SpriteBatch", spriteBatch);
 			this.entityWorld.InitializeAll(true);
 
-
-
-			Entity entity = this.entityWorld.CreateEntity();
-			entity.Group = "SHIPS";
-
-			entity.AddComponent(new component.Position(3f, 7f));
-			entity.AddComponent(new component.Velocity());
-			entity.AddComponent(new component.Thrust());
-			entity.AddComponent(new component.Drawable(textureManager.getTexture(0)));
-
-			entity.Tag = "PLAYER";
-
-
-
 			base.Initialize();
 		}
 
@@ -86,16 +74,14 @@ namespace RTS_test
 		/// </summary>
 		protected override void LoadContent()
 		{
-			// Create a new SpriteBatch, which can be used to draw textures.
-			spriteBatch = new SpriteBatch(GraphicsDevice);
 			font = Content.Load<SpriteFont>("SpriteFont1");
 			textureManager.loadTextures(Content);
 
 			Entity entity = entityWorld.CreateEntity();
-			entity.AddComponent(new component.Position(3f, 7f));
-			entity.AddComponent(new component.Velocity());
+			entity.AddComponent(new component.Position(16f, 16f));
+			entity.AddComponent(new component.Velocity(new Vector2(0.01f, 0.01f)));
 			entity.AddComponent(new component.Thrust());
-			entity.AddComponent(new component.Drawable(textureManager.getTexture(0)));
+			entity.AddComponent(new component.Drawable(textureManager.getTexture(2)));
 
 		}
 
