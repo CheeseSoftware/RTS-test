@@ -53,13 +53,8 @@
     <Compile Include="TileMap.cs" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
     <Reference Include="Artemis_Mono">
-      <HintPath>..\..\..\..\..\..\libs\entitysystem\Artemis_Mono.dll</HintPath>
-=======
-    <Reference Include="artemis">
-      <HintPath>D:\thelinuxlich-artemis_CSharp-676a752\bin\Debug\PC\artemis.dll</HintPath>
->>>>>>> origin/master
+      <HintPath>..\..\..\..\..\..\libs\Artemis_Mono.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
