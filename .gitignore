@@ -60,3 +60,5 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+RTS-test/obj/x86/Debug/RTS-test.csproj.FileListAbsolute.txt
+RTS-test/bin/Windows/Debug/SharpDX.XInput.xml

@@ -17,6 +17,12 @@ namespace RTS_test
 		private TileMap tileMap;
 		private TextureManager textureManager;
 
+		private int frameRate;
+		private TimeSpan elapsedTime;
+		private int frameCounter;
+		private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
+		private SpriteFont font; // Font for fps-counter
+
 		public Game1()
 		{
 			graphics = new GraphicsDeviceManager(this);
@@ -52,7 +58,7 @@ namespace RTS_test
 		{
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
-
+			font = Content.Load<SpriteFont>("SpriteFont1");
 			textureManager.loadTextures(Content);
 		}
 
@@ -78,6 +84,16 @@ namespace RTS_test
 			_inputState.Update();
 			Global.Camera.HandleInput(_inputState, PlayerIndex.One);
 
+			// FPS-counter stuff
+			++this.frameCounter;
+			this.elapsedTime += gameTime.ElapsedGameTime;
+			if (this.elapsedTime > OneSecond)
+			{
+				this.elapsedTime -= OneSecond;
+				this.frameRate = this.frameCounter;
+				this.frameCounter = 0;
+			}
+
 			base.Update(gameTime);
 		}
 
@@ -92,8 +108,8 @@ namespace RTS_test
 			spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend,
 	null, null, null, null, Global.Camera.TranslationMatrix);
 
-			Rectangle blabla = Global.Camera.ViewportWorldBoundry();
-			Rectangle tilesVisible = new Rectangle(blabla.X / 32, blabla.Y / 32, blabla.Width / 32, blabla.Height / 32);
+			Rectangle viewportWorldBoundry = Global.Camera.ViewportWorldBoundry();
+			Rectangle tilesVisible = new Rectangle(viewportWorldBoundry.X / 32, viewportWorldBoundry.Y / 32, viewportWorldBoundry.Width / 32, viewportWorldBoundry.Height / 32);
 
 			//Draw tilemap
 			for (int x = tilesVisible.X; x < tilesVisible.Right; x++)
@@ -120,6 +136,12 @@ namespace RTS_test
 				}
 			}
 
+
+			spriteBatch.End();
+
+			spriteBatch.Begin();
+			string fps = string.Format("fps: {0}", this.frameRate);
+			spriteBatch.DrawString(font, fps, new Vector2(16, 16), Color.Black);
 			spriteBatch.End();
 
 			base.Draw(gameTime);
