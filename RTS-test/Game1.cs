@@ -26,6 +26,13 @@ namespace RTS_test
 			_inputState = new InputState();
 			tileMap = new TileMap(2000, 2000);
 			textureManager = new TextureManager();
+            entityWorld = new EntityWorld();
+
+            Entity entity = entityWorld.CreateEntity();
+            entity.AddComponent(new component.Position(3f, 7f));
+            entity.AddComponent(new component.Velocity());
+            entity.AddComponent(new component.Thrust());
+            entity.AddComponent(new component.Drawable(textureManager.getTexture(0)));
 
 			this.IsFixedTimeStep = false; // Remove fps limit
 			graphics.SynchronizeWithVerticalRetrace = false;

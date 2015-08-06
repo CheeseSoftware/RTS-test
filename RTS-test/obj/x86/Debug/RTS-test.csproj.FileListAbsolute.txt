@@ -47,3 +47,5 @@ C:\Users\gayboy\Documents\GitBuckit\RTS-test\RTS-test\bin\Windows\Debug\SharpDX.
 C:\Users\gayboy\Documents\GitBuckit\RTS-test\RTS-test\bin\Windows\Debug\SharpDX.RawInput.xml
 C:\Users\gayboy\Documents\GitBuckit\RTS-test\RTS-test\bin\Windows\Debug\SharpDX.Direct3D9.xml
 C:\Users\gayboy\Documents\GitBuckit\RTS-test\RTS-test\obj\x86\Debug\RTS-test.csprojResolveAssemblyReference.cache
+C:\Users\gayboy\Documents\GitBuckit\RTS-test\RTS-test\bin\Windows\Debug\artemis.dll
+C:\Users\gayboy\Documents\GitBuckit\RTS-test\RTS-test\bin\Windows\Debug\artemis.xml
