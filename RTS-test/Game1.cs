@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace RTS_test
 {
@@ -12,10 +13,17 @@ namespace RTS_test
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
 
+		private InputState _inputState;
+		private TileMap tileMap;
+		private TextureManager textureManager;
+
 		public Game1()
 		{
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
+			_inputState = new InputState();
+			tileMap = new TileMap(1280, 1280);
+			textureManager = new TextureManager();
 		}
 
 		/// <summary>
@@ -26,7 +34,8 @@ namespace RTS_test
 		/// </summary>
 		protected override void Initialize()
 		{
-			// TODO: Add your initialization logic here
+			Global.Camera.ViewportWidth = graphics.GraphicsDevice.Viewport.Width;
+			Global.Camera.ViewportHeight = graphics.GraphicsDevice.Viewport.Height;
 
 			base.Initialize();
 		}
@@ -40,7 +49,7 @@ namespace RTS_test
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			// TODO: use this.Content to load your game content here
+			textureManager.loadTextures(Content);
 		}
 
 		/// <summary>
@@ -59,10 +68,11 @@ namespace RTS_test
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Update(GameTime gameTime)
 		{
-			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+			if (_inputState.IsExitGame(PlayerIndex.One))
 				Exit();
 
-			// TODO: Add your update logic here
+			_inputState.Update();
+			Global.Camera.HandleInput(_inputState, PlayerIndex.One);
 
 			base.Update(gameTime);
 		}
@@ -75,7 +85,39 @@ namespace RTS_test
 		{
 			GraphicsDevice.Clear(Color.CornflowerBlue);
 
-			// TODO: Add your drawing code here
+			spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend,
+	null, null, null, null, Global.Camera.TranslationMatrix);
+
+			Rectangle blabla = Global.Camera.ViewportWorldBoundry();
+			Rectangle tilesVisible = new Rectangle(blabla.X / 32, blabla.Y / 32, blabla.Width / 32, blabla.Height / 32);
+
+			//Draw tilemap
+			for (int x = 0; x < tileMap.getWidth(); x++)
+			{
+				for (int y = 0; y < tileMap.getHeight(); y++)
+				{
+					if (x >= tilesVisible.X && y >= tilesVisible.Y && x <= tilesVisible.Right && y <= tilesVisible.Bottom)
+					{
+						int tile = tileMap.getTile(x, y);
+						Texture2D texture = textureManager.getTexture(tile);
+
+						if (texture.Width > Global.tileSize || texture.Height > Global.tileSize)
+						{
+							int baseX = x * 32 % texture.Width;
+							//Console.WriteLine("x " + baseX);
+							int baseY = y * 32 % texture.Height;
+
+							Rectangle sourceRectangle = new Rectangle(baseX, baseY, Global.tileSize, Global.tileSize);
+
+							spriteBatch.Draw(texture, new Vector2(x * 32, y * 32), null, sourceRectangle);
+						}
+						else
+							spriteBatch.Draw(texture, new Vector2(x * 32, y * 32));
+					}
+				}
+			}
+
+			spriteBatch.End();
 
 			base.Draw(gameTime);
 		}
