@@ -20,7 +20,6 @@ C:\Users\Gustav\Documents\GitHub\RTS-test\RTS-test\bin\Windows\Debug\SharpDX.Dir
 C:\Users\Gustav\Documents\GitHub\RTS-test\RTS-test\bin\Windows\Debug\SharpDX.XInput.xml
 C:\Users\Gustav\Documents\GitHub\RTS-test\RTS-test\bin\Windows\Debug\SharpDX.RawInput.xml
 C:\Users\Gustav\Documents\GitHub\RTS-test\RTS-test\bin\Windows\Debug\SharpDX.Direct3D9.xml
-C:\Users\Gustav\Documents\GitHub\RTS-test\RTS-test\obj\x86\Debug\RTS-test.csprojResolveAssemblyReference.cache
 C:\Users\Gustav\Documents\GitHub\RTS-test\RTS-test\obj\x86\Debug\RTS-test.exe
 C:\Users\Gustav\Documents\GitHub\RTS-test\RTS-test\obj\x86\Debug\RTS-test.pdb
 C:\Users\gayboy\Documents\GitBuckit\RTS-test\RTS-test\obj\x86\Debug\RTS-test.exe
