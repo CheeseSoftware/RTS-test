@@ -145,7 +145,7 @@ namespace RTS_test
 				cameraMovement.Normalize();
 			}
 
-			cameraMovement *= 1;//Global.tileSize;
+			cameraMovement *= Global.tileSize;
 
 			MoveCamera(cameraMovement);
 		}
