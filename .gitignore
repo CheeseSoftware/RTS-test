@@ -62,3 +62,4 @@ $RECYCLE.BIN/
 *.lnk
 RTS-test/obj/x86/Debug/RTS-test.csproj.FileListAbsolute.txt
 RTS-test/bin/Windows/Debug/SharpDX.XInput.xml
+RTS-test/bin/Windows/Debug/MonoGame.Framework.xml

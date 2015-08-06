@@ -40,9 +40,9 @@ namespace RTS_test
             entity.AddComponent(new component.Thrust());
             entity.AddComponent(new component.Drawable(textureManager.getTexture(0)));
 
-			this.IsFixedTimeStep = false; // Remove fps limit
-			graphics.SynchronizeWithVerticalRetrace = false;
-			graphics.ApplyChanges();
+			//this.IsFixedTimeStep = false; // Remove fps limit
+			//graphics.SynchronizeWithVerticalRetrace = false;
+			//graphics.ApplyChanges();
 		}
 
 		/// <summary>
@@ -53,6 +53,10 @@ namespace RTS_test
 		/// </summary>
 		protected override void Initialize()
 		{
+			graphics.PreferredBackBufferWidth = 1000;  // set this value to the desired width of your window
+			graphics.PreferredBackBufferHeight = 600;	// set this value to the desired height of your window
+			graphics.ApplyChanges();
+
 			Global.Camera.ViewportWidth = graphics.GraphicsDevice.Viewport.Width;
 			Global.Camera.ViewportHeight = graphics.GraphicsDevice.Viewport.Height;
 
@@ -112,7 +116,7 @@ namespace RTS_test
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Draw(GameTime gameTime)
 		{
-			GraphicsDevice.Clear(Color.CornflowerBlue);
+			GraphicsDevice.Clear(Color.Black);
 
 			spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend,
 	null, null, null, null, Global.Camera.TranslationMatrix);
@@ -121,9 +125,9 @@ namespace RTS_test
 			Rectangle tilesVisible = new Rectangle(viewportWorldBoundry.X / 32, viewportWorldBoundry.Y / 32, viewportWorldBoundry.Width / 32, viewportWorldBoundry.Height / 32);
 
 			//Draw tilemap
-			for (int x = tilesVisible.X; x < tilesVisible.Right; x++)
+			for (int x = tilesVisible.X; x <= tilesVisible.Right + 1; x++)
 			{
-				for (int y = tilesVisible.Y; y < tilesVisible.Bottom; y++)
+				for (int y = tilesVisible.Y; y <= tilesVisible.Bottom + 1; y++)
 				{
 					if (x < 0 || y < 0)
 						continue;
@@ -144,13 +148,11 @@ namespace RTS_test
 						spriteBatch.Draw(texture, new Vector2(x * 32, y * 32));
 				}
 			}
-
-
 			spriteBatch.End();
 
 			spriteBatch.Begin();
 			string fps = string.Format("fps: {0}", this.frameRate);
-			spriteBatch.DrawString(font, fps, new Vector2(16, 16), Color.Black);
+			spriteBatch.DrawString(font, fps, new Vector2(16, 16), Color.White);
 			spriteBatch.End();
 
 			base.Draw(gameTime);
