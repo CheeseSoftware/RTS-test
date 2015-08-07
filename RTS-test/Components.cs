@@ -30,6 +30,23 @@ namespace RTS_test
             }
         }
 
+		public class Size : IComponent
+		{
+			public Vector2 size;
+
+			public float X { get { return size.X; } set { size.X = value; } }
+			public float Y { get { return size.Y; } set { size.Y = value; } }
+
+			public Size(Vector2 size)
+			{
+				this.size = size;
+			}
+			public Size(float x, float y)
+			{
+				this.size = new Vector2(x, y);
+			}
+		}
+
 		public class Velocity : IComponent
 		{
             public Vector2 velocity;
@@ -82,5 +99,17 @@ namespace RTS_test
                 this.texture = texture;
             }
         }
-    }
+
+		public class DepletableResource : IComponent
+		{
+			public int resourceAmount;
+			public String type;
+
+			public DepletableResource(int resourceAmount, String type)
+			{
+				this.resourceAmount = resourceAmount;
+				this.type = type;
+			}
+		}
+	}
 }

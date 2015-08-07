@@ -30,7 +30,7 @@ namespace RTS_test
 
 			protected override void Process(Entity e, component.Position position, component.Drawable drawable)
 			{
-				Rectangle rectangle = new Rectangle(new Point((int)position.pos.X, (int)position.pos.Y), new Point(32, 32));
+				Rectangle rectangle = new Rectangle(new Point((int)position.pos.X, (int)position.pos.Y), new Point(drawable.texture.Width, drawable.texture.Height));
 
 				spriteBatch.Draw(drawable.texture, rectangle, Color.White);
 			}
