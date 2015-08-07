@@ -9,5 +9,7 @@ namespace RTS_test
 	{
 		public static readonly Camera Camera = new Camera();
 		public static readonly int tileSize = 32;
+		public static readonly int mapWidth = 64;
+		public static readonly int mapHeight = 64;
 	}
 }
