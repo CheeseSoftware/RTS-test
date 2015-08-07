@@ -27,7 +27,7 @@ namespace RTS_test
 
 		    entity.AddComponent(new component.Position(pos));
 			entity.AddComponent(new component.Velocity(new Vector2(velocity.X, velocity.Y)));
-            entity.AddComponent(new component.MaxVelocity(1.0f));
+            entity.AddComponent(new component.MaxVelocity(0.1f));
 			entity.AddComponent(new component.Thrust());
             entity.AddComponent(new component.Drawable(textureManager.getTexture(2)));
             entity.AddComponent(new component.Goal());

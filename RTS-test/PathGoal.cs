@@ -46,7 +46,6 @@ namespace RTS_test
             while(nodesToExplore.Count() > 0)
             {
                 Node node = nodesToExplore.Dequeue();
-                exploredNodes.Add(node.pos);
                 flowfield[node.pos.x, node.pos.y] = node.distance;
 
                 for (int i = 0; i < 4; ++i)
@@ -59,6 +58,7 @@ namespace RTS_test
                         continue;
 
                     nodesToExplore.Enqueue(new Node(newNodePos, node.distance+1));
+                    exploredNodes.Add(newNodePos);
                 }
 
             }
@@ -75,19 +75,22 @@ namespace RTS_test
 
         public Vector2 getDirection(Vector2 pos)
         {
-            int2 floorPos = new int2((int)Math.Floor(pos.X), (int)Math.Floor(pos.Y));
+            int2 floorPos = new int2((int)Math.Floor(pos.X/32f), (int)Math.Floor(pos.Y/32f));
+            if (floorPos.x < 0 || floorPos.y < 0 || floorPos.x + 1 >= size.x || floorPos.y + 1 >= size.y)
+                return new Vector2(32 * goalPos.x, 32 * goalPos.y) - pos;
 
 
 
             Vector2 direction =
-                //(float)(flowfield[floorPos.x, floorPos.y]) * new Vector2(-1f, -1f)
-                //+ (float)(flowfield[floorPos.x + 1, floorPos.y]) * new Vector2(1f, -1f)
-                //+ (float)(flowfield[floorPos.x, floorPos.y + 1]) * new Vector2(-1f, 1f)
-                //+ (float)(flowfield[floorPos.x + 1, floorPos.y + 1]) * new Vector2(1f, 1f);
-                new Vector2(32*goalPos.x, 32*goalPos.y) - pos;
+                (float)(flowfield[floorPos.x, floorPos.y]) * new Vector2(-1f, -1f)
+                + (float)(flowfield[floorPos.x + 1, floorPos.y]) * new Vector2(1f, -1f)
+                + (float)(flowfield[floorPos.x, floorPos.y + 1]) * new Vector2(-1f, 1f)
+                + (float)(flowfield[floorPos.x + 1, floorPos.y + 1]) * new Vector2(1f, 1f);
+                //new Vector2(32*goalPos.x, 32*goalPos.y) - pos;
 
+            if (direction.Length() > 0f)
             direction.Normalize();
-            return direction;
+            return -direction;
         }
 
 
