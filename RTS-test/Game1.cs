@@ -55,6 +55,7 @@ namespace RTS_test
 		protected override void Initialize()
 		{
 			spriteBatch = new SpriteBatch(GraphicsDevice);
+			this.IsMouseVisible = true;
 
 			graphics.PreferredBackBufferWidth = 1000;  // set this value to the desired width of your window
 			graphics.PreferredBackBufferHeight = 600;	// set this value to the desired height of your window
