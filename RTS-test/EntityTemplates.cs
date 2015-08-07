@@ -80,7 +80,7 @@ namespace RTS_test
 
 			Texture2D texture = textureManager.getTexture(textureId);
 
-			FarseerPhysics.Dynamics.Body body = FarseerPhysics.Factories.BodyFactory.CreateCircle(world, 0.5f, 1.0f);
+			FarseerPhysics.Dynamics.Body body = FarseerPhysics.Factories.BodyFactory.CreateRectangle(world, 2f, 2f, 1.0f);
 			body.BodyType = FarseerPhysics.Dynamics.BodyType.Static;
 			body.Position = pos;
 			body.Rotation = rotation;

@@ -32,12 +32,12 @@ namespace RTS_test
 			protected override void Process(Entity e, component.Physics physics, component.Drawable drawable)
 			{
 				Rectangle rectangle = new Rectangle(
-					new Point((int)(physics.Position.X * 32f), (int)(physics.Position.Y * 32f)),
+					new Point((int)(physics.Position.X * Global.tileSize), (int)(physics.Position.Y * Global.tileSize)),
 					new Point(drawable.texture.Width, drawable.texture.Height)
 					);
 
 				TileMap tileMap = EntitySystem.BlackBoard.GetEntry<TileMap>("TileMap");
-				float dis = tileMap.getDis(physics.Position * 32f) / 4f;
+				float dis = tileMap.getDis(physics.Position * Global.tileSize) / 4f;
 				Color color = new Color(dis, dis, dis);
 
 

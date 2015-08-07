@@ -35,7 +35,7 @@ namespace RTS_test
 		public void draw(SpriteBatch spriteBatch, TileManager tileManager)
 		{
 			Rectangle viewportWorldBoundry = Global.Camera.ViewportWorldBoundry();
-			Rectangle tilesVisible = new Rectangle(viewportWorldBoundry.X / 32, viewportWorldBoundry.Y / 32, viewportWorldBoundry.Width / 32, viewportWorldBoundry.Height / 32);
+			Rectangle tilesVisible = new Rectangle(viewportWorldBoundry.X / Global.tileSize, viewportWorldBoundry.Y / Global.tileSize, viewportWorldBoundry.Width / Global.tileSize, viewportWorldBoundry.Height / Global.tileSize);
 
 			//Draw tilemap
 			for (int x = tilesVisible.X; x <= tilesVisible.Right + 1; x++)
@@ -58,15 +58,15 @@ namespace RTS_test
 					if (texture.Width > Global.tileSize || texture.Height > Global.tileSize)
 					{
 						// Draw parts of a larger texture to look nice
-						int baseX = x * 32 % texture.Width;
-						int baseY = y * 32 % texture.Height;
+						int baseX = x * Global.tileSize % texture.Width;
+						int baseY = y * Global.tileSize % texture.Height;
 
 						Rectangle sourceRectangle = new Rectangle(baseX, baseY, Global.tileSize, Global.tileSize);
 
-						spriteBatch.Draw(texture, new Vector2(x * 32, y * 32), null, sourceRectangle, null, 0f, null, color, SpriteEffects.None, 0f);
+						spriteBatch.Draw(texture, new Vector2(x * Global.tileSize, y * Global.tileSize), null, sourceRectangle, null, 0f, null, color, SpriteEffects.None, 0f);
 					}
 					else // Draw normally
-						spriteBatch.Draw(texture, new Vector2(x * 32, y * 32), color);
+						spriteBatch.Draw(texture, new Vector2(x * Global.tileSize, y * Global.tileSize), color);
 				}
 			}
 		}
