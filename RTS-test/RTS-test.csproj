@@ -66,6 +66,9 @@
     <Reference Include="artemis">
       <HintPath>..\..\..\..\..\..\libs\artemis.dll</HintPath>
     </Reference>
+    <Reference Include="FarseerPhysics MonoGame">
+      <HintPath>..\..\..\..\..\..\libs\FarseerPhysics MonoGame.dll</HintPath>
+    </Reference>
     <Reference Include="libnoise">
       <HintPath>..\..\..\..\..\..\libs\libnoise.dll</HintPath>
     </Reference>

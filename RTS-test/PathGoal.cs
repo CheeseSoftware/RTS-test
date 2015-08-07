@@ -89,9 +89,9 @@ namespace RTS_test
 
         public Vector2 getDirection(Vector2 pos)
         {
-            int2 floorPos = new int2((int)Math.Floor(pos.X/32f), (int)Math.Floor(pos.Y/32f));
+            int2 floorPos = new int2((int)Math.Floor(pos.X), (int)Math.Floor(pos.Y));
             if (floorPos.x < 0 || floorPos.y < 0 || floorPos.x + 1 >= size.x || floorPos.y + 1 >= size.y)
-                return new Vector2(32 * goalPos.x, 32 * goalPos.y) - pos;
+                return new Vector2(goalPos.x, goalPos.y) - pos;
 
 
 

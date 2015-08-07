@@ -29,6 +29,7 @@ namespace RTS_test
 		private TextureManager textureManager;
 		private EntityWorld entityWorld;
 		private UnitController unitController;
+        private FarseerPhysics.Dynamics.World world;
 
 		private int frameRate;
 		private TimeSpan elapsedTime;
@@ -58,6 +59,7 @@ namespace RTS_test
             tileMap = new TileMap(tileManager, Global.mapWidth, Global.mapHeight);
 			textureManager = new TextureManager();
 			unitController = new UnitController();
+            world = new FarseerPhysics.Dynamics.World(new Vector2(0f, 0f));
 
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -71,7 +73,8 @@ namespace RTS_test
 			entityWorld = new EntityWorld();
 			EntitySystem.BlackBoard.SetEntry<SpriteBatch>("SpriteBatch", spriteBatch);
 			EntitySystem.BlackBoard.SetEntry<TextureManager>("TextureManager", textureManager);
-			EntitySystem.BlackBoard.SetEntry<TileMap>("TileMap", tileMap);
+            EntitySystem.BlackBoard.SetEntry<TileMap>("TileMap", tileMap);
+            EntitySystem.BlackBoard.SetEntry<FarseerPhysics.Dynamics.World>("PhysicsWorld", world);
 			this.entityWorld.InitializeAll(true);
 
 
@@ -84,22 +87,22 @@ namespace RTS_test
 
 			GUIContext = GUISystem.GetDefaultGUIContext();
 
-			SchemeManager.GetSingleton().CreateFromFile("Generic.scheme");
-			//GUIContext.GetMouseCursor().SetDefaultImage("TaharezLook/MouseArrow");
-			GUIContext.GetMouseCursor().SetImage(GUIContext.GetMouseCursor().GetDefaultImage());
+            //SchemeManager.GetSingleton().CreateFromFile("Generic.scheme");
+            ////GUIContext.GetMouseCursor().SetDefaultImage("TaharezLook/MouseArrow");
+            //GUIContext.GetMouseCursor().SetImage(GUIContext.GetMouseCursor().GetDefaultImage());
 
-			var winMgr = WindowManager.GetSingleton();
-			GUIWindow = winMgr.CreateWindow("DefaultWindow", "Root");
+            //var winMgr = WindowManager.GetSingleton();
+            //GUIWindow = winMgr.CreateWindow("DefaultWindow", "Root");
 
-			var defaultFont = FontManager.GetSingleton().CreateFromFile("1.font");
-			GUIContext.SetDefaultFont(defaultFont);
-			GUIContext.SetRootWindow(GUIWindow);
+            //var defaultFont = FontManager.GetSingleton().CreateFromFile("1.font");
+            //GUIContext.SetDefaultFont(defaultFont);
+            //GUIContext.SetRootWindow(GUIWindow);
 
-			var label = winMgr.CreateWindow("Generic/Label", "Demo Window");
-			label.SetText("MOOOOOOO");
-			label.SetPosition(new UVector2(UDim.Absolute(100.0f), UDim.Absolute(100.0f)));
-			label.SetSize(new USize(UDim.Absolute(600.0f), UDim.Absolute(100.0f)));
-			GUIWindow.AddChild(label);
+            //var label = winMgr.CreateWindow("Generic/Label", "Demo Window");
+            //label.SetText("MOOOOOOO");
+            //label.SetPosition(new UVector2(UDim.Absolute(100.0f), UDim.Absolute(100.0f)));
+            //label.SetSize(new USize(UDim.Absolute(600.0f), UDim.Absolute(100.0f)));
+            //GUIWindow.AddChild(label);
 
 			base.Initialize();
 		}
@@ -120,7 +123,7 @@ namespace RTS_test
 
 			for (int i = 0; i < 100; ++i)
 				entityWorld.CreateEntityFromTemplate("Test", new object[] {
-					new Vector2(16.0f*i, 40f*(float)Math.Sin(0.5f*i)),
+					new Vector2(0.2f*i, 4f*(float)Math.Sin(0.5f*i)),
 					new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
 				});
 
@@ -167,7 +170,9 @@ namespace RTS_test
 				}
 			}
 
+
 			unitController.update(entityWorld, Global.Camera);
+            world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 			entityWorld.Update();
 			// FPS-counter stuff
 			++this.frameCounter;

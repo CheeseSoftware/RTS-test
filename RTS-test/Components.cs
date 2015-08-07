@@ -132,6 +132,28 @@ namespace RTS_test
 				this.type = type;
 			}
 		}
+
+        public class Physics : IComponent
+        {
+            private FarseerPhysics.Dynamics.Body body;
+
+            public Physics(FarseerPhysics.Dynamics.Body body)
+            {
+                this.body = body;
+            }
+
+            public Vector2 Position
+            {
+                get { return body.Position; }
+                set { body.Position = value; }
+            }
+
+            public Vector2 Velocity
+            {
+                get { return body.LinearVelocity; }
+                set { body.LinearVelocity = value; }
+            }
+        }
 	}
 
 }

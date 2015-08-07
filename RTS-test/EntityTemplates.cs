@@ -15,6 +15,7 @@ namespace RTS_test
     public class TestTemplate : IEntityTemplate {
 	    public Entity BuildEntity(Entity entity, EntityWorld entityWorld, params object[] args) {
             TextureManager textureManager = EntitySystem.BlackBoard.GetEntry<TextureManager>("TextureManager");
+            FarseerPhysics.Dynamics.World world = EntitySystem.BlackBoard.GetEntry<FarseerPhysics.Dynamics.World>("PhysicsWorld");
 
             Vector2 pos = new Vector2(0f, 0f);
             Vector2 velocity = new Vector2(0f, 0f);
@@ -25,9 +26,18 @@ namespace RTS_test
             if (args.Length >= 2)
                 velocity = (Vector2)args[1];
 
-		    entity.AddComponent(new component.Position(pos));
+
+
+            FarseerPhysics.Dynamics.Body body = FarseerPhysics.Factories.BodyFactory.CreateCircle(world, 0.5f, 1.0f);
+            body.BodyType = FarseerPhysics.Dynamics.BodyType.Dynamic;
+            body.Position = pos;
+            body.LinearVelocity = velocity;
+
+
+            entity.AddComponent(new component.Physics(body));
+            entity.AddComponent(new component.Position(pos));
 			entity.AddComponent(new component.Velocity(new Vector2(velocity.X, velocity.Y)));
-            entity.AddComponent(new component.MaxVelocity(0.1f));
+            entity.AddComponent(new component.MaxVelocity(0.85f));
 			entity.AddComponent(new component.Thrust());
             entity.AddComponent(new component.Drawable(textureManager.getTexture(2)));
             entity.AddComponent(new component.Goal());
