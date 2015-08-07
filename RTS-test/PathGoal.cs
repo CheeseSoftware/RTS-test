@@ -134,7 +134,6 @@ namespace RTS_test
 
         }
 
-
         //void unregisterUnit(Unit unit)
         //{
         //    int index = units.Search(unit);

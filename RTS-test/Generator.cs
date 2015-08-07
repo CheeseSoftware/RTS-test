@@ -82,14 +82,13 @@ namespace RTS_test
 							continue;
 
 
-						entityWorld.CreateEntityFromTemplate("Tree", new object[] {
+						entityWorld.CreateEntityFromTemplate("Resource", new object[] {
 							new Vector2(x, y),
 							(float)random.Next(360),
 							"wood",
 							500,
 							5
 						});
-						//tileMap.setTile(x, y, 0);
 
 						for (int xt = 0; xt < treeWidth; xt++)
 						{
@@ -104,6 +103,56 @@ namespace RTS_test
 				}
 			}
 
+			// Generate stone resource 
+			for (int i = 0; i < Math.Sqrt(tileMap.getWidth() * tileMap.getHeight()) / 10; i++)
+			{
+				int x = random.Next(tileMap.getWidth());
+				int y = random.Next(tileMap.getHeight());
+
+				int resourceWidth = 2;
+				int resourceHeight = 2;
+				bool canPlaceResource = true;
+
+				for (int xt = 0; xt < resourceWidth; xt++)
+				{
+					for (int yt = 0; yt < resourceHeight; yt++)
+					{
+						int checkX = xt + x;
+						int checkY = yt + y;
+
+						if (checkX >= tileMap.getWidth() || checkY >= tileMap.getHeight() || occupied[checkX, checkY] || !tileMap.getTile(checkX, checkY).Name.Equals("grass"))
+						{
+							canPlaceResource = false;
+							break;
+						}
+					}
+					if (!canPlaceResource)
+						break;
+				}
+				if (!canPlaceResource)
+					continue;
+
+				entityWorld.CreateEntityFromTemplate("Resource", new object[] {
+							new Vector2(x, y),
+							(float)0,
+							"stone",
+							500,
+							8
+						});
+
+				for (int xt = 0; xt < resourceWidth; xt++)
+				{
+					for (int yt = 0; yt < resourceHeight; yt++)
+					{
+						int checkX = xt + x;
+						int checkY = yt + y;
+						occupied[checkX, checkY] = true;
+					}
+				}
+
+			}
+
 		}
 	}
+
 }

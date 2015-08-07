@@ -66,6 +66,9 @@ namespace RTS_test
 				Vector2 dir = goal.pathGoal.getDirection(physics.Position);
 
 				physics.Velocity += 1.1f * dir;
+
+				float angle = (float)Math.Atan2(dir.Y, dir.X);
+				physics.Rotation = angle;
 			}
 		}
 

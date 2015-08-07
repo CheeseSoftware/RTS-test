@@ -28,7 +28,7 @@ namespace RTS_test
 
 
 
-            FarseerPhysics.Dynamics.Body body = FarseerPhysics.Factories.BodyFactory.CreateCircle(world, 0.5f, 1.0f);
+            FarseerPhysics.Dynamics.Body body = FarseerPhysics.Factories.BodyFactory.CreateEllipse(world, 0.5f, 1.0f, 4, 1.0f);
             body.BodyType = FarseerPhysics.Dynamics.BodyType.Dynamic;
             body.Position = pos;
 			body.Friction = 0.0f;
@@ -40,15 +40,15 @@ namespace RTS_test
 
             entity.AddComponent(new component.Physics(body));
             entity.AddComponent(new component.MaxVelocity(0.85f));
-            entity.AddComponent(new component.Drawable(textureManager.getTexture(2)));
+            entity.AddComponent(new component.Drawable(textureManager.getTexture(9)));
             entity.AddComponent(new component.Goal());
             return entity;
 	    }
 
     }
 
-	[ArtemisEntityTemplate("Tree")]
-	public class TreeTemplate : IEntityTemplate
+	[ArtemisEntityTemplate("Resource")]
+	public class ResourceTemplate : IEntityTemplate
 	{
 		public Entity BuildEntity(Entity entity, EntityWorld entityWorld, params object[] args)
 		{
