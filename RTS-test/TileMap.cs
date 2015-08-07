@@ -80,6 +80,11 @@ namespace RTS_test
 
                 float dis = 3f;
 
+                bool isSolid = getTile(pos.x, pos.y).IsSolid;
+
+                if (isSolid)
+                    dis = 1f;
+
                 for (int xx = -2; xx <= 2; ++xx)
                 {
                     for (int yy = -2; yy <= 2; ++yy)
@@ -88,7 +93,7 @@ namespace RTS_test
                             continue;
 
                         TileData tile = getTile(pos.x + xx, pos.y + yy);
-                        if (!tile.IsSolid)
+                        if (!(tile.IsSolid^isSolid))
                             continue;
 
                         Vector2 b = new Vector2(0.5f, 0.5f);
@@ -106,7 +111,10 @@ namespace RTS_test
                     }
                 }
 
-                disField[pos.x, pos.y] = dis;
+                if (isSolid)
+                    disField[pos.x, pos.y] = -dis;
+                else
+                    disField[pos.x, pos.y] = dis;
             }
         }
 
