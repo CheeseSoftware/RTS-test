@@ -20,11 +20,13 @@ namespace RTS_test
 
 		public void generate(TileMap tileMap, EntityWorld entityWorld)
 		{
+			int seed = 1337; //random.Next(10000);
+
 			occupied = new bool[tileMap.getWidth(), tileMap.getHeight()];
 			Random random = new Random();
 
 			// Generate tilemap
-			Graphics.Tools.Noise.Primitive.BevinsGradient noise = new Graphics.Tools.Noise.Primitive.BevinsGradient(random.Next(10000), NoiseQuality.Best);
+			Graphics.Tools.Noise.Primitive.BevinsGradient noise = new Graphics.Tools.Noise.Primitive.BevinsGradient(seed, NoiseQuality.Best);
 
 			for (int x = 0; x < tileMap.getWidth(); x++)
 			{
@@ -48,13 +50,13 @@ namespace RTS_test
 			}
 
 			// Generate forest
-			Graphics.Tools.Noise.Primitive.SimplexPerlin forestNoise = new Graphics.Tools.Noise.Primitive.SimplexPerlin(random.Next(10000), NoiseQuality.Best);
+			Graphics.Tools.Noise.Primitive.SimplexPerlin forestNoise = new Graphics.Tools.Noise.Primitive.SimplexPerlin(seed, NoiseQuality.Best);
 			for (int x = 0; x < tileMap.getWidth(); x++)
 			{
 				for (int y = 0; y < tileMap.getHeight(); y++)
 				{
 					float zoom = 0.05f;
-					if (forestNoise.GetValue(zoom * x, zoom * y) > 0.5f)
+					if (forestNoise.GetValue(zoom * x, zoom * y) > 0.2f)
 					{
 						int treeWidth = 2;
 						int treeHeight = 2;
@@ -89,7 +91,7 @@ namespace RTS_test
 						});
 						//tileMap.setTile(x, y, 0);
 
-						/*for (int xt = 0; xt < treeWidth; xt++)
+						for (int xt = 0; xt < treeWidth; xt++)
 						{
 							for (int yt = 0; yt < treeHeight; yt++)
 							{
@@ -97,7 +99,7 @@ namespace RTS_test
 								int checkY = yt + y;
 								occupied[checkX, checkY] = true;
 							}
-						}*/
+						}
 					}
 				}
 			}

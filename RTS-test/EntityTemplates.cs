@@ -84,7 +84,7 @@ namespace RTS_test
 			body.BodyType = FarseerPhysics.Dynamics.BodyType.Static;
 			body.Position = pos;
 			body.Rotation = rotation;
-			body.FixedRotation = true;
+			body.FixedRotation = false;
 
 			entity.AddComponent(new component.Physics(body));
 			entity.AddComponent(new component.Size(texture.Width, texture.Height));
