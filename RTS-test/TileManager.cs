@@ -34,6 +34,7 @@ namespace RTS_test
 
         public TileManager()
         {
+            registerTile(new TileData("null", null, false));
         }
 
         public UInt16 registerTile(TileData tileData)
@@ -57,7 +58,7 @@ namespace RTS_test
         public TileData getTile(UInt16 id)
         {
             if (id >= registeredTiles.Count())
-                throw new Exception("Unregistered tileID(" + id.ToString() + ")!");
+                return registeredTiles[0];
 
             return registeredTiles[id];
         }

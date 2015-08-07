@@ -79,10 +79,12 @@ namespace RTS_test
 			font = Content.Load<SpriteFont>("SpriteFont1");
 			textureManager.loadTextures(Content);
 
-            TileData tileNull = new TileData("null", textureManager.getTexture(0), false);
             TileData tileGrass = new TileData("grass", textureManager.getTexture(1), false);
-            tileManager.registerTile(tileNull);
+            TileData tileSand = new TileData("sand", textureManager.getTexture(3), false);
+            TileData tileWater = new TileData("water", textureManager.getTexture(4), true);
             tileManager.registerTile(tileGrass);
+            tileManager.registerTile(tileSand);
+            tileManager.registerTile(tileWater);
 
 
 			Entity entity = entityWorld.CreateEntity();
@@ -154,6 +156,8 @@ namespace RTS_test
                     TileData tileData = tileManager.getTile(tile);
 					Texture2D texture = tileData.Texture;
 
+                    if (texture == null)
+                        continue;
 
 					if (texture.Width > Global.tileSize || texture.Height > Global.tileSize)
 					{
