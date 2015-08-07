@@ -78,8 +78,6 @@ namespace RTS_test
 			if (args.Length >= 5)
 				textureId = (int)args[4];
 
-			Console.WriteLine("Added tree at X " + pos.X + " Y " + pos.Y);
-
 			Texture2D texture = textureManager.getTexture(textureId);
 
 			FarseerPhysics.Dynamics.Body body = FarseerPhysics.Factories.BodyFactory.CreateCircle(world, 0.5f, 1.0f);

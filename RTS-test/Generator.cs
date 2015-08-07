@@ -81,10 +81,11 @@ namespace RTS_test
 
 
 						entityWorld.CreateEntityFromTemplate("Tree", new object[] {
-							new Vector2(32*x, 32*y),
+							new Vector2(x, y),
 							(float)random.Next(360),
 							"wood",
-							500
+							500,
+							5
 						});
 						//tileMap.setTile(x, y, 0);
 
