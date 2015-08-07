@@ -28,7 +28,7 @@ namespace RTS_test
 
 
 
-            FarseerPhysics.Dynamics.Body body = FarseerPhysics.Factories.BodyFactory.CreateEllipse(world, 0.5f, 1.0f, 4, 1.0f);
+            FarseerPhysics.Dynamics.Body body = FarseerPhysics.Factories.BodyFactory.CreateEllipse(world, 1.0f, 0.5f, 4, 1.0f);
             body.BodyType = FarseerPhysics.Dynamics.BodyType.Dynamic;
             body.Position = pos;
 			body.Friction = 0.0f;
