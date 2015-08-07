@@ -36,7 +36,11 @@ namespace RTS_test
                     new Point(drawable.texture.Width, drawable.texture.Height)
                     );
 
-                spriteBatch.Draw(drawable.texture, rectangle, Color.White);
+                TileMap tileMap = EntitySystem.BlackBoard.GetEntry<TileMap>("TileMap");
+                float dis = tileMap.getDis(position.pos*32f)/4f;
+                Color color = new Color(dis, dis, dis);
+
+                spriteBatch.Draw(drawable.texture, rectangle, color);
             }
         }
 
@@ -59,7 +63,7 @@ namespace RTS_test
 
                 Vector2 dir = goal.pathGoal.getDirection(position.pos);
 
-                velocity.velocity += 0.1f * dir;
+                velocity.velocity += 0.01f * dir;
             }
         }
 

@@ -81,6 +81,7 @@ namespace RTS_test
 			tileManager.registerTile(tileSand);
 			tileManager.registerTile(tileWater);
 
+            tileMap.load();
 
 			for (int i = 0; i < 100; ++i)
 				entityWorld.CreateEntityFromTemplate("Test", new object[] {

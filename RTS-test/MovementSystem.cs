@@ -34,11 +34,18 @@ namespace RTS_test
 					transformComponent.X += (float)(velocityComponent.X * ms);
 					transformComponent.Y += (float)(velocityComponent.Y * ms);
 
-                    // TODO: Replace -1 with -radius.
-                    float dis = tileMap.getDis(transformComponent.pos)-1;
-                    Vector2 normal = tileMap.getNormal(transformComponent.pos);
-                    if (dis < 0f)
-                        transformComponent.pos += -normal * dis;
+                    // Raymarched collision
+                    // TODO: Replace -1.0f with -1.0f*radius.
+                    float dis;
+                    for (int i = 0; i < 8; ++i )
+                    {
+                        dis = tileMap.getDis(transformComponent.pos / 32f) - 1.0f;
+                        Vector2 normal = tileMap.getNormal(transformComponent.pos / 32f);
+                        if (dis < 0f)
+                            transformComponent.pos += -32f * normal * dis;
+                        else
+                            break;
+                    }
 				}
 			}
 
