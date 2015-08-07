@@ -11,6 +11,7 @@ namespace RTS_test
 	public class TileMap
 	{
 		private UInt16[,] tiles;
+        private float[,] disField;
         private TileManager tileManager;
 		private int width;
 		private int height;
@@ -21,6 +22,7 @@ namespace RTS_test
 			this.width = width;
 			this.height = height;
             tiles = new UInt16[width, height];
+            disField = new float[width, height];
 
 			generate();
 		}
@@ -100,6 +102,16 @@ namespace RTS_test
         public UInt16 getTileID(int x, int y)
         {
             return tiles[x, y];
+        }
+
+        public float getDis(Vector2 pos)
+        {
+            return 10f;
+        }
+
+        public Vector2 getNormal(Vector2 pos)
+        {
+            return new Vector2(0f, 0f);
         }
 
 		public void setTile(int x, int y, UInt16 tile)
