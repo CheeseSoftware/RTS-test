@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RTS_test
 {
-    struct int2
+    public struct int2
     {
         public int2(int x, int y)
         {

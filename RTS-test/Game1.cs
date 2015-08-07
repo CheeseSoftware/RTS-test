@@ -1,6 +1,7 @@
 ﻿using Artemis;
 using Artemis.Manager;
 using Artemis.System;
+using Artemis.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -23,6 +24,7 @@ namespace RTS_test
         private TileManager tileManager;
 		private TextureManager textureManager;
         private EntityWorld entityWorld;
+        private UnitController unitController;
 
 		private int frameRate;
 		private TimeSpan elapsedTime;
@@ -38,6 +40,7 @@ namespace RTS_test
 			tileMap = new TileMap(Global.mapWidth, Global.mapHeight);
             tileManager = new TileManager();
 			textureManager = new TextureManager();
+            unitController = new UnitController();
 
 			
 
@@ -93,7 +96,7 @@ namespace RTS_test
                     new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
                 });
 
-
+            
 		}
 
 		/// <summary>
@@ -118,6 +121,7 @@ namespace RTS_test
 			_inputState.Update();
 			Global.Camera.HandleInput(_inputState, PlayerIndex.One);
 
+            unitController.update(entityWorld, Global.Camera);
             entityWorld.Update();
 			// FPS-counter stuff
 			++this.frameCounter;
@@ -128,7 +132,7 @@ namespace RTS_test
 				this.frameRate = this.frameCounter;
 				this.frameCounter = 0;
 			}
-
+            
 			base.Update(gameTime);
 		}
 

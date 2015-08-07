@@ -47,6 +47,16 @@ namespace RTS_test
             }
         }
 
+        public class MaxVelocity : IComponent
+        {
+            public float maxVelocity;
+
+            public MaxVelocity(float maxVelocity)
+            {
+                this.maxVelocity = maxVelocity;
+            }
+        }
+
 		public class Thrust : IComponent
 		{
             public Vector2 thrust;
@@ -80,6 +90,16 @@ namespace RTS_test
             public Drawable(Texture2D texture)
             {
                 this.texture = texture;
+            }
+        }
+
+        public class Goal : IComponent
+        {
+            public PathGoal pathGoal;
+
+            public Goal()
+            {
+                this.pathGoal = null;
             }
         }
     }

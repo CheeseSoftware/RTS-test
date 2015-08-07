@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace RTS_test
 {
-    class PathGoal
+    public class PathGoal
     {
         private int[,] flowfield;
         private int2 size;
@@ -27,10 +27,11 @@ namespace RTS_test
             public int distance;
         }
 
-        public PathGoal(int2 size)
+        public PathGoal(int2 size, int2 goalPos)
         {
             this.size = size;
             this.flowfield = new int[size.x,size.y];
+            this.goalPos = goalPos;
 
             stepDirections = new int2[] { new int2(-1,0), new int2(1,0), new int2(0,-1), new int2(0,1) };
         }
@@ -76,11 +77,14 @@ namespace RTS_test
         {
             int2 floorPos = new int2((int)Math.Floor(pos.X), (int)Math.Floor(pos.Y));
 
+
+
             Vector2 direction =
-                (float)(flowfield[floorPos.x, floorPos.y]) * new Vector2(-1f, -1f)
-                + (float)(flowfield[floorPos.x + 1, floorPos.y]) * new Vector2(1f, -1f)
-                + (float)(flowfield[floorPos.x, floorPos.y + 1]) * new Vector2(-1f, 1f)
-                + (float)(flowfield[floorPos.x + 1, floorPos.y + 1]) * new Vector2(1f, 1f);
+                //(float)(flowfield[floorPos.x, floorPos.y]) * new Vector2(-1f, -1f)
+                //+ (float)(flowfield[floorPos.x + 1, floorPos.y]) * new Vector2(1f, -1f)
+                //+ (float)(flowfield[floorPos.x, floorPos.y + 1]) * new Vector2(-1f, 1f)
+                //+ (float)(flowfield[floorPos.x + 1, floorPos.y + 1]) * new Vector2(1f, 1f);
+                new Vector2(32*goalPos.x, 32*goalPos.y) - pos;
 
             direction.Normalize();
             return direction;
