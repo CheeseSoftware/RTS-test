@@ -64,7 +64,8 @@ namespace RTS_test
 			Global.Camera.ViewportHeight = graphics.GraphicsDevice.Viewport.Height;
 
 			entityWorld = new EntityWorld();
-			EntitySystem.BlackBoard.SetEntry<SpriteBatch>("SpriteBatch", spriteBatch);
+            EntitySystem.BlackBoard.SetEntry<SpriteBatch>("SpriteBatch", spriteBatch);
+            EntitySystem.BlackBoard.SetEntry<TextureManager>("TextureManager", textureManager);
 			this.entityWorld.InitializeAll(true);
 
 			base.Initialize();
@@ -86,11 +87,12 @@ namespace RTS_test
             tileManager.registerTile(tileSand);
             tileManager.registerTile(tileWater);
 
-			Entity entity = entityWorld.CreateEntity();
-			entity.AddComponent(new component.Position(16f, 16f));
-			entity.AddComponent(new component.Velocity(new Vector2(0.01f, 0.01f)));
-			entity.AddComponent(new component.Thrust());
-			entity.AddComponent(new component.Drawable(textureManager.getTexture(2)));
+            for (int i = 0; i < 100; ++i)
+                entityWorld.CreateEntityFromTemplate("Test", new object[] {
+                    new Vector2(16.0f*i, 40f*(float)Math.Sin(0.5f*i)),
+                    new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
+                });
+
 
 		}
 
