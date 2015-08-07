@@ -54,13 +54,18 @@ namespace RTS_test
 			TextureManager textureManager = EntitySystem.BlackBoard.GetEntry<TextureManager>("TextureManager");
 
 			Vector2 pos = new Vector2(0f, 0f);
+			float rotation = 0.0f;
+			Random r = new Random();
 
 			if (args.Length >= 1)
 				pos = (Vector2)args[0];
 
+			if (args.Length >= 2)
+				rotation = (float)args[1];
+
 			Texture2D texture = textureManager.getTexture(5);
 
-			entity.AddComponent(new component.Position(pos));
+			entity.AddComponent(new component.Position(pos, rotation));
 			entity.AddComponent(new component.Size(texture.Width, texture.Height));
 			entity.AddComponent(new component.Drawable(texture));
 			entity.AddComponent(new component.DepletableResource(500, "Tree"));

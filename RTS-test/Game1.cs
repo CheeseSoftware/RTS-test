@@ -30,6 +30,7 @@ namespace RTS_test
 		private EntityWorld entityWorld;
 		private UnitController unitController;
         private FarseerPhysics.Dynamics.World world;
+		private Generator generator;
 
 		private int frameRate;
 		private TimeSpan elapsedTime;
@@ -60,6 +61,7 @@ namespace RTS_test
 			textureManager = new TextureManager();
 			unitController = new UnitController();
             world = new FarseerPhysics.Dynamics.World(new Vector2(0f, 0f));
+			generator = new Generator();
 
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -75,6 +77,8 @@ namespace RTS_test
 			EntitySystem.BlackBoard.SetEntry<TextureManager>("TextureManager", textureManager);
             EntitySystem.BlackBoard.SetEntry<TileMap>("TileMap", tileMap);
             EntitySystem.BlackBoard.SetEntry<FarseerPhysics.Dynamics.World>("PhysicsWorld", world);
+			EntitySystem.BlackBoard.SetEntry<TileMap>("TileMap", tileMap);
+			EntitySystem.BlackBoard.SetEntry<Generator>("Generator", generator);
 			this.entityWorld.InitializeAll(true);
 
 
@@ -120,6 +124,8 @@ namespace RTS_test
 			tileManager.registerTile(tileWater);
 
             tileMap.load();
+			generator.generate(tileMap, entityWorld);
+			tileMap.updateDisField();
 
 			for (int i = 0; i < 100; ++i)
 				entityWorld.CreateEntityFromTemplate("Test", new object[] {
@@ -129,7 +135,7 @@ namespace RTS_test
 
 
 			//Generate resources and natural object entities
-			Random r = new Random();
+			/*Random r = new Random();
 			for (int i = 0; i < tileMap.getWidth(); i++)
 			{
 				entityWorld.CreateEntityFromTemplate("Tree", new object[] {
@@ -143,7 +149,7 @@ namespace RTS_test
 				entityWorld.CreateEntityFromTemplate("BerryBush", new object[] {
 					new Vector2(r.Next(tileMap.getWidth() * 32), r.Next(tileMap.getHeight() * 32)),
 					});
-			}
+			}*/
 
 
 		}

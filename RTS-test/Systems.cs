@@ -40,7 +40,8 @@ namespace RTS_test
                 float dis = tileMap.getDis(physics.Position * 32f) / 4f;
                 Color color = new Color(dis, dis, dis);
 
-                spriteBatch.Draw(drawable.texture, rectangle, color);
+				
+                spriteBatch.Draw(drawable.texture, null, rectangle, null, null, physics.Rotation, null, color, SpriteEffects.None, 0);
             }
         }
 
