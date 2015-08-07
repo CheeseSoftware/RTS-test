@@ -27,6 +27,8 @@ namespace RTS_test
 		public int ViewportWidth { get; set; }
 		public int ViewportHeight { get; set; }
 
+		public Rectangle Viewport { get { return new Rectangle(0, 0, ViewportWidth, ViewportHeight); } }
+
 		// Center of the Viewport which does not account for scale
 		public Vector2 ViewportCenter
 		{
