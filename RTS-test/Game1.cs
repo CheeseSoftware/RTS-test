@@ -23,8 +23,8 @@ namespace RTS_test
 		private TileMap tileMap;
 		private TileManager tileManager;
 		private TextureManager textureManager;
-        private EntityWorld entityWorld;
-        private UnitController unitController;
+		private EntityWorld entityWorld;
+		private UnitController unitController;
 
 		private int frameRate;
 		private TimeSpan elapsedTime;
@@ -48,7 +48,7 @@ namespace RTS_test
 			tileManager = new TileManager();
             tileMap = new TileMap(tileManager, Global.mapWidth, Global.mapHeight);
 			textureManager = new TextureManager();
-            unitController = new UnitController();
+			unitController = new UnitController();
 
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 			this.IsMouseVisible = true;
@@ -106,7 +106,7 @@ namespace RTS_test
 					});
 			}
 
-            
+
 		}
 
 		protected override void UnloadContent()
@@ -124,12 +124,15 @@ namespace RTS_test
 			MouseState mouseState;
 			if (_inputState.IsNewLeftMouseClick(out mouseState))
 			{
-				Vector2 pos = Global.Camera.ScreenToWorld(mouseState.Position.ToVector2());
-				unitController.setPathGoal(new PathGoal(tileMap, new int2(Global.mapWidth, Global.mapHeight), new int2((int)pos.X/32, (int)pos.Y/32)));
+				if (Global.Camera.Viewport.Contains(mouseState.Position))
+				{
+					Vector2 pos = Global.Camera.ScreenToWorld(mouseState.Position.ToVector2());
+					unitController.setPathGoal(new PathGoal(tileMap, new int2(Global.mapWidth, Global.mapHeight), new int2((int)pos.X / 32, (int)pos.Y / 32)));
+				}
 			}
 
 			unitController.update(entityWorld, Global.Camera);
-            entityWorld.Update();
+			entityWorld.Update();
 			// FPS-counter stuff
 			++this.frameCounter;
 			this.elapsedTime += gameTime.ElapsedGameTime;
@@ -139,7 +142,7 @@ namespace RTS_test
 				this.frameRate = this.frameCounter;
 				this.frameCounter = 0;
 			}
-            
+
 			base.Update(gameTime);
 		}
 
