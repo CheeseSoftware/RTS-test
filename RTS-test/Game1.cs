@@ -35,7 +35,7 @@ namespace RTS_test
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			_inputState = new InputState();
-			tileMap = new TileMap(2000, 2000);
+			tileMap = new TileMap(Global.mapWidth, Global.mapHeight);
             tileManager = new TileManager();
 			textureManager = new TextureManager();
 
@@ -85,7 +85,6 @@ namespace RTS_test
             tileManager.registerTile(tileGrass);
             tileManager.registerTile(tileSand);
             tileManager.registerTile(tileWater);
-
 
 			Entity entity = entityWorld.CreateEntity();
 			entity.AddComponent(new component.Position(16f, 16f));
@@ -150,7 +149,7 @@ namespace RTS_test
 			{
 				for (int y = tilesVisible.Y; y <= tilesVisible.Bottom + 1; y++)
 				{
-					if (x < 0 || y < 0)
+					if (x < 0 || y < 0 || x >= Global.mapWidth ||y >= Global.mapHeight)
 						continue;
 					UInt16 tile = tileMap.getTile(x, y);
                     TileData tileData = tileManager.getTile(tile);

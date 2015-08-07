@@ -73,6 +73,19 @@ namespace RTS_test
 		{
 			Vector2 newPosition = Position + cameraMovement;
 
+
+			int borderWidth = 32;
+
+			if (newPosition.X < -borderWidth + ViewportCenter.X)
+				newPosition.X = -borderWidth + ViewportCenter.X;
+			if (newPosition.X > borderWidth - ViewportCenter.X + Global.mapWidth * Global.tileSize)
+				newPosition.X = borderWidth - ViewportCenter.X + Global.mapWidth * Global.tileSize;
+
+			if (newPosition.Y < -borderWidth + ViewportCenter.Y)
+				newPosition.Y = -borderWidth + ViewportCenter.Y;
+			if (newPosition.Y > borderWidth - ViewportCenter.Y + Global.mapHeight * Global.tileSize)
+				newPosition.Y = borderWidth - ViewportCenter.Y + Global.mapHeight * Global.tileSize;
+
 			Position = newPosition;
 		}
 
