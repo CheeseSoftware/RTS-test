@@ -1,4 +1,6 @@
 ﻿using Graphics.Tools.Noise;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,14 +44,42 @@ namespace RTS_test
 
 					else
 						id = 3;
-
-					/*else if (distanceFromCenter + 0.33 * noise.GetValue(x * 0.015625F, y * 0.015625F, 48) > 0.5)
-						blockMap.setBlock(x, y, new NormalBlock((int)Skylight.BlockIds.Blocks.Sand.GRAY, 0));
-
-					else// if (noise.GetValue(x * 0.015625F, y * 0.015625F, 160) > 0)
-						blockMap.setBlock(x, y, new NormalBlock(Skylight.BlockIds.Blocks.Sand.BROWN, 0));*/
-
 					tiles[x, y] = id;
+				}
+			}
+		}
+
+		public void draw(SpriteBatch spriteBatch, TileManager tileManager)
+		{
+			Rectangle viewportWorldBoundry = Global.Camera.ViewportWorldBoundry();
+			Rectangle tilesVisible = new Rectangle(viewportWorldBoundry.X / 32, viewportWorldBoundry.Y / 32, viewportWorldBoundry.Width / 32, viewportWorldBoundry.Height / 32);
+
+			//Draw tilemap
+			for (int x = tilesVisible.X; x <= tilesVisible.Right + 1; x++)
+			{
+				for (int y = tilesVisible.Y; y <= tilesVisible.Bottom + 1; y++)
+				{
+					if (x < 0 || y < 0 || x >= Global.mapWidth || y >= Global.mapHeight)
+						continue;
+					UInt16 tile = getTile(x, y);
+					TileData tileData = tileManager.getTile(tile);
+					Texture2D texture = tileData.Texture;
+
+					if (texture == null)
+						continue;
+
+					if (texture.Width > Global.tileSize || texture.Height > Global.tileSize)
+					{
+						// Draw parts of a larger texture to look nice
+						int baseX = x * 32 % texture.Width;
+						int baseY = y * 32 % texture.Height;
+
+						Rectangle sourceRectangle = new Rectangle(baseX, baseY, Global.tileSize, Global.tileSize);
+
+						spriteBatch.Draw(texture, new Vector2(x * 32, y * 32), null, sourceRectangle);
+					}
+					else // Draw normally
+						spriteBatch.Draw(texture, new Vector2(x * 32, y * 32));
 				}
 			}
 		}
@@ -57,6 +87,11 @@ namespace RTS_test
         public UInt16 getTile(int x, int y)
 		{
 			return tiles[x, y];
+		}
+
+		public void setTile(int x, int y, UInt16 tile)
+		{
+			tiles[x, y] = tile;
 		}
 
 		public int getWidth()

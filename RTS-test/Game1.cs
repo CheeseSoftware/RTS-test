@@ -21,7 +21,7 @@ namespace RTS_test
 
 		private InputState _inputState;
 		private TileMap tileMap;
-        private TileManager tileManager;
+		private TileManager tileManager;
 		private TextureManager textureManager;
         private EntityWorld entityWorld;
         private UnitController unitController;
@@ -36,28 +36,22 @@ namespace RTS_test
 		{
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
-			_inputState = new InputState();
-			tileMap = new TileMap(Global.mapWidth, Global.mapHeight);
-            tileManager = new TileManager();
-			textureManager = new TextureManager();
-            unitController = new UnitController();
-
-			
 
 			//this.IsFixedTimeStep = false; // Remove fps limit
 			//graphics.SynchronizeWithVerticalRetrace = false;
 			//graphics.ApplyChanges();
 		}
 
-		/// <summary>
-		/// Allows the game to perform any initialization it needs to before starting to run.
-		/// This is where it can query for any required services and load any non-graphic
-		/// related content.  Calling base.Initialize will enumerate through any components
-		/// and initialize them as well.
-		/// </summary>
 		protected override void Initialize()
 		{
+			_inputState = new InputState();
+			tileMap = new TileMap(Global.mapWidth, Global.mapHeight);
+			tileManager = new TileManager();
+			textureManager = new TextureManager();
+            unitController = new UnitController();
+
 			spriteBatch = new SpriteBatch(GraphicsDevice);
+			this.IsMouseVisible = true;
 
 			graphics.PreferredBackBufferWidth = 1000;  // set this value to the desired width of your window
 			graphics.PreferredBackBufferHeight = 600;	// set this value to the desired height of your window
@@ -67,52 +61,57 @@ namespace RTS_test
 			Global.Camera.ViewportHeight = graphics.GraphicsDevice.Viewport.Height;
 
 			entityWorld = new EntityWorld();
-            EntitySystem.BlackBoard.SetEntry<SpriteBatch>("SpriteBatch", spriteBatch);
-            EntitySystem.BlackBoard.SetEntry<TextureManager>("TextureManager", textureManager);
+			EntitySystem.BlackBoard.SetEntry<SpriteBatch>("SpriteBatch", spriteBatch);
+			EntitySystem.BlackBoard.SetEntry<TextureManager>("TextureManager", textureManager);
+			EntitySystem.BlackBoard.SetEntry<TileMap>("TileMap", tileMap);
 			this.entityWorld.InitializeAll(true);
 
 			base.Initialize();
 		}
 
-		/// <summary>
-		/// LoadContent will be called once per game and is the place to load
-		/// all of your content.
-		/// </summary>
 		protected override void LoadContent()
 		{
 			font = Content.Load<SpriteFont>("SpriteFont1");
 			textureManager.loadTextures(Content);
 
-            TileData tileGrass = new TileData("grass", textureManager.getTexture(1), false);
-            TileData tileSand = new TileData("sand", textureManager.getTexture(3), false);
-            TileData tileWater = new TileData("water", textureManager.getTexture(4), true);
-            tileManager.registerTile(tileGrass);
-            tileManager.registerTile(tileSand);
-            tileManager.registerTile(tileWater);
+			TileData tileGrass = new TileData("grass", textureManager.getTexture(1), false);
+			TileData tileSand = new TileData("sand", textureManager.getTexture(3), false);
+			TileData tileWater = new TileData("water", textureManager.getTexture(4), true);
+			tileManager.registerTile(tileGrass);
+			tileManager.registerTile(tileSand);
+			tileManager.registerTile(tileWater);
 
-            for (int i = 0; i < 100; ++i)
-                entityWorld.CreateEntityFromTemplate("Test", new object[] {
-                    new Vector2(16.0f*i, 40f*(float)Math.Sin(0.5f*i)),
-                    new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
-                });
+			/*for (int i = 0; i < 100; ++i)
+				entityWorld.CreateEntityFromTemplate("Test", new object[] {
+					new Vector2(16.0f*i, 40f*(float)Math.Sin(0.5f*i)),
+					new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
+				});*/
+
+
+			//Generate resources and natural object entities
+			Random r = new Random();
+			for (int i = 0; i < tileMap.getWidth(); i++)
+			{
+				entityWorld.CreateEntityFromTemplate("Tree", new object[] {
+					new Vector2(r.Next(tileMap.getWidth() * 32), r.Next(tileMap.getHeight() * 32)),
+					});
+
+				entityWorld.CreateEntityFromTemplate("Stone", new object[] {
+					new Vector2(r.Next(tileMap.getWidth() * 32), r.Next(tileMap.getHeight() * 32)),
+					});
+
+				entityWorld.CreateEntityFromTemplate("BerryBush", new object[] {
+					new Vector2(r.Next(tileMap.getWidth() * 32), r.Next(tileMap.getHeight() * 32)),
+					});
+			}
 
             
 		}
 
-		/// <summary>
-		/// UnloadContent will be called once per game and is the place to unload
-		/// game-specific content.
-		/// </summary>
 		protected override void UnloadContent()
 		{
-			// TODO: Unload any non ContentManager content here
 		}
 
-		/// <summary>
-		/// Allows the game to run logic such as updating the world,
-		/// checking for collisions, gathering input, and playing audio.
-		/// </summary>
-		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Update(GameTime gameTime)
 		{
 			if (_inputState.IsExitGame(PlayerIndex.One))
@@ -136,48 +135,13 @@ namespace RTS_test
 			base.Update(gameTime);
 		}
 
-		/// <summary>
-		/// This is called when the game should draw itself.
-		/// </summary>
-		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Draw(GameTime gameTime)
 		{
 			GraphicsDevice.Clear(Color.Black);
 
 			spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
 	null, null, null, null, Global.Camera.TranslationMatrix);
-
-			Rectangle viewportWorldBoundry = Global.Camera.ViewportWorldBoundry();
-			Rectangle tilesVisible = new Rectangle(viewportWorldBoundry.X / 32, viewportWorldBoundry.Y / 32, viewportWorldBoundry.Width / 32, viewportWorldBoundry.Height / 32);
-
-			//Draw tilemap
-			for (int x = tilesVisible.X; x <= tilesVisible.Right + 1; x++)
-			{
-				for (int y = tilesVisible.Y; y <= tilesVisible.Bottom + 1; y++)
-				{
-					if (x < 0 || y < 0 || x >= Global.mapWidth ||y >= Global.mapHeight)
-						continue;
-					UInt16 tile = tileMap.getTile(x, y);
-                    TileData tileData = tileManager.getTile(tile);
-					Texture2D texture = tileData.Texture;
-
-                    if (texture == null)
-                        continue;
-
-					if (texture.Width > Global.tileSize || texture.Height > Global.tileSize)
-					{
-						// Draw parts of a larger texture to look nice
-						int baseX = x * 32 % texture.Width;
-						int baseY = y * 32 % texture.Height;
-
-						Rectangle sourceRectangle = new Rectangle(baseX, baseY, Global.tileSize, Global.tileSize);
-
-						spriteBatch.Draw(texture, new Vector2(x * 32, y * 32), null, sourceRectangle);
-					}
-					else // Draw normally
-						spriteBatch.Draw(texture, new Vector2(x * 32, y * 32));
-				}
-			}
+			tileMap.draw(spriteBatch, tileManager);
 			entityWorld.Draw();
 			spriteBatch.End();
 
