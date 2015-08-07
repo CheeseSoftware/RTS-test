@@ -172,7 +172,7 @@ namespace RTS_test
 				if (Global.Camera.Viewport.Contains(mouseState.Position))
 				{
 					Vector2 pos = Global.Camera.ScreenToWorld(mouseState.Position.ToVector2());
-					unitController.setPathGoal(new PathGoal(tileMap, new int2(Global.mapWidth, Global.mapHeight), new int2((int)pos.X / 32, (int)pos.Y / 32)));
+					unitController.setPathGoal(new PathGoal(tileMap, new int2(Global.mapWidth, Global.mapHeight), new int2((int)pos.X / Global.tileSize, (int)pos.Y / Global.tileSize)));
 				}
 			}
 

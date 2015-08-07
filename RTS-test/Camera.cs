@@ -76,7 +76,7 @@ namespace RTS_test
 			Vector2 newPosition = Position + cameraMovement;
 
 
-			int borderWidth = 32;
+			int borderWidth = Global.tileSize;
 
 			if (newPosition.X < -borderWidth + ViewportCenter.X)
 				newPosition.X = -borderWidth + ViewportCenter.X;
