@@ -6,8 +6,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RTS_test.component;
+using RTS_test.GUI;
 using RTS_test.system;
+using SharpCEGui.Base;
+using SharpCEGui.Base.Widgets;
 using System;
+using System.IO;
 
 namespace RTS_test
 {
@@ -32,6 +36,10 @@ namespace RTS_test
 		private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
 		private SpriteFont font; // Font for fps-counter
 
+		private SharpCEGui.Base.System GUISystem;
+		protected GUIContext GUIContext;
+		private Window GUIWindow;
+
 		public Game1()
 		{
 			graphics = new GraphicsDeviceManager(this);
@@ -40,6 +48,7 @@ namespace RTS_test
 			//this.IsFixedTimeStep = false; // Remove fps limit
 			//graphics.SynchronizeWithVerticalRetrace = false;
 			//graphics.ApplyChanges();
+			IsMouseVisible = true;
 		}
 
 		protected override void Initialize()
@@ -51,7 +60,6 @@ namespace RTS_test
 			unitController = new UnitController();
 
 			spriteBatch = new SpriteBatch(GraphicsDevice);
-			this.IsMouseVisible = true;
 
 			graphics.PreferredBackBufferWidth = 1000;  // set this value to the desired width of your window
 			graphics.PreferredBackBufferHeight = 600;	// set this value to the desired height of your window
@@ -65,6 +73,33 @@ namespace RTS_test
 			EntitySystem.BlackBoard.SetEntry<TextureManager>("TextureManager", textureManager);
 			EntitySystem.BlackBoard.SetEntry<TileMap>("TileMap", tileMap);
 			this.entityWorld.InitializeAll(true);
+
+
+			//GUI
+			var renderer = MonoGameRenderer.Create(GraphicsDevice, Content);
+			GUISystem = SharpCEGui.Base.System.Create(renderer, null, new DefaultXmlParser());
+
+			InitialiseDefaultResourceGroups();
+			InitialiseResourceGroupDirectories();
+
+			GUIContext = GUISystem.GetDefaultGUIContext();
+
+			SchemeManager.GetSingleton().CreateFromFile("Generic.scheme");
+			//GUIContext.GetMouseCursor().SetDefaultImage("TaharezLook/MouseArrow");
+			GUIContext.GetMouseCursor().SetImage(GUIContext.GetMouseCursor().GetDefaultImage());
+
+			var winMgr = WindowManager.GetSingleton();
+			GUIWindow = winMgr.CreateWindow("DefaultWindow", "Root");
+
+			var defaultFont = FontManager.GetSingleton().CreateFromFile("1.font");
+			GUIContext.SetDefaultFont(defaultFont);
+			GUIContext.SetRootWindow(GUIWindow);
+
+			var label = winMgr.CreateWindow("Generic/Label", "Demo Window");
+			label.SetText("MOOOOOOO");
+			label.SetPosition(new UVector2(UDim.Absolute(100.0f), UDim.Absolute(100.0f)));
+			label.SetSize(new USize(UDim.Absolute(600.0f), UDim.Absolute(100.0f)));
+			GUIWindow.AddChild(label);
 
 			base.Initialize();
 		}
@@ -144,6 +179,16 @@ namespace RTS_test
 				this.frameCounter = 0;
 			}
 
+			//GUI
+			var ms = Mouse.GetState();
+			GUIContext.InjectMousePosition(ms.X, ms.Y);
+			if (ms.LeftButton == ButtonState.Pressed)
+				GUIContext.InjectMouseButtonDown(MouseButton.LeftButton);
+			else if (ms.LeftButton == ButtonState.Released)
+				GUIContext.InjectMouseButtonUp(MouseButton.LeftButton);
+			GUIContext.InjectTimePulse((float)gameTime.ElapsedGameTime.TotalSeconds);
+			GUISystem.InjectTimePulse((float)gameTime.ElapsedGameTime.TotalSeconds);
+
 			base.Update(gameTime);
 		}
 
@@ -161,9 +206,45 @@ namespace RTS_test
 			spriteBatch.Begin();
 			string fps = string.Format("fps: {0}", this.frameRate);
 			spriteBatch.DrawString(font, fps, new Vector2(16, 16), Color.White);
+
+			// GUI
+			GUISystem.RenderAllGUIContexts();
 			spriteBatch.End();
 
 			base.Draw(gameTime);
+		}
+
+		private void InitialiseResourceGroupDirectories()
+		{
+			var resourceProvider = (DefaultResourceProvider)SharpCEGui.Base.System.GetSingleton().GetResourceProvider();
+			var dataPathPrefix = Path.Combine(Environment.CurrentDirectory, "resources");
+
+			// for each resource type, set a resource group directory
+			resourceProvider.SetResourceGroupDirectory("schemes", Path.Combine(dataPathPrefix, "schemes"));
+			resourceProvider.SetResourceGroupDirectory("imagesets", Path.Combine(dataPathPrefix, "imagesets"));
+			resourceProvider.SetResourceGroupDirectory("fonts", Path.Combine(dataPathPrefix, "fonts"));
+			resourceProvider.SetResourceGroupDirectory("layouts", Path.Combine(dataPathPrefix, "layouts"));
+			resourceProvider.SetResourceGroupDirectory("looknfeels", Path.Combine(dataPathPrefix, "looknfeel"));
+			resourceProvider.SetResourceGroupDirectory("lua_scripts", Path.Combine(dataPathPrefix, "lua_scripts"));
+			resourceProvider.SetResourceGroupDirectory("schemas", Path.Combine(dataPathPrefix, "xml_schemas"));
+			resourceProvider.SetResourceGroupDirectory("animations", Path.Combine(dataPathPrefix, "animations"));
+		}
+
+		private void InitialiseDefaultResourceGroups()
+		{
+			//// set the default resource groups to be used
+			SharpCEGui.Base.ImageManager.SetImagesetDefaultResourceGroup("imagesets");
+			SharpCEGui.Base.Font.SetDefaultResourceGroup("fonts");
+			SharpCEGui.Base.Scheme.SetDefaultResourceGroup("schemes");
+			SharpCEGui.Base.WidgetLookManager.SetDefaultResourceGroup("looknfeels");
+			SharpCEGui.Base.WindowManager.SetDefaultResourceGroup("layouts");
+			//CEGUI::ScriptModule::setDefaultResourceGroup("lua_scripts");
+			AnimationManager.SetDefaultResourceGroup("animations");
+
+			//// setup default group for validation schemas
+			//CEGUI::XMLParser* parser = CEGUI::System::getSingleton().getXMLParser();
+			//if (parser->isPropertyPresent("SchemaDefaultResourceGroup"))
+			//    parser->setProperty("SchemaDefaultResourceGroup", "schemas");
 		}
 	}
 }

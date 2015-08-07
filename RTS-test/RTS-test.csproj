@@ -43,6 +43,12 @@
     <Compile Include="DisField.cs" />
     <Compile Include="EntityTemplates.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="GUI\MonoGameGeometryBuffer.cs" />
+    <Compile Include="GUI\MonoGameRenderer.cs" />
+    <Compile Include="GUI\MonoGameRenderTarget.cs" />
+    <Compile Include="GUI\MonoGameTexture.cs" />
+    <Compile Include="GUI\MonoGameTextureTarget.cs" />
+    <Compile Include="GUI\MonoGameViewportTarget.cs" />
     <Compile Include="MovementSystem.cs" />
     <Compile Include="PathGoal.cs" />
     <Compile Include="PathManager.cs" />
@@ -66,6 +72,9 @@
     </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpCEGui.Base">
+      <HintPath>..\..\..\..\..\..\libs\SharpCEGui.Base.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
