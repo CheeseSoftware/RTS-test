@@ -16,6 +16,7 @@ namespace RTS_test
 		public class Position : IComponent
 		{
 			public Vector2 pos;
+			public float rotation = 0.0f;
 
 			public float X { get { return pos.X; } set { pos.X = value; } }
 			public float Y { get { return pos.Y; } set { pos.Y = value; } }
@@ -28,7 +29,17 @@ namespace RTS_test
             {
                 this.pos = new Vector2(x, y);
             }
-        }
+			public Position(Vector2 pos, float rotation)
+			{
+				this.pos = pos;
+				this.rotation = rotation;
+			}
+			public Position(float x, float y, float rotation)
+			{
+				this.pos = new Vector2(x, y);
+				this.rotation = rotation;
+			}
+		}
 
 		public class Size : IComponent
 		{

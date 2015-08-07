@@ -42,6 +42,7 @@
     <Compile Include="Components.cs" />
     <Compile Include="EntityTemplates.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="Generator.cs" />
     <Compile Include="GUI\MonoGameGeometryBuffer.cs" />
     <Compile Include="GUI\MonoGameRenderer.cs" />
     <Compile Include="GUI\MonoGameRenderTarget.cs" />

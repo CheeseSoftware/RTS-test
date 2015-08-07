@@ -29,6 +29,7 @@ namespace RTS_test
 		private TextureManager textureManager;
 		private EntityWorld entityWorld;
 		private UnitController unitController;
+		private Generator generator;
 
 		private int frameRate;
 		private TimeSpan elapsedTime;
@@ -58,6 +59,7 @@ namespace RTS_test
             tileMap = new TileMap(tileManager, Global.mapWidth, Global.mapHeight);
 			textureManager = new TextureManager();
 			unitController = new UnitController();
+			generator = new Generator();
 
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -72,6 +74,7 @@ namespace RTS_test
 			EntitySystem.BlackBoard.SetEntry<SpriteBatch>("SpriteBatch", spriteBatch);
 			EntitySystem.BlackBoard.SetEntry<TextureManager>("TextureManager", textureManager);
 			EntitySystem.BlackBoard.SetEntry<TileMap>("TileMap", tileMap);
+			EntitySystem.BlackBoard.SetEntry<Generator>("Generator", generator);
 			this.entityWorld.InitializeAll(true);
 
 
@@ -117,6 +120,8 @@ namespace RTS_test
 			tileManager.registerTile(tileWater);
 
             tileMap.load();
+			generator.generate(tileMap, entityWorld);
+			tileMap.updateDisField();
 
 			for (int i = 0; i < 100; ++i)
 				entityWorld.CreateEntityFromTemplate("Test", new object[] {
@@ -126,7 +131,7 @@ namespace RTS_test
 
 
 			//Generate resources and natural object entities
-			Random r = new Random();
+			/*Random r = new Random();
 			for (int i = 0; i < tileMap.getWidth(); i++)
 			{
 				entityWorld.CreateEntityFromTemplate("Tree", new object[] {
@@ -140,7 +145,7 @@ namespace RTS_test
 				entityWorld.CreateEntityFromTemplate("BerryBush", new object[] {
 					new Vector2(r.Next(tileMap.getWidth() * 32), r.Next(tileMap.getHeight() * 32)),
 					});
-			}
+			}*/
 
 
 		}

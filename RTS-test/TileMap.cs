@@ -30,37 +30,7 @@ namespace RTS_test
         {
             tiles = new UInt16[width, height];
             disField = new float[width, height];
-
-            generate();
-            updateDisField();
         }
-
-		public void generate()
-		{
-			Random random = new Random();
-			Graphics.Tools.Noise.Primitive.SimplexPerlin noise = new Graphics.Tools.Noise.Primitive.SimplexPerlin(random.Next(100000), NoiseQuality.Standard);
-
-			for (int x = 0; x < width; x++)
-			{
-				for (int y = 0; y < height; y++)
-				{
-
-					ushort id = 0;
-
-					float zoom = 0.05f;
-
-					if (noise.GetValue(zoom * x, zoom * y) > 0.3f)
-						id = 1;
-
-					else if (noise.GetValue(zoom * x, zoom * y) > 0.0001f)
-						id = 2;
-
-					else
-						id = 3;
-					setTile(x, y, id);
-				}
-			}
-		}
 
 		public void draw(SpriteBatch spriteBatch, TileManager tileManager)
 		{
@@ -74,8 +44,8 @@ namespace RTS_test
 				{
 
                     float dis = getDis(new Vector2((float)x, (float)y)) / 4f;
-                    Color color = new Color(dis, dis, dis);
-
+					//Color color = new Color(dis, dis, dis);
+					Color color = Color.White;
 					if (x < 0 || y < 0 || x >= Global.mapWidth || y >= Global.mapHeight)
 						continue;
 					UInt16 tile = getTileID(x, y);
