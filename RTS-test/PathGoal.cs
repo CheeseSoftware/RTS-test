@@ -148,16 +148,14 @@ namespace RTS_test
                 return new Vector2(goalPos.x, goalPos.y) - pos;
 
 
-
             Vector2 direction =
                 (float)(flowfield[floorPos.x, floorPos.y]) * new Vector2(-1f, -1f)
                 + (float)(flowfield[floorPos.x + 1, floorPos.y]) * new Vector2(1f, -1f)
                 + (float)(flowfield[floorPos.x, floorPos.y + 1]) * new Vector2(-1f, 1f)
                 + (float)(flowfield[floorPos.x + 1, floorPos.y + 1]) * new Vector2(1f, 1f);
-                //new Vector2(32*goalPos.x, 32*goalPos.y) - pos;
 
             if (direction.Length() > 0f)
-            direction.Normalize();
+                direction.Normalize();
             return -direction;
         }
 
