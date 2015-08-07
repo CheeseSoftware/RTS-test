@@ -12,35 +12,6 @@ namespace RTS_test
 {
     namespace component
     {
-		[ArtemisComponentPool(InitialSize = 5, IsResizable = true, ResizeSize = 20, IsSupportMultiThread = false)]
-		public class Position : IComponent
-		{
-			public Vector2 pos;
-			public float rotation = 0.0f;
-
-			public float X { get { return pos.X; } set { pos.X = value; } }
-			public float Y { get { return pos.Y; } set { pos.Y = value; } }
-
-			public Position(Vector2 pos)
-            {
-                this.pos = pos;
-            }
-            public Position(float x, float y)
-            {
-                this.pos = new Vector2(x, y);
-            }
-			public Position(Vector2 pos, float rotation)
-			{
-				this.pos = pos;
-				this.rotation = rotation;
-			}
-			public Position(float x, float y, float rotation)
-			{
-				this.pos = new Vector2(x, y);
-				this.rotation = rotation;
-			}
-		}
-
 		public class Size : IComponent
 		{
 			public Vector2 size;
@@ -58,23 +29,6 @@ namespace RTS_test
 			}
 		}
 
-		public class Velocity : IComponent
-		{
-            public Vector2 velocity;
-
-			public float X { get { return velocity.X; } set { velocity.X = value; } }
-			public float Y { get { return velocity.Y; } set { velocity.Y = value; } }
-
-			public Velocity(Vector2 velocity)
-            {
-                this.velocity = velocity;
-            }
-            public Velocity()
-            {
-                this.velocity = new Vector2(0f, 0f);
-            }
-        }
-
         public class MaxVelocity : IComponent
         {
             public float maxVelocity;
@@ -82,20 +36,6 @@ namespace RTS_test
             public MaxVelocity(float maxVelocity)
             {
                 this.maxVelocity = maxVelocity;
-            }
-        }
-
-		public class Thrust : IComponent
-		{
-            public Vector2 thrust;
-
-            public Thrust(Vector2 thrust)
-            {
-                this.thrust = thrust;
-            }
-            public Thrust()
-            {
-                this.thrust = new Vector2(0f, 0f);
             }
         }
 

@@ -31,14 +31,15 @@ namespace RTS_test
             FarseerPhysics.Dynamics.Body body = FarseerPhysics.Factories.BodyFactory.CreateCircle(world, 0.5f, 1.0f);
             body.BodyType = FarseerPhysics.Dynamics.BodyType.Dynamic;
             body.Position = pos;
+			body.Friction = 0.0f;
+			body.Restitution = 0.0f;
+			body.Mass = 0.0f;
+			body.FixedRotation = true;
             body.LinearVelocity = velocity;
 
 
             entity.AddComponent(new component.Physics(body));
-            entity.AddComponent(new component.Position(pos));
-			entity.AddComponent(new component.Velocity(new Vector2(velocity.X, velocity.Y)));
             entity.AddComponent(new component.MaxVelocity(0.85f));
-			entity.AddComponent(new component.Thrust());
             entity.AddComponent(new component.Drawable(textureManager.getTexture(2)));
             entity.AddComponent(new component.Goal());
             return entity;
@@ -52,9 +53,14 @@ namespace RTS_test
 		public Entity BuildEntity(Entity entity, EntityWorld entityWorld, params object[] args)
 		{
 			TextureManager textureManager = EntitySystem.BlackBoard.GetEntry<TextureManager>("TextureManager");
+			FarseerPhysics.Dynamics.World world = EntitySystem.BlackBoard.GetEntry<FarseerPhysics.Dynamics.World>("PhysicsWorld");
 
 			Vector2 pos = new Vector2(0f, 0f);
 			float rotation = 0.0f;
+			int resourceAmount = 500;
+			String resourceType = "No type";
+			int textureId = 0;
+
 			Random r = new Random();
 
 			if (args.Length >= 1)
@@ -63,58 +69,29 @@ namespace RTS_test
 			if (args.Length >= 2)
 				rotation = (float)args[1];
 
-			Texture2D texture = textureManager.getTexture(5);
+			if (args.Length >= 3)
+				resourceType = (String)args[2];
 
-			entity.AddComponent(new component.Position(pos, rotation));
+			if (args.Length >= 4)
+				resourceAmount = (int)args[3];
+
+			if (args.Length >= 5)
+				textureId = (int)args[4];
+
+			Console.WriteLine("Added tree at X " + pos.X + " Y " + pos.Y);
+
+			Texture2D texture = textureManager.getTexture(textureId);
+
+			FarseerPhysics.Dynamics.Body body = FarseerPhysics.Factories.BodyFactory.CreateCircle(world, 0.5f, 1.0f);
+			body.BodyType = FarseerPhysics.Dynamics.BodyType.Static;
+			body.Position = pos;
+			body.Rotation = rotation;
+			body.FixedRotation = true;
+
+			entity.AddComponent(new component.Physics(body));
 			entity.AddComponent(new component.Size(texture.Width, texture.Height));
 			entity.AddComponent(new component.Drawable(texture));
-			entity.AddComponent(new component.DepletableResource(500, "Tree"));
-			return entity;
-		}
-
-	}
-
-	[ArtemisEntityTemplate("Stone")]
-	public class StoneTemplate : IEntityTemplate
-	{
-		public Entity BuildEntity(Entity entity, EntityWorld entityWorld, params object[] args)
-		{
-			TextureManager textureManager = EntitySystem.BlackBoard.GetEntry<TextureManager>("TextureManager");
-
-			Vector2 pos = new Vector2(0f, 0f);
-
-			if (args.Length >= 1)
-				pos = (Vector2)args[0];
-
-			Texture2D texture = textureManager.getTexture(8);
-
-			entity.AddComponent(new component.Position(pos));
-			entity.AddComponent(new component.Size(texture.Width, texture.Height));
-			entity.AddComponent(new component.Drawable(texture));
-			entity.AddComponent(new component.DepletableResource(500, "Stone"));
-			return entity;
-		}
-
-	}
-
-	[ArtemisEntityTemplate("BerryBush")]
-	public class BerryBushTemplate : IEntityTemplate
-	{
-		public Entity BuildEntity(Entity entity, EntityWorld entityWorld, params object[] args)
-		{
-			TextureManager textureManager = EntitySystem.BlackBoard.GetEntry<TextureManager>("TextureManager");
-
-			Vector2 pos = new Vector2(0f, 0f);
-
-			if (args.Length >= 1)
-				pos = (Vector2)args[0];
-
-			Texture2D texture = textureManager.getTexture(6);
-
-			entity.AddComponent(new component.Position(pos));
-			entity.AddComponent(new component.Size(texture.Width, texture.Height));
-			entity.AddComponent(new component.Drawable(texture));
-			entity.AddComponent(new component.DepletableResource(500, "BerryBush"));
+			entity.AddComponent(new component.DepletableResource(resourceAmount, resourceType));
 			return entity;
 		}
 

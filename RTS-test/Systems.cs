@@ -19,7 +19,7 @@ namespace RTS_test
             private SpriteBatch spriteBatch;
 
             public EntityRenderer()
-                : base(Aspect.All(typeof(component.Physics), typeof(component.Position)))
+                : base(Aspect.All(typeof(component.Physics), typeof(component.Drawable)))
             {
                 spriteBatch = EntitySystem.BlackBoard.GetEntry<SpriteBatch>("SpriteBatch");
             }
