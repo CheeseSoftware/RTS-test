@@ -8,14 +8,16 @@ using System.Text;
 
 namespace RTS_test
 {
-	class TileMap
+	public class TileMap
 	{
 		private UInt16[,] tiles;
+        private TileManager tileManager;
 		private int width;
 		private int height;
 
-		public TileMap(int width, int height)
+		public TileMap(TileManager tileManager, int width, int height)
 		{
+            this.tileManager = tileManager;
 			this.width = width;
 			this.height = height;
             tiles = new UInt16[width, height];
@@ -61,7 +63,7 @@ namespace RTS_test
 				{
 					if (x < 0 || y < 0 || x >= Global.mapWidth || y >= Global.mapHeight)
 						continue;
-					UInt16 tile = getTile(x, y);
+					UInt16 tile = getTileID(x, y);
 					TileData tileData = tileManager.getTile(tile);
 					Texture2D texture = tileData.Texture;
 
@@ -84,10 +86,21 @@ namespace RTS_test
 			}
 		}
 
-        public UInt16 getTile(int x, int y)
-		{
-			return tiles[x, y];
-		}
+        public TileManager getTileManager()
+        {
+            return tileManager;
+        }
+
+        public TileData getTile(int x, int y)
+        {
+            UInt16 tileID = tiles[x, y];
+            return tileManager.getTile(tileID);
+        }
+
+        public UInt16 getTileID(int x, int y)
+        {
+            return tiles[x, y];
+        }
 
 		public void setTile(int x, int y, UInt16 tile)
 		{

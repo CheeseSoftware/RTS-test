@@ -45,8 +45,8 @@ namespace RTS_test
 		protected override void Initialize()
 		{
 			_inputState = new InputState();
-			tileMap = new TileMap(Global.mapWidth, Global.mapHeight);
 			tileManager = new TileManager();
+            tileMap = new TileMap(tileManager, Global.mapWidth, Global.mapHeight);
 			textureManager = new TextureManager();
             unitController = new UnitController();
 
@@ -125,7 +125,7 @@ namespace RTS_test
 			if (_inputState.IsNewLeftMouseClick(out mouseState))
 			{
 				Vector2 pos = Global.Camera.ScreenToWorld(mouseState.Position.ToVector2());
-				unitController.setPathGoal(new PathGoal(new int2(Global.mapWidth, Global.mapHeight), new int2((int)pos.X/32, (int)pos.Y/32)));
+				unitController.setPathGoal(new PathGoal(tileMap, new int2(Global.mapWidth, Global.mapHeight), new int2((int)pos.X/32, (int)pos.Y/32)));
 			}
 
 			unitController.update(entityWorld, Global.Camera);

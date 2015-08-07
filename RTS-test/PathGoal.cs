@@ -11,6 +11,7 @@ namespace RTS_test
         private int[,] flowfield;
         private int2 size;
         private int2 goalPos;
+        private TileMap tileMap;
         //private List<Unit> units;
         //private List<uint2> unitPositions;
 
@@ -27,8 +28,9 @@ namespace RTS_test
             public int distance;
         }
 
-        public PathGoal(int2 size, int2 goalPos)
+        public PathGoal(TileMap tileMap, int2 size, int2 goalPos)
         {
+            this.tileMap = tileMap;
             this.size = size;
             this.flowfield = new int[size.x,size.y];
             this.goalPos = goalPos;
@@ -43,6 +45,14 @@ namespace RTS_test
 
             nodesToExplore.Enqueue(new Node(goalPos, 0));
 
+            for (int y = 0; y < size.y; ++y)
+            {
+                for (int x = 0; x < size.x; ++x)
+                {
+                    flowfield[x, y] = 1000000;
+                }
+            }
+
             while(nodesToExplore.Count() > 0)
             {
                 Node node = nodesToExplore.Dequeue();
@@ -55,6 +65,10 @@ namespace RTS_test
                     if (newNodePos.x < 0 || newNodePos.y < 0 || newNodePos.x >= size.x || newNodePos.y >= size.y)
                         continue;
                     if (exploredNodes.Contains(newNodePos))
+                        continue;
+
+                    TileData tile = tileMap.getTile(newNodePos.x, newNodePos.y);
+                    if (tile.IsSolid)
                         continue;
 
                     nodesToExplore.Enqueue(new Node(newNodePos, node.distance+1));

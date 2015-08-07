@@ -13,11 +13,14 @@ namespace RTS_test
 
         public UnitController()
         {
-            pathGoal = new PathGoal(new int2(Global.mapWidth, Global.mapHeight), new int2(13, 37));
+            pathGoal = null;
         }
 
 		public void update(EntityWorld entityWorld, Camera camera)
         {
+            if (pathGoal == null)
+                return;
+
             Bag<Entity> entities = entityWorld.EntityManager.GetEntities(Aspect.All(typeof(component.Goal)));
             foreach (Entity entity in entities)
             {

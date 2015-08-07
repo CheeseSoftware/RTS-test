@@ -54,6 +54,9 @@ namespace RTS_test
 
             protected override void Process(Entity e, component.Goal goal, component.Position position, component.Velocity velocity)
             {
+                if (goal.pathGoal == null)
+                    return;
+
                 Vector2 dir = goal.pathGoal.getDirection(position.pos);
 
                 velocity.velocity += 0.1f * dir;
