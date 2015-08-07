@@ -6,44 +6,68 @@ using Microsoft.Xna.Framework;
 
 namespace RTS_test
 {
+    struct StepDirection
+    {
+        public int2 pos;
+        public float dis;
+        public StepDirection(int2 pos)
+        {
+            this.pos = pos;
+            dis = new Vector2((float)pos.x, (float)pos.y).Length();
+        }
+    }
+
     public class PathGoal
     {
-        private int[,] flowfield;
+        private float[,] flowfield;
         private int2 size;
         private int2 goalPos;
         private TileMap tileMap;
         //private List<Unit> units;
         //private List<uint2> unitPositions;
 
-        private int2[] stepDirections;
+        private List<StepDirection> stepDirections = new List<StepDirection>();
 
         struct Node
         {
-            public Node(int2 pos, int distance)
+            public Node(int2 pos)
             {
                 this.pos = pos;
-                this.distance = distance;
             }
             public int2 pos;
-            public int distance;
         }
 
         public PathGoal(TileMap tileMap, int2 size, int2 goalPos)
         {
             this.tileMap = tileMap;
             this.size = size;
-            this.flowfield = new int[size.x,size.y];
+            this.flowfield = new float[size.x,size.y];
             this.goalPos = goalPos;
 
-            stepDirections = new int2[] { new int2(-1,0), new int2(1,0), new int2(0,-1), new int2(0,1) };
+            //stepDirections = new int2[] { new int2(-1,0), new int2(1,0), new int2(0,-1), new int2(0,1) };
+
+            for (int x = -3; x <= 3; ++x)
+            {
+                for (int y = -3; y <= 3; ++y)
+                {
+                    if (x != 0 || y != 0)
+                    stepDirections.Add(new StepDirection(new int2(x, y)));
+                }
+            }
+
+            stepDirections.Sort(delegate(StepDirection x, StepDirection y)
+            {
+                return x.dis.CompareTo(y.dis);
+            });
         }
 
         public void updatePath()
         {
             Queue<Node> nodesToExplore = new Queue<Node>();
-            HashSet<int2> exploredNodes = new HashSet<int2>();
+            //Dictionary<int2, float> exploredNodes = new Dictionary<int2, float>();
+            HashSet<int2> nodesToExploreSet = new HashSet<int2>();
 
-            nodesToExplore.Enqueue(new Node(goalPos, 0));
+            
 
             for (int y = 0; y < size.y; ++y)
             {
@@ -53,26 +77,57 @@ namespace RTS_test
                 }
             }
 
+            nodesToExplore.Enqueue(new Node(goalPos));
+            flowfield[goalPos.x, goalPos.y] = 0f;
+
             while(nodesToExplore.Count() > 0)
             {
                 Node node = nodesToExplore.Dequeue();
-                flowfield[node.pos.x, node.pos.y] = node.distance;
+                float nodeDis = flowfield[node.pos.x, node.pos.y];
 
-                for (int i = 0; i < 4; ++i)
+                nodesToExploreSet.Remove(node.pos);
+
+                float dis = tileMap.getDis(new Vector2(node.pos.x, node.pos.y));
+          
+
+                for (int i = 0; i < stepDirections.Count; ++i )
                 {
-                    int2 newNodePos = node.pos + stepDirections[i];
+                    StepDirection stepDirection = stepDirections[i];
+                    if (dis < stepDirection.dis)
+                        break;
+
+                    int2 newNodePos = node.pos + stepDirection.pos;
+                    float newNodeDis = nodeDis + stepDirection.dis;
 
                     if (newNodePos.x < 0 || newNodePos.y < 0 || newNodePos.x >= size.x || newNodePos.y >= size.y)
-                        continue;
-                    if (exploredNodes.Contains(newNodePos))
                         continue;
 
                     TileData tile = tileMap.getTile(newNodePos.x, newNodePos.y);
                     if (tile.IsSolid)
                         continue;
 
-                    nodesToExplore.Enqueue(new Node(newNodePos, node.distance+1));
-                    exploredNodes.Add(newNodePos);
+                    //if (exploredNodes.ContainsKey(newNodePos))
+                    //{
+                    //    float oldDis = exploredNodes[newNodePos];
+                    //    if (newNodeDis >= oldDis)
+                    //        continue;
+
+
+                    //    exploredNodes[newNodePos] = newNodeDis;
+                    //}
+                    //else
+                    //    exploredNodes.Add(newNodePos, newNodeDis);
+
+                    if (newNodeDis >= flowfield[newNodePos.x, newNodePos.y])
+                        continue;
+
+                    flowfield[newNodePos.x, newNodePos.y] = newNodeDis;
+
+                    if (!nodesToExploreSet.Contains(newNodePos))
+                    {
+                        nodesToExplore.Enqueue(new Node(newNodePos));
+                        nodesToExploreSet.Add(newNodePos);
+                    }
                 }
 
             }
