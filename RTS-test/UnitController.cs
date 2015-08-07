@@ -9,22 +9,28 @@ namespace RTS_test
 {
     public class UnitController
     {
-        bool first = true;
+        private PathGoal pathGoal;
 
-        public void update(EntityWorld entityWorld, Camera camera)
+        public UnitController()
         {
-            if (!first) return;
-            first = false;
+            pathGoal = new PathGoal(new int2(Global.mapWidth, Global.mapHeight), new int2(13, 37));
+        }
+
+		public void update(EntityWorld entityWorld, Camera camera)
+        {
             Bag<Entity> entities = entityWorld.EntityManager.GetEntities(Aspect.All(typeof(component.Goal)));
-
-            PathGoal pathGoal = new PathGoal(new int2(Global.mapWidth, Global.mapHeight), new int2(13, 37));
-           
-            pathGoal.updatePath();
-
-            foreach(Entity entity in entities)
+            foreach (Entity entity in entities)
             {
                 entity.GetComponent<component.Goal>().pathGoal = pathGoal;
             }
         }
+
+		public void setPathGoal(PathGoal pathGoal)
+		{
+			this.pathGoal = pathGoal;
+            pathGoal.updatePath();
+
+            
+		}
     }
 }

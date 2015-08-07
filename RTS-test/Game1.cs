@@ -81,11 +81,12 @@ namespace RTS_test
 			tileManager.registerTile(tileSand);
 			tileManager.registerTile(tileWater);
 
-            for (int i = 0; i < 100; ++i)
-                entityWorld.CreateEntityFromTemplate("Test", new object[] {
-                    new Vector2(16.0f*i, 40f*(float)Math.Sin(0.5f*i)),
-                    new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
-                });
+
+			for (int i = 0; i < 100; ++i)
+				entityWorld.CreateEntityFromTemplate("Test", new object[] {
+					new Vector2(16.0f*i, 40f*(float)Math.Sin(0.5f*i)),
+					new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
+				});
 
 
 			//Generate resources and natural object entities
@@ -120,7 +121,14 @@ namespace RTS_test
 			_inputState.Update();
 			Global.Camera.HandleInput(_inputState, PlayerIndex.One);
 
-            unitController.update(entityWorld, Global.Camera);
+			MouseState mouseState;
+			if (_inputState.IsNewLeftMouseClick(out mouseState))
+			{
+				Vector2 pos = Global.Camera.ScreenToWorld(mouseState.Position.ToVector2());
+				unitController.setPathGoal(new PathGoal(new int2(Global.mapWidth, Global.mapHeight), new int2((int)pos.X/32, (int)pos.Y/32)));
+			}
+
+			unitController.update(entityWorld, Global.Camera);
             entityWorld.Update();
 			// FPS-counter stuff
 			++this.frameCounter;
