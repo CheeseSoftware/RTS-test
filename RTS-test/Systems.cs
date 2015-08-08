@@ -124,7 +124,7 @@ namespace RTS_test
 				float dis;
 				for (int i = 0; i < 8; ++i)
 				{
-					dis = tileMap.getDis(physics.Position - new Vector2(0.5f, 0.5f)) - 1.0f;
+					dis = tileMap.getDis(physics.Position - new Vector2(0.5f, 0.5f)) - 1.0f + 0.5f;
 					Vector2 normal = tileMap.getNormal(physics.Position);
 					if (dis < 0f)
 					{

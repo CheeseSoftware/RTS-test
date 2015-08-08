@@ -110,14 +110,34 @@ namespace RTS_test
 
             //stepDirections = new int2[] { new int2(-1,0), new int2(1,0), new int2(0,-1), new int2(0,1) };
 
-            for (int x = -3; x <= 3; ++x)
+            HashSet<Vector2> dirSet = new HashSet<Vector2>();
+
+            for (int x = -1; x <= 1; ++x)
             {
-                for (int y = -3; y <= 3; ++y)
+                for (int y = -1; y <= 1; ++y)
                 {
-                    if (x != 0 || y != 0)
+                    if (x == 0 && y == 0)
+                        continue;
+
+                    //if (x != 0 && y != 0)
+                    //    continue;
+
+                    Vector2 dir = new Vector2(x, y);
+                    dir.Normalize();
+
+
+                    if (dirSet.Contains(dir))
+                        continue;
+
                     stepDirections.Add(new StepDirection(new int2(x, y)));
+                    dirSet.Add(dir);
                 }
             }
+
+            stepDirections.Sort(delegate(StepDirection x, StepDirection y)
+            {
+                return x.dis.CompareTo(y.dis);
+            });
 
             stepDirections.Sort(delegate(StepDirection x, StepDirection y)
             {
@@ -169,7 +189,7 @@ namespace RTS_test
 
                     nodesToExploreMap.Remove(node.pos);
 
-                    float dis = tileMap.getDis(new Vector2(node.pos.x, node.pos.y));
+                    float dis = 0.55f+tileMap.getDis(new Vector2((float)node.pos.x - 0.5f, (float)node.pos.y - 0.5f));
 
 
                     for (int i = 0; i < stepDirections.Count; ++i)
@@ -186,7 +206,7 @@ namespace RTS_test
 
                         TileData tile = tileMap.getTile(newNodePos.x, newNodePos.y);
                         if (tile.IsSolid)
-                            continue;
+                            newNodeDis -= 1;
 
                         //if (exploredNodes.ContainsKey(newNodePos))
                         //{
@@ -239,15 +259,26 @@ namespace RTS_test
                 return new Vector2(goalPos.x, goalPos.y) - pos;
 
 
-            Vector2 direction =
-                (float)(flowfield[floorPos.x, floorPos.y]) * new Vector2(-1f, -1f)
-                + (float)(flowfield[floorPos.x + 1, floorPos.y]) * new Vector2(1f, -1f)
-                + (float)(flowfield[floorPos.x, floorPos.y + 1]) * new Vector2(-1f, 1f)
-                + (float)(flowfield[floorPos.x + 1, floorPos.y + 1]) * new Vector2(1f, 1f);
+            //Vector2 direction =
+            //    (float)(flowfield[floorPos.x, floorPos.y]) * new Vector2(-1f, -1f)
+            //    + (float)(flowfield[floorPos.x + 1, floorPos.y]) * new Vector2(1f, -1f)
+            //    + (float)(flowfield[floorPos.x, floorPos.y + 1]) * new Vector2(-1f, 1f)
+            //    + (float)(flowfield[floorPos.x + 1, floorPos.y + 1]) * new Vector2(1f, 1f);
 
-            if (direction.Length() > 0f)
-                direction.Normalize();
-            return -direction;
+            //if (direction.Length() > 0f)
+            //    direction.Normalize();
+            //return -direction;
+
+
+            Vector2 a = (float)(flowfield[floorPos.x, floorPos.y]) * Vector2.Normalize(new Vector2(-1f, -1f));
+            Vector2 b = (float)(flowfield[floorPos.x + 1, floorPos.y]) * Vector2.Normalize(new Vector2(+1f, -1f));
+            Vector2 c = (float)(flowfield[floorPos.x, floorPos.y + 1]) * Vector2.Normalize(new Vector2(-1f, +1f));
+            Vector2 d = (float)(flowfield[floorPos.x + 1, floorPos.y + 1]) * Vector2.Normalize(new Vector2(+1f, +1f));
+
+            Vector2 normal = new Vector2(a.X + b.X + c.X + d.X, a.Y + b.Y + c.Y + d.Y);
+            if (normal.Length() > 0f)
+                normal.Normalize();
+            return -normal;
         }
 
 

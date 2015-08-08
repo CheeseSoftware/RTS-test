@@ -65,7 +65,7 @@ namespace RTS_test
                      * *********************/
                     if (pathGoal != null)
                     {
-                        Vector2 dir = pathGoal.getDirection(new Vector2((float)x, (float)y));
+                        Vector2 dir = pathGoal.getDirection(new Vector2((float)x+0.5f, (float)y+0.5f));
                         color = new Color(0.5f + 0.5f * dir.Length(), 0.5f + 0.5f * dir.Length(), 0.5f + 0.5f * dir.Length());//new Color(dir.Length(), 0.5f + 0.5f * dir.X, 0.5f + 0.5f * dir.Y);
                     }
 
