@@ -85,6 +85,7 @@ namespace RTS_test
 			body.Position = pos;
 			body.Rotation = rotation;
 			body.FixedRotation = false;
+			body.CollidesWith = FarseerPhysics.Dynamics.Category.None;
 
 			//entity.AddComponent(new component.Physics(body));
 			entity.AddComponent(new component.Size(texture.Width, texture.Height));
