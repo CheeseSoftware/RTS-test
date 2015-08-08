@@ -65,7 +65,7 @@ namespace RTS_test
 
 				Vector2 dir = goal.pathGoal.getDirection(physics.Position);
 
-				physics.Velocity += 1.1f * dir;
+                physics.Body.ApplyLinearImpulse(1.1f * dir);
 				float oldRotation = physics.Rotation;
 				float rotation = (float)Math.Atan2(dir.Y, dir.X);
 
@@ -128,8 +128,10 @@ namespace RTS_test
 					Vector2 normal = tileMap.getNormal(physics.Position);
 					if (dis < 0f)
 					{
-						physics.Position += -1.0f * normal * dis;
-						physics.Velocity += -0.5f * normal * dis;
+                        physics.Body.ApplyLinearImpulse(-1.0f * normal * dis);
+                        if (dis < -0.5f)
+						    physics.Position += -1.0f * normal * (dis+0.5f);
+						//physics.Velocity += -0.5f * normal * dis;
 					}
 					else
 						break;

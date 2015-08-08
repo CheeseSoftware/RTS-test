@@ -110,6 +110,11 @@ namespace RTS_test
                 get { return body.Rotation; }
                 set { body.Rotation = value; }
             }
+
+            public FarseerPhysics.Dynamics.Body Body
+            {
+                get { return body; }
+            }
         }
 	}
 
