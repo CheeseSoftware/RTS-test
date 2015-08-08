@@ -96,7 +96,8 @@ namespace RTS_test
 
         private float calcF(float dis, int2 a, int2 b)
         {
-            return dis + new Vector2(a.x - b.x, a.y - b.y).Length();
+            Vector2 delta = new Vector2(a.x - b.x, a.y - b.y);
+            return dis + delta.Length();
         }
 
         public PathGoal(Bag<Entity> units, TileMap tileMap, int2 size, int2 goalPos)
@@ -156,13 +157,13 @@ namespace RTS_test
 
                 foreach (Node node in nodesToExplore)
                 {
-                    node.f = calcF(node.dis, entityPos, goalPos);
+                    node.f = calcF(node.dis, entityPos, node.pos);
                 }
                 nodesToExplore.Sort();
 
                 while (nodesToExplore.Count() > 0)
                 {
-                    Node node = nodesToExplore.First();
+                    Node node = nodesToExplore[0];
                     nodesToExplore.RemoveAt(0);
                     float nodeDis = flowfield[node.pos.x, node.pos.y];
 
@@ -209,7 +210,7 @@ namespace RTS_test
                             nodesToExploreMap.Remove(newNodePos);
                         }
 
-                        Node newNode = new Node(newNodePos, newNodeDis, calcF(newNodeDis, entityPos, goalPos));
+                        Node newNode = new Node(newNodePos, newNodeDis, calcF(newNodeDis, entityPos, node.pos));
                         int index = nodesToExplore.BinarySearch(newNode);
                         if (index < 0)
                             index = ~index;

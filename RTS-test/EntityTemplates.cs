@@ -12,8 +12,10 @@ using System.Text;
 namespace RTS_test
 {
     [ArtemisEntityTemplate("Test")]
-    public class TestTemplate : IEntityTemplate {
-	    public Entity BuildEntity(Entity entity, EntityWorld entityWorld, params object[] args) {
+    public class TestTemplate : IEntityTemplate
+    {
+        public Entity BuildEntity(Entity entity, EntityWorld entityWorld, params object[] args)
+        {
             TextureManager textureManager = EntitySystem.BlackBoard.GetEntry<TextureManager>("TextureManager");
             FarseerPhysics.Dynamics.World world = EntitySystem.BlackBoard.GetEntry<FarseerPhysics.Dynamics.World>("PhysicsWorld");
 
@@ -31,19 +33,57 @@ namespace RTS_test
             FarseerPhysics.Dynamics.Body body = FarseerPhysics.Factories.BodyFactory.CreateEllipse(world, 1.0f, 0.5f, 4, 1.0f);
             body.BodyType = FarseerPhysics.Dynamics.BodyType.Dynamic;
             body.Position = pos;
-			body.Friction = 0.0f;
-			body.Restitution = 0.0f;
-			body.Mass = 0.0f;
-			body.FixedRotation = true;
+            body.Friction = 0.0f;
+            body.Restitution = 0.0f;
+            body.Mass = 0.0f;
+            body.FixedRotation = true;
             body.LinearVelocity = velocity;
 
 
             entity.AddComponent(new component.Physics(body));
-            entity.AddComponent(new component.MaxVelocity(0.95f));
+            entity.AddComponent(new component.MaxVelocity(0.85f));
             entity.AddComponent(new component.Drawable(textureManager.getTexture(9)));
             entity.AddComponent(new component.Goal());
             return entity;
-	    }
+        }
+
+    }
+
+    [ArtemisEntityTemplate("Test2")]
+    public class Test2Template : IEntityTemplate
+    {
+        public Entity BuildEntity(Entity entity, EntityWorld entityWorld, params object[] args)
+        {
+            TextureManager textureManager = EntitySystem.BlackBoard.GetEntry<TextureManager>("TextureManager");
+            FarseerPhysics.Dynamics.World world = EntitySystem.BlackBoard.GetEntry<FarseerPhysics.Dynamics.World>("PhysicsWorld");
+
+            Vector2 pos = new Vector2(0f, 0f);
+            Vector2 velocity = new Vector2(0f, 0f);
+
+            if (args.Length >= 1)
+                pos = (Vector2)args[0];
+
+            if (args.Length >= 2)
+                velocity = (Vector2)args[1];
+
+
+
+            FarseerPhysics.Dynamics.Body body = FarseerPhysics.Factories.BodyFactory.CreateEllipse(world, 1.0f, 0.5f, 4, 1.0f);
+            body.BodyType = FarseerPhysics.Dynamics.BodyType.Dynamic;
+            body.Position = pos;
+            body.Friction = 0.0f;
+            body.Restitution = 0.0f;
+            body.Mass = 0.0f;
+            body.FixedRotation = true;
+            body.LinearVelocity = velocity;
+
+
+            entity.AddComponent(new component.Physics(body));
+            entity.AddComponent(new component.MaxVelocity(0.90f));
+            entity.AddComponent(new component.Drawable(textureManager.getTexture(10)));
+            entity.AddComponent(new component.Goal());
+            return entity;
+        }
 
     }
 

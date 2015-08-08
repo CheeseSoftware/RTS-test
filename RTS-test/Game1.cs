@@ -129,8 +129,14 @@ namespace RTS_test
 			generator.generate(tileMap, entityWorld);
 			tileMap.updateDisField();
 
-			for (int i = 0; i < 100; ++i)
-				entityWorld.CreateEntityFromTemplate("Test", new object[] {
+            for (int i = 0; i < 50; ++i)
+                entityWorld.CreateEntityFromTemplate("Test", new object[] {
+					new Vector2(0.2f*i, 4f*(float)Math.Sin(0.5f*i)),
+					new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
+				});
+
+            for (int i = 0; i < 50; ++i)
+                entityWorld.CreateEntityFromTemplate("Test2", new object[] {
 					new Vector2(0.2f*i, 4f*(float)Math.Sin(0.5f*i)),
 					new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
 				});
