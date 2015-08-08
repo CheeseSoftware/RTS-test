@@ -15,6 +15,16 @@ namespace RTS_test
         private TileManager tileManager;
 		private int width;
 		private int height;
+        private PathGoal pathGoal = null;
+
+        /***********************
+         * Debug code!
+         * // TODO: Remove debug code.
+         * *********************/
+        public void setPathGoal(PathGoal pathGoal)
+        {
+            this.pathGoal = pathGoal;
+        }
 
         private Queue<int2> updateQueue = new Queue<int2>();
         private HashSet<int2> updateTiles = new HashSet<int2>();
@@ -45,7 +55,20 @@ namespace RTS_test
 
                     float dis = getDis(new Vector2((float)x, (float)y)) / 4f;
 					//Color color = new Color(dis, dis, dis);
+
+
 					Color color = Color.White;
+
+                    /***********************
+                     * Debug code!
+                     * // TODO: Remove debug code.
+                     * *********************/
+                    if (pathGoal != null)
+                    {
+                        Vector2 dir = pathGoal.getDirection(new Vector2((float)x, (float)y));
+                        color = new Color(0.5f + 0.5f * dir.Length(), 0.5f + 0.5f * dir.Length(), 0.5f + 0.5f * dir.Length());//new Color(dir.Length(), 0.5f + 0.5f * dir.X, 0.5f + 0.5f * dir.Y);
+                    }
+
 					if (x < 0 || y < 0 || x >= Global.mapWidth || y >= Global.mapHeight)
 						continue;
 					UInt16 tile = getTileID(x, y);

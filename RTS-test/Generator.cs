@@ -90,6 +90,8 @@ namespace RTS_test
 							5
 						});
 
+                        
+
 						for (int xt = 0; xt < treeWidth; xt++)
 						{
 							for (int yt = 0; yt < treeHeight; yt++)
@@ -97,6 +99,7 @@ namespace RTS_test
 								int checkX = xt + x;
 								int checkY = yt + y;
 								occupied[checkX, checkY] = true;
+                                tileMap.setTile(checkX, checkY, 4);
 							}
 						}
 					}

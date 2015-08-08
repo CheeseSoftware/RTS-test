@@ -118,10 +118,12 @@ namespace RTS_test
 
 			TileData tileGrass = new TileData("grass", textureManager.getTexture(1), false);
 			TileData tileSand = new TileData("sand", textureManager.getTexture(3), false);
-			TileData tileWater = new TileData("water", textureManager.getTexture(4), true);
+            TileData tileWater = new TileData("water", textureManager.getTexture(4), true);
+            TileData tileTree = new TileData("tree", textureManager.getTexture(5), true);
 			tileManager.registerTile(tileGrass);
 			tileManager.registerTile(tileSand);
-			tileManager.registerTile(tileWater);
+            tileManager.registerTile(tileWater);
+            tileManager.registerTile(tileTree);
 
             tileMap.load();
 			generator.generate(tileMap, entityWorld);
@@ -172,7 +174,10 @@ namespace RTS_test
 				if (Global.Camera.Viewport.Contains(mouseState.Position))
 				{
 					Vector2 pos = Global.Camera.ScreenToWorld(mouseState.Position.ToVector2());
-					unitController.setPathGoal(new PathGoal(tileMap, new int2(Global.mapWidth, Global.mapHeight), new int2((int)pos.X / Global.tileSize, (int)pos.Y / Global.tileSize)));
+                    Bag<Entity> entities = entityWorld.EntityManager.GetEntities(Aspect.All(typeof(component.Goal),typeof(component.Physics)));
+                    PathGoal pathGoal = new PathGoal(entities, tileMap, new int2(Global.mapWidth, Global.mapHeight), new int2((int)pos.X / Global.tileSize, (int)pos.Y / Global.tileSize));
+                    unitController.setPathGoal(pathGoal);
+                    tileMap.setPathGoal(pathGoal);
 				}
 			}
 

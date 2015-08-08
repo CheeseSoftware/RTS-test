@@ -39,7 +39,7 @@ namespace RTS_test
 
 
             entity.AddComponent(new component.Physics(body));
-            entity.AddComponent(new component.MaxVelocity(0.85f));
+            entity.AddComponent(new component.MaxVelocity(0.95f));
             entity.AddComponent(new component.Drawable(textureManager.getTexture(9)));
             entity.AddComponent(new component.Goal());
             return entity;
@@ -86,7 +86,7 @@ namespace RTS_test
 			body.Rotation = rotation;
 			body.FixedRotation = false;
 
-			entity.AddComponent(new component.Physics(body));
+			//entity.AddComponent(new component.Physics(body));
 			entity.AddComponent(new component.Size(texture.Width, texture.Height));
 			entity.AddComponent(new component.Drawable(texture));
 			entity.AddComponent(new component.DepletableResource(resourceAmount, resourceType));
