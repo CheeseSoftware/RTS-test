@@ -6,7 +6,7 @@ using System.Text;
 
 namespace RTS_test
 {
-    class DisFieldMixer
+    public class DisFieldMixer
     {
         private List<DisField> disFields = new List<DisField>();
 

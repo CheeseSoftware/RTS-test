@@ -71,7 +71,7 @@ namespace RTS_test
         private float[,] flowfield;
         private int2 size;
         private int2 goalPos;
-        private TileMap tileMap;
+        private DisFieldMixer disFieldMixer;
         private Bag<Entity> units;
         //private List<uint2> unitPositions;
 
@@ -105,10 +105,10 @@ namespace RTS_test
             return dis + delta.Length();
         }
 
-        public PathGoal(Bag<Entity> units, TileMap tileMap, int2 size, int2 goalPos)
+        public PathGoal(Bag<Entity> units, DisFieldMixer disFieldMixer, int2 size, int2 goalPos)
         {
             this.units = units;
-            this.tileMap = tileMap;
+            this.disFieldMixer = disFieldMixer;
             this.size = size;
             this.flowfield = new float[size.x,size.y];
             this.goalPos = goalPos;
@@ -170,7 +170,7 @@ namespace RTS_test
                     continue;
                 if (flowfield[entityPos.x, entityPos.y] < maxValue)
                     continue;
-                if (tileMap.getTile(entityPos.x, entityPos.y).IsSolid)
+                if (disFieldMixer.getTile(entityPos.x, entityPos.y))
                     continue;
 
                 foreach (Node node in nodesToExplore)
@@ -187,7 +187,7 @@ namespace RTS_test
 
                     nodesToExploreMap.Remove(node.pos);
 
-                    float dis = 2f;// 0.55f + tileMap.DisField.getDis(new Vector2((float)node.pos.x - 0.5f, (float)node.pos.y - 0.5f));
+                    float dis = 2f;// 0.55f + disFieldMixer.DisField.getDis(new Vector2((float)node.pos.x - 0.5f, (float)node.pos.y - 0.5f));
 
                     for (int i = 0; i < stepDirections.Count; ++i)
                     {
@@ -201,8 +201,8 @@ namespace RTS_test
                         if (newNodePos.x < 0 || newNodePos.y < 0 || newNodePos.x >= size.x || newNodePos.y >= size.y)
                             continue;
 
-                        TileData tile = tileMap.getTile(newNodePos.x, newNodePos.y);
-                        if (tile.IsSolid)
+                        bool tileIsSolid = disFieldMixer.getTile(newNodePos.x, newNodePos.y);
+                        if (tileIsSolid)
                         {
                             flowfield[newNodePos.x, newNodePos.y] = newNodeDis+1;
                             continue;
