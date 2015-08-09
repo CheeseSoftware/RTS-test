@@ -50,10 +50,12 @@
     <Compile Include="GUI\MonoGameTexture.cs" />
     <Compile Include="GUI\MonoGameTextureTarget.cs" />
     <Compile Include="GUI\MonoGameViewportTarget.cs" />
+    <Compile Include="Map.cs" />
     <Compile Include="MovementSystem.cs" />
     <Compile Include="PathGoal.cs" />
     <Compile Include="PathManager.cs" />
     <Compile Include="Systems.cs" />
+    <Compile Include="TileEntityMap.cs" />
     <Compile Include="TileManager.cs" />
     <Compile Include="Types.cs" />
     <Compile Include="Global.cs" />

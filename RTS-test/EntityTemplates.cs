@@ -95,7 +95,7 @@ namespace RTS_test
 			TextureManager textureManager = EntitySystem.BlackBoard.GetEntry<TextureManager>("TextureManager");
 			FarseerPhysics.Dynamics.World world = EntitySystem.BlackBoard.GetEntry<FarseerPhysics.Dynamics.World>("PhysicsWorld");
 
-			Vector2 pos = new Vector2(0f, 0f);
+			int2 pos = new int2(0, 0);
 			float rotation = 0.0f;
 			int resourceAmount = 500;
 			String resourceType = "No type";
@@ -104,7 +104,7 @@ namespace RTS_test
 			Random r = new Random();
 
 			if (args.Length >= 1)
-				pos = (Vector2)args[0];
+				pos = (int2)args[0];
 
 			if (args.Length >= 2)
 				rotation = (float)args[1];
@@ -120,14 +120,8 @@ namespace RTS_test
 
 			Texture2D texture = textureManager.getTexture(textureId);
 
-			FarseerPhysics.Dynamics.Body body = FarseerPhysics.Factories.BodyFactory.CreateRectangle(world, 2f, 2f, 1.0f);
-			body.BodyType = FarseerPhysics.Dynamics.BodyType.Static;
-			body.Position = pos;
-			body.Rotation = rotation;
-			body.FixedRotation = false;
-			body.CollidesWith = FarseerPhysics.Dynamics.Category.None;
-
-			//entity.AddComponent(new component.Physics(body));
+            //entity.AddComponent(new component.Physics(body));
+            entity.AddComponent(new component.TileEntity(pos.x, pos.y, texture.Width / Global.tileSize, texture.Height / Global.tileSize));
 			entity.AddComponent(new component.Size(texture.Width, texture.Height));
 			entity.AddComponent(new component.Drawable(texture));
 			entity.AddComponent(new component.DepletableResource(resourceAmount, resourceType));

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,11 @@ namespace RTS_test
         {
             this.x = value;
             this.y = value;
+        }
+
+        public Vector2 toVector2()
+        {
+            return new Vector2(x, y);
         }
 
         public static bool operator ==(int2 a, int2 b)

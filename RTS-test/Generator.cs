@@ -83,7 +83,7 @@ namespace RTS_test
 
 
 						entityWorld.CreateEntityFromTemplate("Resource", new object[] {
-							new Vector2(x, y),
+							new int2(x, y),
 							(float)random.Next(360),
 							"wood",
 							500,
@@ -99,7 +99,6 @@ namespace RTS_test
 								int checkX = xt + x;
 								int checkY = yt + y;
 								occupied[checkX, checkY] = true;
-                                tileMap.setTile(checkX, checkY, 4);
 							}
 						}
 					}
@@ -136,7 +135,7 @@ namespace RTS_test
 					continue;
 
 				entityWorld.CreateEntityFromTemplate("Resource", new object[] {
-							new Vector2(x, y),
+							new int2(x, y),
 							(float)0,
 							"stone",
 							500,
