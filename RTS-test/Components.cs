@@ -89,11 +89,13 @@ namespace RTS_test
         {
             private int2 position;
             private int2 size;
+            private float rotation = 0f;
 
-            public TileEntity(int x, int y, int width, int height)
+            public TileEntity(int x, int y, int width, int height, float rotation = 0f)
             {
                 position = new int2(x, y);
                 size = new int2(width, height);
+                this.rotation = rotation;
 
                 TileEntityMap tileEntityMap = EntitySystem.BlackBoard.GetEntry<TileEntityMap>("TileEntityMap");
                 for (int i = position.x; i < position.x + size.x; i++)
@@ -120,6 +122,12 @@ namespace RTS_test
             {
                 get { return size; }
                 set { size = value; }
+            }
+
+            public float Rotation
+            {
+                get { return rotation; }
+                set { rotation = value; }
             }
 
             public void remove()

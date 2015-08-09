@@ -21,6 +21,7 @@ namespace RTS_test
             this.width = width;
             this.height = height;
             tiles = new Map<bool>(width, height);
+            disField = new float[width, height];
         }
 
         public void updateDisField()
@@ -111,6 +112,8 @@ namespace RTS_test
 
         public bool getTileSolid(int x, int y)
         {
+            if (x < 0 || y < 0 || x >= width || y >= height)
+                return true;
             return tiles.getData(x, y);
         }
 

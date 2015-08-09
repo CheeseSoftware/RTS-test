@@ -121,7 +121,7 @@ namespace RTS_test
 			Texture2D texture = textureManager.getTexture(textureId);
 
             //entity.AddComponent(new component.Physics(body));
-            entity.AddComponent(new component.TileEntity(pos.x, pos.y, texture.Width / Global.tileSize, texture.Height / Global.tileSize));
+            entity.AddComponent(new component.TileEntity(pos.x, pos.y, texture.Width / Global.tileSize, texture.Height / Global.tileSize, rotation));
 			entity.AddComponent(new component.Size(texture.Width, texture.Height));
 			entity.AddComponent(new component.Drawable(texture));
 			entity.AddComponent(new component.DepletableResource(resourceAmount, resourceType));

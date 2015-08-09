@@ -131,6 +131,7 @@ namespace RTS_test
             tileMap.load();
             generator.generate(tileMap, entityWorld);
             tileMap.updateDisField();
+            tileEntityMap.updateDisField();
 
             for (int i = 0; i < 50; ++i)
                 entityWorld.CreateEntityFromTemplate("Test", new object[] {

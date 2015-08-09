@@ -73,7 +73,7 @@ namespace RTS_test
                 float dis = tileMap.getDis(tileEntity.Position.toVector2() * Global.tileSize) / 4f;
                 Color color = new Color(dis, dis, dis);
 
-                spriteBatch.Draw(drawable.texture, null, rectangle, null, new Vector2(drawable.texture.Width / 2, drawable.texture.Height / 2), 0f, null, color, SpriteEffects.None, 0);
+                spriteBatch.Draw(drawable.texture, null, rectangle, null, new Vector2(drawable.texture.Width / 2, drawable.texture.Height / 2), tileEntity.Rotation, null, color, SpriteEffects.None, 0);
             }
         }
 
@@ -137,8 +137,9 @@ namespace RTS_test
 		public class TerrainPhysics : EntityProcessingSystem<component.Physics>
 		{
 			private TileMap tileMap;
+            private TileEntityMap tileEntityMap;
 
-			public TerrainPhysics()
+            public TerrainPhysics()
 				: base(Aspect.All(typeof(component.Physics)))
 			{
 
@@ -147,7 +148,8 @@ namespace RTS_test
 
 			public override void LoadContent()
 			{
-				tileMap = EntitySystem.BlackBoard.GetEntry<TileMap>("TileMap");
+                tileMap = EntitySystem.BlackBoard.GetEntry<TileMap>("TileMap");
+                tileEntityMap = EntitySystem.BlackBoard.GetEntry<TileEntityMap>("TileEntityMap");
 			}
 
 			protected override void Process(Entity e, component.Physics physics)
@@ -158,8 +160,8 @@ namespace RTS_test
 				for (int i = 0; i < 8; ++i)
 				{
 					dis = tileMap.getDis(physics.Position - new Vector2(0.5f, 0.5f)) - 1.0f + 0.5f;
-					Vector2 normal = tileMap.getNormal(physics.Position);
-					if (dis < 0f)
+                    Vector2 normal = tileMap.getNormal(physics.Position);
+                    if (dis < 0f)
 					{
                         physics.Body.ApplyLinearImpulse(-2.0f * normal * dis);
 
