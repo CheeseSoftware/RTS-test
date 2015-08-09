@@ -40,12 +40,24 @@ namespace RTS_test
 
                 TileMap tileMap = EntitySystem.BlackBoard.GetEntry<TileMap>("TileMap");
                 float dis = tileMap.DisField.getDis(physics.Position * Global.tileSize) / 4f;
-                Color color = new Color(dis, dis, dis);
 
-                spriteBatch.Draw(drawable.texture, null, rectangle, null, new Vector2(drawable.texture.Width / 2, drawable.texture.Height / 2), physics.Rotation, null, color, SpriteEffects.None, 0);
+                if (!e.HasComponent<component.AnimationComponent>())
+                {
+                    Color color = new Color(dis, dis, dis);
+                    spriteBatch.Draw(drawable.texture, null, rectangle, null, new Vector2(drawable.texture.Width / 2, drawable.texture.Height / 2), physics.Rotation + drawable.AdditionalRotation, null, color, SpriteEffects.None, 0);
+                }
+                else
+                {
+                    component.AnimationComponent animationComponent = e.GetComponent<component.AnimationComponent>();
+                    if (!animationComponent.isAnimating())
+                        animationComponent.startAnimation(14);
+                    Texture2D currentTexture = textureManager.getTexture(animationComponent.getCurrentTexture());
+
+                    spriteBatch.Draw(currentTexture, null, rectangle, animationComponent.getCurrentFrame(), new Vector2(rectangle.Width / 2, rectangle.Height / 2), physics.Rotation + drawable.AdditionalRotation, null, null, SpriteEffects.None, 0);
+                }
 
                 // Draw HP bar
-                if(e.HasComponent<component.HealthComponent>())
+                if (e.HasComponent<component.HealthComponent>())
                 {
                     component.HealthComponent healthComponent = e.GetComponent<component.HealthComponent>();
                     healthComponent.Health += 0.4f;

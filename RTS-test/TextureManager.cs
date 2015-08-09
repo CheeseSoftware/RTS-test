@@ -43,7 +43,9 @@ namespace RTS_test
             insertTexture("worker2");
             insertTexture("hpbar"); // 11
             insertTexture("hp"); // 12
-		}
+            insertTexture("smallworkeralone");
+            insertTexture("smallworker");
+        }
 
 		public Texture2D getTexture(int index)
 		{

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Artemis.Attributes;
 using Artemis.Interface;
 using Artemis.System;
+using Artemis.Blackboard;
 
 namespace RTS_test
 {
@@ -55,11 +56,15 @@ namespace RTS_test
         public class Drawable : IComponent
         {
             public Texture2D texture;
+            private float additionalRotation;
 
-            public Drawable(Texture2D texture)
+            public Drawable(Texture2D texture, float additionalRotation = 0f)
             {
                 this.texture = texture;
+                this.additionalRotation = additionalRotation;
             }
+
+            public float AdditionalRotation { get { return this.additionalRotation; } }
         }
 
 
@@ -208,6 +213,51 @@ namespace RTS_test
             }
 
             public float Health { get { return health; } set { health = value; } }
+        }
+
+        public class AnimationComponent : IComponent
+        {
+            private Dictionary<int, Animation> animations;
+            private Animation currentAnimation;
+            private int currentTexture;
+
+            public AnimationComponent()
+            {
+                animations = new Dictionary<int, Animation>();
+            }
+
+            public void addAnimation(int texture, Animation animation)
+            {
+                animations.Add(texture, animation);
+            }
+
+            public void startAnimation(int texture)
+            {
+                currentAnimation = animations[texture];
+                currentTexture = texture;
+                currentAnimation.start();
+            }
+
+            public void stopAnimation()
+            {
+                currentAnimation.stop();
+            }
+
+            public bool isAnimating()
+            {
+                return currentAnimation != null && currentAnimation.isAnimating();
+            }
+
+            public Rectangle getCurrentFrame()
+            {
+                return currentAnimation.getCurrentFrame();
+            }
+
+            public int getCurrentTexture()
+            {
+                return currentTexture;
+            }
+
         }
     }
 
