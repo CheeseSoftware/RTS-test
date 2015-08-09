@@ -87,22 +87,22 @@ namespace RTS_test
 
         public class TileEntity : IComponent
         {
-            private int2 position;
-            private int2 size;
+            private Rectangle position;
+            private Rectangle collision;
             private float rotation = 0f;
 
-            public TileEntity(int x, int y, int width, int height, float rotation = 0f)
+            public TileEntity(Rectangle position, Rectangle collision, float rotation = 0f)
             {
-                position = new int2(x, y);
-                size = new int2(width, height);
+                this.position = position;
+                this.collision = collision;
                 this.rotation = rotation;
 
                 DisField entityDisField = EntitySystem.BlackBoard.GetEntry<DisField>("EntityDisField");
-                for (int i = position.x; i < position.x + size.x; i++)
+                for (int i = collision.Left; i < collision.Right; i++)
                 {
-                    for (int j = position.y; j < position.y + size.y; j++)
+                    for (int j = collision.Top; j < collision.Bottom + collision.Height; j++)
                     {
-                        entityDisField.setTile(position.x, position.y, true);
+                        entityDisField.setTile(i, j, true);
                     }
                 }
             }
@@ -112,16 +112,16 @@ namespace RTS_test
                 remove();
             }
 
-            public int2 Position
+            public Rectangle Position
             {
                 get { return position; }
                 set { position = value; }
             }
 
-            public int2 Size
+            public Rectangle Collision
             {
-                get { return size; }
-                set { size = value; }
+                get { return collision; }
+                set { collision = value; }
             }
 
             public float Rotation
@@ -133,25 +133,25 @@ namespace RTS_test
             public void remove()
             {
                 DisField entityDisField = EntitySystem.BlackBoard.GetEntry<DisField>("EntityDisField");
-                for (int i = position.x; i < position.x + size.x; i++)
+                for (int i = collision.Left; i < collision.Right; i++)
                 {
-                    for (int j = position.y; j < position.y + size.y; j++)
+                    for (int j = collision.Top; j < collision.Bottom + collision.Height; j++)
                     {
-                        entityDisField.setTile(position.x, position.y, false);
+                        entityDisField.setTile(i, j, false);
                     }
                 }
             }
 
             public bool isMultiTile()
             {
-                return size.x > 1 || size.y > 1;
+                return position.Width > 1 || position.Height > 1;
             }
 
             public IEnumerator<int2> getTiles()
             {
-                for (int i = position.x; i < position.x + size.x; i++)
+                for (int i = collision.Left; i < collision.Right; i++)
                 {
-                    for (int j = position.y; j < position.y + size.y; j++)
+                    for (int j = collision.Top; j < collision.Bottom + collision.Height; j++)
                     {
                         yield return new int2(i, j);
                     }

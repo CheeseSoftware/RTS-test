@@ -65,12 +65,12 @@ namespace RTS_test
             protected override void Process(Entity e, component.TileEntity tileEntity, component.Drawable drawable)
             {
                 Rectangle rectangle = new Rectangle(
-                    new Point((int)(tileEntity.Position.x * Global.tileSize), (int)(tileEntity.Position.y * Global.tileSize)),
+                    new Point((int)(tileEntity.Position.X * Global.tileSize), (int)(tileEntity.Position.Y * Global.tileSize)),
                     new Point(drawable.texture.Width, drawable.texture.Height)
                     );
 
                 TileMap tileMap = EntitySystem.BlackBoard.GetEntry<TileMap>("TileMap");
-                float dis = tileMap.DisField.getDis(tileEntity.Position.toVector2() * Global.tileSize) / 4f;
+                float dis = tileMap.DisField.getDis(tileEntity.Position.Location.ToVector2() * Global.tileSize) / 4f;
                 Color color = new Color(dis, dis, dis);
 
                 //spriteBatch.Draw(drawable.texture, null, rectangle, null, new Vector2(drawable.texture.Width / 2, drawable.texture.Height / 2), tileEntity.Rotation, null, color, SpriteEffects.None, 0);
