@@ -129,21 +129,22 @@ namespace RTS_test
 					if (dis < 0f)
 					{
                         physics.Body.ApplyLinearImpulse(-2.0f * normal * dis);
+
                         if (dis < -0.5f)
-						    physics.Position += -1.0f * normal * (dis+0.5f);
-						//physics.Velocity += -0.5f * normal * dis;
-					}
-					else
-						break;
-				}
-			}
+                            physics.Position += -1.0f * normal * (dis + 0.5f);
+                        //physics.Velocity += -0.5f * normal * dis;
+                    }
+                    else
+                        break;
+                }
+            }
 
-		}
-
-
+        }
 
 
 
 
-	}
+
+
+    }
 }

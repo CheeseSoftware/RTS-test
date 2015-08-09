@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Artemis;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -7,162 +8,190 @@ using System.Text;
 
 namespace RTS_test
 {
-	public class Camera
-	{
-		// Construct a new Camera class with standard zoom (no scaling)
-		public Camera()
-		{
-			Zoom = 1.0f;
-		}
+    public class Camera
+    {
+        private Entity entityFollowing = null;
+        private float cameraSpeed = 0.01f;
+        private Vector2 position;
 
-		// Centered Position of the Camera in pixels.
-		public Vector2 Position { get; private set; }
-		// Current Zoom level with 1.0f being standard
-		public float Zoom { get; private set; }
-		// Current Rotation amount with 0.0f being standard orientation
-		public float Rotation { get; private set; }
+        public Camera()
+        {
+            Zoom = 1.0f;
+        }
 
-		// Height and width of the viewport window which we need to adjust
-		// any time the player resizes the game window.
-		public int ViewportWidth { get; set; }
-		public int ViewportHeight { get; set; }
+        // Centered Position of the Camera in pixels.
+        public Vector2 Position
+        {
+            get { return this.position; } private set
+            {
+                position = value;
+                int borderWidth = Global.tileSize;
+                if (position.X < -borderWidth + ViewportCenter.X)
+                    position.X = -borderWidth + ViewportCenter.X;
+                if (position.X > borderWidth - ViewportCenter.X + Global.mapWidth * Global.tileSize)
+                    position.X = borderWidth - ViewportCenter.X + Global.mapWidth * Global.tileSize;
 
-		public Rectangle Viewport { get { return new Rectangle(0, 0, ViewportWidth, ViewportHeight); } }
+                if (position.Y < -borderWidth + ViewportCenter.Y)
+                    position.Y = -borderWidth + ViewportCenter.Y;
+                if (position.Y > borderWidth - ViewportCenter.Y + Global.mapHeight * Global.tileSize)
+                    position.Y = borderWidth - ViewportCenter.Y + Global.mapHeight * Global.tileSize;
+            }
+        }
+        // Current Zoom level with 1.0f being standard
+        public float Zoom { get; private set; }
+        // Current Rotation amount with 0.0f being standard orientation
+        public float Rotation { get; private set; }
 
-		// Center of the Viewport which does not account for scale
-		public Vector2 ViewportCenter
-		{
-			get
-			{
-				return new Vector2(ViewportWidth * 0.5f, ViewportHeight * 0.5f);
-			}
-		}
+        // Height and width of the viewport window which we need to adjust
+        // any time the player resizes the game window.
+        public int ViewportWidth { get; set; }
+        public int ViewportHeight { get; set; }
 
-		// Create a matrix for the camera to offset everything we draw,
-		// the map and our objects. since the camera coordinates are where
-		// the camera is, we offset everything by the negative of that to simulate
-		// a camera moving. We also cast to integers to avoid filtering artifacts.
-		public Matrix TranslationMatrix
-		{
-			get
-			{
-				return Matrix.CreateTranslation(-(int)Position.X,
-				   -(int)Position.Y, 0) *
-				   Matrix.CreateRotationZ(Rotation) *
-				   Matrix.CreateScale(new Vector3(Zoom, Zoom, 1)) *
-				   Matrix.CreateTranslation(new Vector3(ViewportCenter, 0));
-			}
-		}
+        public Rectangle Viewport { get { return new Rectangle(0, 0, ViewportWidth, ViewportHeight); } }
 
-		// Call this method with negative values to zoom out
-		// or positive values to zoom in. It looks at the current zoom
-		// and adjusts it by the specified amount. If we were at a 1.0f
-		// zoom level and specified -0.5f amount it would leave us with
-		// 1.0f - 0.5f = 0.5f so everything would be drawn at half size.
-		public void AdjustZoom(float amount)
-		{
-			Zoom += amount;
-			//if (Zoom < 0.25f)
-			{
-				//Zoom = 1f;
-			}
-		}
+        public Vector2 ViewportCenter
+        {
+            get
+            {
+                return new Vector2(ViewportWidth * 0.5f, ViewportHeight * 0.5f);
+            }
+        }
 
-		// Move the camera in an X and Y amount based on the cameraMovement param.
-		// if clampToMap is true the camera will try not to pan outside of the
-		// bounds of the map.
-		public void MoveCamera(Vector2 cameraMovement)
-		{
-			Vector2 newPosition = Position + cameraMovement;
+        // Create a matrix for the camera to offset everything we draw,
+        // the map and our objects. since the camera coordinates are where
+        // the camera is, we offset everything by the negative of that to simulate
+        // a camera moving. We also cast to integers to avoid filtering artifacts.
+        public Matrix TranslationMatrix
+        {
+            get
+            {
+                return Matrix.CreateTranslation(-(int)Position.X,
+                   -(int)Position.Y, 0) *
+                   Matrix.CreateRotationZ(Rotation) *
+                   Matrix.CreateScale(new Vector3(Zoom, Zoom, 1)) *
+                   Matrix.CreateTranslation(new Vector3(ViewportCenter, 0));
+            }
+        }
 
+        // Call this method with negative values to zoom out
+        // or positive values to zoom in. It looks at the current zoom
+        // and adjusts it by the specified amount. If we were at a 1.0f
+        // zoom level and specified -0.5f amount it would leave us with
+        // 1.0f - 0.5f = 0.5f so everything would be drawn at half size.
+        public void AdjustZoom(float amount)
+        {
+            Zoom += amount;
+            //if (Zoom < 0.25f)
+            {
+                //Zoom = 1f;
+            }
+        }
 
-			int borderWidth = Global.tileSize;
+        // Move the camera in an X and Y amount based on the cameraMovement param.
+        // if clampToMap is true the camera will try not to pan outside of the
+        // bounds of the map.
+        public void MoveCamera(Vector2 cameraMovement)
+        {
+            Vector2 newPosition = Position + cameraMovement;
+            Position = newPosition;
+        }
 
-			if (newPosition.X < -borderWidth + ViewportCenter.X)
-				newPosition.X = -borderWidth + ViewportCenter.X;
-			if (newPosition.X > borderWidth - ViewportCenter.X + Global.mapWidth * Global.tileSize)
-				newPosition.X = borderWidth - ViewportCenter.X + Global.mapWidth * Global.tileSize;
+        public Rectangle ViewportWorldBoundry()
+        {
+            Vector2 viewPortCorner = ScreenToWorld(new Vector2(0, 0));
+            Vector2 viewPortBottomCorner =
+               ScreenToWorld(new Vector2(ViewportWidth, ViewportHeight));
 
-			if (newPosition.Y < -borderWidth + ViewportCenter.Y)
-				newPosition.Y = -borderWidth + ViewportCenter.Y;
-			if (newPosition.Y > borderWidth - ViewportCenter.Y + Global.mapHeight * Global.tileSize)
-				newPosition.Y = borderWidth - ViewportCenter.Y + Global.mapHeight * Global.tileSize;
+            return new Rectangle((int)viewPortCorner.X,
+               (int)viewPortCorner.Y,
+               (int)(viewPortBottomCorner.X - viewPortCorner.X),
+               (int)(viewPortBottomCorner.Y - viewPortCorner.Y));
+        }
 
-			Position = newPosition;
-		}
+        // Center the camera on specific pixel coordinates
+        public void CenterOn(Vector2 position)
+        {
+            Position = position;
+        }
 
-		public Rectangle ViewportWorldBoundry()
-		{
-			Vector2 viewPortCorner = ScreenToWorld(new Vector2(0, 0));
-			Vector2 viewPortBottomCorner =
-			   ScreenToWorld(new Vector2(ViewportWidth, ViewportHeight));
+        public void followEntity(Entity entity, float cameraSpeed = 0.01f)
+        {
+            this.entityFollowing = entity;
+            this.cameraSpeed = cameraSpeed;
+        }
 
-			return new Rectangle((int)viewPortCorner.X,
-			   (int)viewPortCorner.Y,
-			   (int)(viewPortBottomCorner.X - viewPortCorner.X),
-			   (int)(viewPortBottomCorner.Y - viewPortCorner.Y));
-		}
+        public void stopFollwingEntity()
+        {
+            this.entityFollowing = null;
+        }
 
-		// Center the camera on specific pixel coordinates
-		public void CenterOn(Vector2 position)
-		{
-			Position = position;
-		}
+        public Vector2 WorldToScreen(Vector2 worldPosition)
+        {
+            return Vector2.Transform(worldPosition, TranslationMatrix);
+        }
 
+        public Vector2 ScreenToWorld(Vector2 screenPosition)
+        {
+            return Vector2.Transform(screenPosition,
+                Matrix.Invert(TranslationMatrix));
+        }
 
-		public Vector2 WorldToScreen(Vector2 worldPosition)
-		{
-			return Vector2.Transform(worldPosition, TranslationMatrix);
-		}
+        // Move the camera's position based on input
+        public void HandleInput(InputState inputState,
+           PlayerIndex? controllingPlayer)
+        {
+            if (entityFollowing != null)
+            {
+                component.Physics physics = entityFollowing.GetComponent<component.Physics>();
+                if (physics != null)
+                {
+                    Vector2 newPos = new Vector2();
+                    newPos.X = MathHelper.Lerp(Position.X, physics.Position.X * 32, cameraSpeed);
+                    newPos.Y = MathHelper.Lerp(Position.Y, physics.Position.Y * 32, cameraSpeed);
+                    Position = newPos;
+                }
+            }
+            else
+            {
+                Vector2 cameraMovement = Vector2.Zero;
 
-		public Vector2 ScreenToWorld(Vector2 screenPosition)
-		{
-			return Vector2.Transform(screenPosition,
-				Matrix.Invert(TranslationMatrix));
-		}
+                if (inputState.CurrentKeyboardStates[(int)PlayerIndex.One].IsKeyDown(Keys.Left))
+                {
+                    cameraMovement.X = -1;
+                }
+                else if (inputState.CurrentKeyboardStates[(int)PlayerIndex.One].IsKeyDown(Keys.Right))
+                {
+                    cameraMovement.X = 1;
+                }
+                if (inputState.CurrentKeyboardStates[(int)PlayerIndex.One].IsKeyDown(Keys.Up))
+                {
+                    cameraMovement.Y = -1;
+                }
+                else if (inputState.CurrentKeyboardStates[(int)PlayerIndex.One].IsKeyDown(Keys.Down))
+                {
+                    cameraMovement.Y = 1;
+                }
+                if (inputState.IsScrollDown(controllingPlayer))
+                {
+                    AdjustZoom(-0.1f);
+                }
+                else if (inputState.IsScrollUp(controllingPlayer))
+                {
+                    AdjustZoom(0.1f);
+                }
 
-		// Move the camera's position based on input
-		public void HandleInput(InputState inputState,
-		   PlayerIndex? controllingPlayer)
-		{
-			Vector2 cameraMovement = Vector2.Zero;
+                // When using a controller, to match the thumbstick behavior,
+                // we need to normalize non-zero vectors in case the user
+                // is pressing a diagonal direction.
+                if (cameraMovement != Vector2.Zero)
+                {
+                    cameraMovement.Normalize();
+                }
 
-			if (inputState.CurrentKeyboardStates[(int)PlayerIndex.One].IsKeyDown(Keys.Left))
-			{
-				cameraMovement.X = -1;
-			}
-			else if (inputState.CurrentKeyboardStates[(int)PlayerIndex.One].IsKeyDown(Keys.Right))
-			{
-				cameraMovement.X = 1;
-			}
-			if (inputState.CurrentKeyboardStates[(int)PlayerIndex.One].IsKeyDown(Keys.Up))
-			{
-				cameraMovement.Y = -1;
-			}
-			else if (inputState.CurrentKeyboardStates[(int)PlayerIndex.One].IsKeyDown(Keys.Down))
-			{
-				cameraMovement.Y = 1;
-			}
-			if (inputState.IsScrollDown(controllingPlayer))
-			{
-				AdjustZoom(-0.1f);
-			}
-			else if (inputState.IsScrollUp(controllingPlayer))
-			{
-				AdjustZoom(0.1f);
-			}
+                cameraMovement *= Global.tileSize;
 
-			// When using a controller, to match the thumbstick behavior,
-			// we need to normalize non-zero vectors in case the user
-			// is pressing a diagonal direction.
-			if (cameraMovement != Vector2.Zero)
-			{
-				cameraMovement.Normalize();
-			}
-
-			cameraMovement *= Global.tileSize;
-
-			MoveCamera(cameraMovement);
-		}
-	}
+                MoveCamera(cameraMovement);
+            }
+        }
+    }
 }

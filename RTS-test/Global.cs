@@ -11,5 +11,7 @@ namespace RTS_test
 		public static readonly int tileSize = 32;
 		public static readonly int mapWidth = 256;
 		public static readonly int mapHeight = 256;
+
+        public static PathGoal globalGoal = null; //TEMP
 	}
 }

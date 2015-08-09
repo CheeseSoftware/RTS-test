@@ -16,7 +16,7 @@ namespace RTS_test
             pathGoal = null;
         }
 
-		public void update(EntityWorld entityWorld, Camera camera)
+		public void updateGoal(EntityWorld entityWorld, Camera camera)
         {
             if (pathGoal == null)
                 return;
