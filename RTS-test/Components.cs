@@ -162,6 +162,7 @@ namespace RTS_test
         public class Physics : IComponent
         {
             private FarseerPhysics.Dynamics.Body body;
+            private Vector2 oldPosition = new Vector2();
 
             public Physics(FarseerPhysics.Dynamics.Body body)
             {
@@ -171,7 +172,12 @@ namespace RTS_test
             public Vector2 Position
             {
                 get { return body.Position; }
-                set { body.Position = value; }
+                set { oldPosition = body.Position; body.Position = value; }
+            }
+
+            public Vector2 OldPosition
+            {
+                get { return oldPosition; }
             }
 
             public Vector2 Velocity

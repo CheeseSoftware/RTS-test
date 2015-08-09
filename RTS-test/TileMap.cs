@@ -228,11 +228,6 @@ namespace RTS_test
             }
 		}
 
-        public void setTileSolid(int x, int y, bool solid)
-        {
-
-        }
-
 		public int getWidth()
 		{
 			return this.width;
