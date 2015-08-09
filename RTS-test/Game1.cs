@@ -129,7 +129,7 @@ namespace RTS_test
             generator.generate(tileMap, entityWorld);
             tileMap.updateDisField();
 
-            for (int i = 0; i < 50; ++i)
+            /*for (int i = 0; i < 50; ++i)
                 entityWorld.CreateEntityFromTemplate("Test", new object[] {
                     new Vector2(0.2f*i, 4f*(float)Math.Sin(0.5f*i)),
                     new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
@@ -139,7 +139,13 @@ namespace RTS_test
                 entityWorld.CreateEntityFromTemplate("Test2", new object[] {
                     new Vector2(0.2f*i, 4f*(float)Math.Sin(0.5f*i)),
                     new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
+                });*/
+
+
+            Entity e = entityWorld.CreateEntityFromTemplate("Test", new object[] {
+                    new Vector2(10, 10),
                 });
+            Global.Camera.followEntity(e, 0.1f);
 
 
             //Generate resources and natural object entities
