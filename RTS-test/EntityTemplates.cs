@@ -40,6 +40,7 @@ namespace RTS_test
             body.LinearVelocity = velocity;
 
 
+            entity.AddComponent(new component.HealthComponent(100));
             entity.AddComponent(new component.Physics(body));
             entity.AddComponent(new component.MaxVelocity(0.85f));
             entity.AddComponent(new component.Drawable(textureManager.getTexture(9)));

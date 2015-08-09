@@ -41,6 +41,8 @@ namespace RTS_test
 			insertTexture("stone");
             insertTexture("worker");
             insertTexture("worker2");
+            insertTexture("hpbar"); // 11
+            insertTexture("hp"); // 12
 		}
 
 		public Texture2D getTexture(int index)

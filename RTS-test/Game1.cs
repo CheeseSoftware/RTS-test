@@ -145,17 +145,17 @@ namespace RTS_test
                     new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
                 });
 
-            for (int i = 0; i < 50; ++i)
+            /*for (int i = 0; i < 50; ++i)
                 entityWorld.CreateEntityFromTemplate("Test2", new object[] {
                     new Vector2(0.2f*i, 4f*(float)Math.Sin(0.5f*i)),
                     new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
-                });
+                });*/
 
 
-            Entity e = entityWorld.CreateEntityFromTemplate("Test", new object[] {
+            /*Entity e = entityWorld.CreateEntityFromTemplate("Test", new object[] {
                     new Vector2(10, 10),
                 });
-            Global.Camera.followEntity(e, 0.1f);
+            Global.Camera.followEntity(e, 0.1f);*/
 
             int2 a = new int2(0);
             int2 b = new int2(3);

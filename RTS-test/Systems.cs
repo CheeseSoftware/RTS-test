@@ -17,11 +17,13 @@ namespace RTS_test
         public class EntityRenderer : EntityProcessingSystem<component.Physics, component.Drawable>
         {
             private SpriteBatch spriteBatch;
+            private TextureManager textureManager;
 
             public EntityRenderer()
                 : base(Aspect.All(typeof(component.Physics), typeof(component.Drawable)))
             {
                 spriteBatch = EntitySystem.BlackBoard.GetEntry<SpriteBatch>("SpriteBatch");
+                textureManager = EntitySystem.BlackBoard.GetEntry<TextureManager>("TextureManager");
             }
 
             public override void LoadContent()
@@ -40,9 +42,28 @@ namespace RTS_test
                 float dis = tileMap.DisField.getDis(physics.Position * Global.tileSize) / 4f;
                 Color color = new Color(dis, dis, dis);
 
-
-
                 spriteBatch.Draw(drawable.texture, null, rectangle, null, new Vector2(drawable.texture.Width / 2, drawable.texture.Height / 2), physics.Rotation, null, color, SpriteEffects.None, 0);
+
+                // Draw HP bar
+                if(e.HasComponent<component.HealthComponent>())
+                {
+                    component.HealthComponent healthComponent = e.GetComponent<component.HealthComponent>();
+                    healthComponent.Health += 0.4f;
+                    if (healthComponent.Health > 50)
+                        healthComponent.Health = 0;
+                    Texture2D hpbar = textureManager.getTexture(11);
+                    Texture2D hp = textureManager.getTexture(12);
+
+                    Vector2 pos = physics.Position * 32;
+                    Vector2 offset = new Vector2(0, -12);
+                    Rectangle hpbarRectangle = new Rectangle((int)(offset.X + pos.X), (int)(offset.Y + pos.Y), 52, 4);
+                    Rectangle hpRectangle = new Rectangle((int)(offset.X + pos.X), (int)(offset.Y + pos.Y), (int)healthComponent.Health, 2);
+
+                    spriteBatch.Draw(hpbar, null, hpbarRectangle, null, new Vector2(hpbar.Width / 2, hpbar.Height / 2), 0f, null, null, SpriteEffects.None, 0);
+
+                    spriteBatch.Draw(hp, null, hpRectangle, hpRectangle, new Vector2(hp.Width / 2, hp.Height / 2), 0f, null, null, SpriteEffects.None, 0);
+
+                }
             }
         }
 

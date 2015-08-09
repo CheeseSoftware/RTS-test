@@ -197,6 +197,18 @@ namespace RTS_test
                 get { return body; }
             }
         }
+
+        public class HealthComponent : IComponent
+        {
+            float health;
+
+            public HealthComponent(float health)
+            {
+                this.health = health;
+            }
+
+            public float Health { get { return health; } set { health = value; } }
+        }
     }
 
 }
