@@ -206,13 +206,18 @@ namespace RTS_test
         public class HealthComponent : IComponent
         {
             float health;
+            float maxHealth;
 
-            public HealthComponent(float health)
+            public HealthComponent(float health, float maxHealth = 100)
             {
                 this.health = health;
+                this.maxHealth = maxHealth;
             }
 
             public float Health { get { return health; } set { health = value; } }
+
+            public float MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
+
         }
 
         public class AnimationComponent : IComponent

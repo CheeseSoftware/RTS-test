@@ -146,7 +146,7 @@ namespace RTS_test
 
             for (int i = 0; i < 50; ++i)
                 entityWorld.CreateEntityFromTemplate("Test", new object[] {
-                    new Vector2(0.2f*i, 4f*(float)Math.Sin(0.5f*i)),
+                    new Vector2(7 + 0.2f*i, 7 + 4f*(float)Math.Sin(0.5f*i)),
                     new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
                 });
 
