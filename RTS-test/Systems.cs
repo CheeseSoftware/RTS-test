@@ -163,9 +163,12 @@ namespace RTS_test
                 {
                     dis = disFieldMixer.getDis(physics.Position - new Vector2(0.5f, 0.5f)) - 1.0f + 0.5f;
                     Vector2 normal = disFieldMixer.getNormal(physics.Position);
-                    if (dis < 0f)
+                    if (dis < 0f && normal.Length() > 0f)
                     {
-                        physics.Body.ApplyLinearImpulse(-2.0f * normal * dis);
+                        physics.Body.ApplyLinearImpulse(-1.0f * normal * dis);
+                        //physics.Body.ApplyForce(-100.0f * normal * (dis));
+                        //physics.Position += -1f * normal * (dis);
+                        //physics.Velocity *= 0.5f;
 
                         if (dis < -0.5f)
                             physics.Position += -1.0f * normal * (dis + 0.5f);

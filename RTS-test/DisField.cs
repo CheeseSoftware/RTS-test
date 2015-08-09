@@ -19,6 +19,15 @@ namespace RTS_test
             this.size = size;
             disField = new float[size.x, size.y];
             tiles = new bool[size.x, size.y]; ;
+
+            for (int y = 0; y < size.y; ++y)
+            {
+                for (int x = 0; x < size.x; ++x)
+                {
+                    disField[x, y] = 3f;
+                    tiles[x, y] = false;
+                }
+            }
         }
 
         public void update()
