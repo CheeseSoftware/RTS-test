@@ -25,6 +25,7 @@ namespace RTS_test
 
         private InputState _inputState;
         private TileMap tileMap;
+        private TileEntityMap tileEntityMap;
         private TileManager tileManager;
         private TextureManager textureManager;
         private EntityWorld entityWorld;
@@ -58,6 +59,7 @@ namespace RTS_test
             _inputState = new InputState();
             tileManager = new TileManager();
             tileMap = new TileMap(tileManager, Global.mapWidth, Global.mapHeight);
+            tileEntityMap = new TileEntityMap(Global.mapWidth, Global.mapHeight);
             textureManager = new TextureManager();
             unitController = new UnitController();
             world = new FarseerPhysics.Dynamics.World(new Vector2(0f, 0f));
@@ -76,6 +78,7 @@ namespace RTS_test
             EntitySystem.BlackBoard.SetEntry<SpriteBatch>("SpriteBatch", spriteBatch);
             EntitySystem.BlackBoard.SetEntry<TextureManager>("TextureManager", textureManager);
             EntitySystem.BlackBoard.SetEntry<TileMap>("TileMap", tileMap);
+            EntitySystem.BlackBoard.SetEntry<TileEntityMap>("TileEntityMap", tileEntityMap);
             EntitySystem.BlackBoard.SetEntry<FarseerPhysics.Dynamics.World>("PhysicsWorld", world);
             EntitySystem.BlackBoard.SetEntry<TileMap>("TileMap", tileMap);
             EntitySystem.BlackBoard.SetEntry<Generator>("Generator", generator);

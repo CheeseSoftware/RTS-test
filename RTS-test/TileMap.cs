@@ -10,7 +10,7 @@ namespace RTS_test
 {
 	public class TileMap
 	{
-		private UInt16[,] tiles;
+		private Map<UInt16> tiles;
         private float[,] disField;
         private TileManager tileManager;
 		private int width;
@@ -38,7 +38,7 @@ namespace RTS_test
 
         public void load()
         {
-            tiles = new UInt16[width, height];
+            tiles = new Map<UInt16>(width, height);
             disField = new float[width, height];
         }
 
@@ -47,7 +47,6 @@ namespace RTS_test
 			Rectangle viewportWorldBoundry = Global.Camera.ViewportWorldBoundry();
 			Rectangle tilesVisible = new Rectangle(viewportWorldBoundry.X / Global.tileSize, viewportWorldBoundry.Y / Global.tileSize, viewportWorldBoundry.Width / Global.tileSize, viewportWorldBoundry.Height / Global.tileSize);
 
-			//Draw tilemap
 			for (int x = tilesVisible.X; x <= tilesVisible.Right + 1; x++)
 			{
 				for (int y = tilesVisible.Y; y <= tilesVisible.Bottom + 1; y++)
@@ -157,7 +156,7 @@ namespace RTS_test
             if (x < 0 || y < 0 || x >= width || y >= height)
                 return 0;
 
-            return tiles[x, y];
+            return tiles.getData(x, y);
         }
 
         public float getDis(Vector2 pos)
@@ -210,7 +209,7 @@ namespace RTS_test
                 return;
 
 
-			tiles[x, y] = tile;
+			tiles.setData(x, y, tile);
 
             for (int xx = -2; xx <= 2; ++xx)
             {
@@ -228,6 +227,11 @@ namespace RTS_test
                 }
             }
 		}
+
+        public void setTileSolid(int x, int y, bool solid)
+        {
+
+        }
 
 		public int getWidth()
 		{
