@@ -252,11 +252,37 @@ namespace RTS_test
         //    unitPositions.RemoveAt(index);
         //}
 
+        public float getDis(Vector2 pos)
+        {
+            int2 floorPos = new int2((int)pos.X, (int)pos.Y);
+            int2 ceilPos = new int2((int)pos.X + 1, (int)pos.Y + 1);
+
+            if (floorPos.x < 0 || floorPos.y < 0 || ceilPos.x >= size.x || ceilPos.y >= size.y)
+                return maxValue;
+
+            Vector2 localPos = new Vector2(pos.X % 1f, pos.Y % 1f);
+            float a = 1f - localPos.X;
+            float b = 1f - localPos.Y;
+            float c = 1f - a;
+            float d = 1f - b;
+            float[] dis = { 
+                flowfield[floorPos.x, floorPos.y],
+                flowfield[ceilPos.x, floorPos.y],
+                flowfield[floorPos.x, ceilPos.y],
+                flowfield[ceilPos.x, ceilPos.y]
+            };
+
+
+            float dis2 = a * b * dis[0] + c * b * dis[1] + a * d * dis[2] + c * d * dis[3];
+
+            return dis2;
+        }
+
         public Vector2 getDirection(Vector2 pos)
         {
-            int2 floorPos = new int2((int)Math.Floor(pos.X), (int)Math.Floor(pos.Y));
-            if (floorPos.x < 0 || floorPos.y < 0 || floorPos.x + 1 >= size.x || floorPos.y + 1 >= size.y)
-                return new Vector2(goalPos.x, goalPos.y) - pos;
+            //int2 floorPos = new int2((int)Math.Floor(pos.X), (int)Math.Floor(pos.Y));
+            //if (floorPos.x < 0 || floorPos.y < 0 || floorPos.x + 1 >= size.x || floorPos.y + 1 >= size.y)
+            //    return new Vector2(goalPos.x, goalPos.y) - pos;
 
 
             //Vector2 direction =
@@ -270,10 +296,39 @@ namespace RTS_test
             //return -direction;
 
 
-            Vector2 a = (float)(flowfield[floorPos.x, floorPos.y]) * Vector2.Normalize(new Vector2(-1f, -1f));
-            Vector2 b = (float)(flowfield[floorPos.x + 1, floorPos.y]) * Vector2.Normalize(new Vector2(+1f, -1f));
-            Vector2 c = (float)(flowfield[floorPos.x, floorPos.y + 1]) * Vector2.Normalize(new Vector2(-1f, +1f));
-            Vector2 d = (float)(flowfield[floorPos.x + 1, floorPos.y + 1]) * Vector2.Normalize(new Vector2(+1f, +1f));
+            //Vector2 a = (float)(flowfield[floorPos.x, floorPos.y]) * Vector2.Normalize(new Vector2(-1f, -1f));
+            //Vector2 b = (float)(flowfield[floorPos.x + 1, floorPos.y]) * Vector2.Normalize(new Vector2(+1f, -1f));
+            //Vector2 c = (float)(flowfield[floorPos.x, floorPos.y + 1]) * Vector2.Normalize(new Vector2(-1f, +1f));
+            //Vector2 d = (float)(flowfield[floorPos.x + 1, floorPos.y + 1]) * Vector2.Normalize(new Vector2(+1f, +1f));
+
+            //Vector2 normal = new Vector2(a.X + b.X + c.X + d.X, a.Y + b.Y + c.Y + d.Y);
+            //if (normal.Length() > 0f)
+            //    normal.Normalize();
+            //return -normal;
+
+
+            //////////////
+            //int2 floorPos = new int2((int)Math.Round(pos.X) - 1, (int)Math.Round(pos.Y) - 1);
+            //if (floorPos.x < 0 || floorPos.y < 0 || floorPos.x + 2 >= size.x || floorPos.y + 2 >= size.y)
+            //    return new Vector2(goalPos.x, goalPos.y) - pos;
+
+            //Vector2 a = (float)(flowfield[floorPos.x, floorPos.y]) * Vector2.Normalize(new Vector2(-1f, -1f));
+            //Vector2 b = (float)(flowfield[floorPos.x + 2, floorPos.y]) * Vector2.Normalize(new Vector2(+1f, -1f));
+            //Vector2 c = (float)(flowfield[floorPos.x, floorPos.y + 2]) * Vector2.Normalize(new Vector2(-1f, +1f));
+            //Vector2 d = (float)(flowfield[floorPos.x + 2, floorPos.y + 2]) * Vector2.Normalize(new Vector2(+1f, +1f));
+
+            //Vector2 normal = new Vector2(a.X + b.X + c.X + d.X, a.Y + b.Y + c.Y + d.Y);
+            //if (normal.Length() > 0f)
+            //    normal.Normalize();
+            //return -normal;
+
+            ////pos = new Vector2((int)Math.Round(pos.X), (int)Math.Round(pos.Y));
+            //////////////
+            ////// Epsilon: 0.01f
+            Vector2 a = getDis(pos + new Vector2(-0.51f, +0.00f)) * Vector2.Normalize(new Vector2(-1f, +0f));
+            Vector2 b = getDis(pos + new Vector2(+0.51f, -0.00f)) * Vector2.Normalize(new Vector2(+1f, -0f));
+            Vector2 c = getDis(pos + new Vector2(-0.00f, +0.51f)) * Vector2.Normalize(new Vector2(-0f, +1f));
+            Vector2 d = getDis(pos + new Vector2(+0.00f, -0.51f)) * Vector2.Normalize(new Vector2(+0f, -1f));
 
             Vector2 normal = new Vector2(a.X + b.X + c.X + d.X, a.Y + b.Y + c.Y + d.Y);
             if (normal.Length() > 0f)

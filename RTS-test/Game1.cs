@@ -129,7 +129,7 @@ namespace RTS_test
             generator.generate(tileMap, entityWorld);
             tileMap.updateDisField();
 
-            /*for (int i = 0; i < 50; ++i)
+            for (int i = 0; i < 50; ++i)
                 entityWorld.CreateEntityFromTemplate("Test", new object[] {
                     new Vector2(0.2f*i, 4f*(float)Math.Sin(0.5f*i)),
                     new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
@@ -139,13 +139,17 @@ namespace RTS_test
                 entityWorld.CreateEntityFromTemplate("Test2", new object[] {
                     new Vector2(0.2f*i, 4f*(float)Math.Sin(0.5f*i)),
                     new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
-                });*/
+                });
 
 
             Entity e = entityWorld.CreateEntityFromTemplate("Test", new object[] {
                     new Vector2(10, 10),
                 });
             Global.Camera.followEntity(e, 0.1f);
+
+            int2 a = new int2(0);
+            int2 b = new int2(3);
+            int2 c = a * b;
 
 
             //Generate resources and natural object entities
@@ -192,13 +196,13 @@ namespace RTS_test
                         PathGoal pathGoal = new PathGoal(entities, tileMap, new int2(Global.mapWidth, Global.mapHeight), new int2((int)pos.X / Global.tileSize, (int)pos.Y / Global.tileSize));
                         unitController.setPathGoal(pathGoal);
                         pathGoal.updatePath();
-                        //tileMap.setPathGoal(pathGoal);
+                        tileMap.setPathGoal(pathGoal);
                     //}).Start();
                 }
             }
 
 
-            //unitController.update(entityWorld, Global.Camera);
+            unitController.updateGoal(entityWorld, Global.Camera);
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
             entityWorld.Update();
             // FPS-counter stuff
