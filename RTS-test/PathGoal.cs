@@ -66,6 +66,8 @@ namespace RTS_test
 
     public class PathGoal
     {
+        private const float maxValue = 1000000f;
+
         private float[,] flowfield;
         private int2 size;
         private int2 goalPos;
@@ -74,6 +76,9 @@ namespace RTS_test
         //private List<uint2> unitPositions;
 
         private List<StepDirection> stepDirections = new List<StepDirection>();
+
+        List<Node> nodesToExplore = new List<Node>();
+        Dictionary<int2, Node> nodesToExploreMap = new Dictionary<int2, Node>();
 
         class Node : IComparable
         {
@@ -139,20 +144,7 @@ namespace RTS_test
                 return x.dis.CompareTo(y.dis);
             });
 
-            stepDirections.Sort(delegate(StepDirection x, StepDirection y)
-            {
-                return x.dis.CompareTo(y.dis);
-            });
-        }
-
-        public void updatePath()
-        {
-            List<Node> nodesToExplore = new List<Node>();
-            //Dictionary<int2, float> exploredNodes = new Dictionary<int2, float>();
-            Dictionary<int2, Node> nodesToExploreMap = new Dictionary<int2, Node>();
-
-
-            float maxValue = 1000000f;
+            
             for (int y = 0; y < size.y; ++y)
             {
                 for (int x = 0; x < size.x; ++x)
@@ -163,16 +155,22 @@ namespace RTS_test
 
             nodesToExplore.Add(new Node(goalPos, 0f, 0f));
             flowfield[goalPos.x, goalPos.y] = 0f;
+        }
 
+        public void updatePath()
+        {
             foreach (Entity entity in units)
             {
                 component.Physics physics = entity.GetComponent<component.Physics>();
 
                 int2 entityPos = new int2((int)(physics.Position.X+0.5f), (int)(physics.Position.Y+0.5f));
+                int2 floorPos = new int2((int)(physics.Position.X), (int)(physics.Position.Y));
 
                 if (entityPos.x < 0 || entityPos.y < 0 || entityPos.x >= size.x || entityPos.y >= size.y)
                     continue;
                 if (flowfield[entityPos.x, entityPos.y] < maxValue)
+                    continue;
+                if (tileMap.getTile(entityPos.x, entityPos.y).IsSolid)
                     continue;
 
                 foreach (Node node in nodesToExplore)
@@ -189,8 +187,7 @@ namespace RTS_test
 
                     nodesToExploreMap.Remove(node.pos);
 
-                    float dis = 0.55f+tileMap.getDis(new Vector2((float)node.pos.x - 0.5f, (float)node.pos.y - 0.5f));
-
+                    float dis = 2f;// 0.55f + tileMap.getDis(new Vector2((float)node.pos.x - 0.5f, (float)node.pos.y - 0.5f));
 
                     for (int i = 0; i < stepDirections.Count; ++i)
                     {
@@ -206,7 +203,10 @@ namespace RTS_test
 
                         TileData tile = tileMap.getTile(newNodePos.x, newNodePos.y);
                         if (tile.IsSolid)
-                            newNodeDis -= 1;
+                        {
+                            flowfield[newNodePos.x, newNodePos.y] = newNodeDis+1;
+                            continue;
+                        }
 
                         //if (exploredNodes.ContainsKey(newNodePos))
                         //{
@@ -281,6 +281,10 @@ namespace RTS_test
             return -normal;
         }
 
+        public Bag<Entity> getEntities()
+        {
+            return units;
+        }
 
     }
 }

@@ -21,11 +21,7 @@ namespace RTS_test
             if (pathGoal == null)
                 return;
 
-            Bag<Entity> entities = entityWorld.EntityManager.GetEntities(Aspect.All(typeof(component.Goal)));
-            foreach (Entity entity in entities)
-            {
-                entity.GetComponent<component.Goal>().pathGoal = pathGoal;
-            }
+            pathGoal.updatePath(); 
         }
 
 		public void setPathGoal(PathGoal pathGoal)
@@ -33,7 +29,11 @@ namespace RTS_test
 			this.pathGoal = pathGoal;
             pathGoal.updatePath();
 
-            
+            Bag<Entity> entities = pathGoal.getEntities();
+            foreach (Entity entity in entities)
+            {
+                entity.GetComponent<component.Goal>().pathGoal = pathGoal;
+            }
 		}
     }
 }

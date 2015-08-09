@@ -62,7 +62,7 @@ namespace RTS_test
 			{
 				if (goal.pathGoal == null)
 					return;
-
+ 
 				Vector2 dir = goal.pathGoal.getDirection(physics.Position);
 
                 physics.Body.ApplyLinearImpulse(1.1f * dir);
@@ -128,7 +128,7 @@ namespace RTS_test
 					Vector2 normal = tileMap.getNormal(physics.Position);
 					if (dis < 0f)
 					{
-                        physics.Body.ApplyLinearImpulse(-1.0f * normal * dis);
+                        physics.Body.ApplyLinearImpulse(-2.0f * normal * dis);
                         if (dis < -0.5f)
 						    physics.Position += -1.0f * normal * (dis+0.5f);
 						//physics.Velocity += -0.5f * normal * dis;

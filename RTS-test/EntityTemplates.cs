@@ -76,10 +76,10 @@ namespace RTS_test
             body.Mass = 0.0f;
             body.FixedRotation = true;
             body.LinearVelocity = velocity;
-
-
+            body.LinearDamping = 5f;
+            
             entity.AddComponent(new component.Physics(body));
-            entity.AddComponent(new component.MaxVelocity(0.90f));
+            //entity.AddComponent(new component.MaxVelocity(0.90f));
             entity.AddComponent(new component.Drawable(textureManager.getTexture(10)));
             entity.AddComponent(new component.Goal());
             return entity;
