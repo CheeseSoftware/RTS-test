@@ -15,6 +15,7 @@ namespace RTS_test
         private TileManager tileManager;
         private int2 size;
         private PathGoal pathGoal = null;
+        private DisField treeDis = null;
 
         /***********************
          * Debug code!
@@ -23,6 +24,10 @@ namespace RTS_test
         public void setPathGoal(PathGoal pathGoal)
         {
             this.pathGoal = pathGoal;
+        }
+        public void setTreeDis(DisField treeDis)
+        {
+            this.treeDis = treeDis;
         }
 
 		public TileMap(TileManager tileManager, int2 size)
@@ -64,8 +69,19 @@ namespace RTS_test
                      * *********************/
                     if (pathGoal != null)
                     {
-                        Vector2 dir = pathGoal.getDirection(new Vector2((float)x+0.5f, (float)y+0.5f));
+                        Vector2 dir = pathGoal.getDirection(new Vector2((float)x + 0.5f, (float)y + 0.5f));
                         color = new Color(dir.Length(), 0.5f + 0.5f * dir.X, 0.5f + 0.5f * dir.Y);//new Color(0.5f + 0.5f * dir.Length(), 0.5f + 0.5f * dir.Length(), 0.5f + 0.5f * dir.Length());//
+                    }
+                    if (treeDis != null)
+                    {
+                        Vector2 dir = treeDis.getNormal(new Vector2((float)x + 0.5f, (float)y + 0.5f));
+                        float tdis = treeDis.getDis(new Vector2((float)x + 0.5f, (float)y + 0.5f));
+                        bool solid = treeDis.getTile(x, y);
+                        //color = new Color(tdis, tdis, tdis);//new Color(0.5f + 0.5f * dir.Length(), 0.5f + 0.5f * dir.Length(), 0.5f + 0.5f * dir.Length());//
+                        if (solid)
+                            color = Color.Gray;
+                        else
+                            color = Color.White;
                     }
 
 					if (x < 0 || y < 0 || x >= Global.mapWidth || y >= Global.mapHeight)

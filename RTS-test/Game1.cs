@@ -137,6 +137,7 @@ namespace RTS_test
 
             disFieldMixer.addDisField(tileMap.DisField);
             disFieldMixer.addDisField(entityDisField);
+            tileMap.setTreeDis(entityDisField);
 
             for (int i = 0; i < 50; ++i)
                 entityWorld.CreateEntityFromTemplate("Test", new object[] {

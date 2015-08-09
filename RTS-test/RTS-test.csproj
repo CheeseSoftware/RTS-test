@@ -57,7 +57,6 @@
     <Compile Include="PathGoal.cs" />
     <Compile Include="PathManager.cs" />
     <Compile Include="Systems.cs" />
-    <Compile Include="TileEntityMap.cs" />
     <Compile Include="TileManager.cs" />
     <Compile Include="Types.cs" />
     <Compile Include="Global.cs" />
