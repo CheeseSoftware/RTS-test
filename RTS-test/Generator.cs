@@ -22,15 +22,15 @@ namespace RTS_test
 		{
 			int seed = 1337; //random.Next(10000);
 
-			occupied = new bool[tileMap.getWidth(), tileMap.getHeight()];
+			occupied = new bool[tileMap.Size.x, tileMap.Size.y];
 			Random random = new Random();
 
 			// Generate tilemap
 			Graphics.Tools.Noise.Primitive.BevinsGradient noise = new Graphics.Tools.Noise.Primitive.BevinsGradient(seed, NoiseQuality.Best);
 
-			for (int x = 0; x < tileMap.getWidth(); x++)
+			for (int x = 0; x < tileMap.Size.x; x++)
 			{
-				for (int y = 0; y < tileMap.getHeight(); y++)
+				for (int y = 0; y < tileMap.Size.y; y++)
 				{
 
 					ushort id = 0;
@@ -51,9 +51,9 @@ namespace RTS_test
 
 			// Generate forest
 			Graphics.Tools.Noise.Primitive.SimplexPerlin forestNoise = new Graphics.Tools.Noise.Primitive.SimplexPerlin(seed, NoiseQuality.Best);
-			for (int x = 0; x < tileMap.getWidth(); x++)
+			for (int x = 0; x < tileMap.Size.x; x++)
 			{
-				for (int y = 0; y < tileMap.getHeight(); y++)
+				for (int y = 0; y < tileMap.Size.y; y++)
 				{
 					float zoom = 0.05f;
 					if (forestNoise.GetValue(zoom * x, zoom * y) > 0.2f)
@@ -69,7 +69,7 @@ namespace RTS_test
 								int checkX = xt + x;
 								int checkY = yt + y;
 
-								if (checkX >= tileMap.getWidth() || checkY >= tileMap.getHeight() || occupied[checkX, checkY] || !tileMap.getTile(checkX, checkY).Name.Equals("grass"))
+								if (checkX >= tileMap.Size.x || checkY >= tileMap.Size.y || occupied[checkX, checkY] || !tileMap.getTile(checkX, checkY).Name.Equals("grass"))
 								{
 									canPlaceTree = false;
 									break;
@@ -106,10 +106,10 @@ namespace RTS_test
 			}
 
 			// Generate stone resource 
-			for (int i = 0; i < Math.Sqrt(tileMap.getWidth() * tileMap.getHeight()) / 10; i++)
+			for (int i = 0; i < Math.Sqrt(tileMap.Size.x * tileMap.Size.y) / 10; i++)
 			{
-				int x = random.Next(tileMap.getWidth());
-				int y = random.Next(tileMap.getHeight());
+				int x = random.Next(tileMap.Size.x);
+				int y = random.Next(tileMap.Size.y);
 
 				int resourceWidth = 2;
 				int resourceHeight = 2;
@@ -122,7 +122,7 @@ namespace RTS_test
 						int checkX = xt + x;
 						int checkY = yt + y;
 
-						if (checkX >= tileMap.getWidth() || checkY >= tileMap.getHeight() || occupied[checkX, checkY] || !tileMap.getTile(checkX, checkY).Name.Equals("grass"))
+						if (checkX >= tileMap.Size.x || checkY >= tileMap.Size.y || occupied[checkX, checkY] || !tileMap.getTile(checkX, checkY).Name.Equals("grass"))
 						{
 							canPlaceResource = false;
 							break;

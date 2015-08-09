@@ -187,7 +187,7 @@ namespace RTS_test
 
                     nodesToExploreMap.Remove(node.pos);
 
-                    float dis = 2f;// 0.55f + tileMap.getDis(new Vector2((float)node.pos.x - 0.5f, (float)node.pos.y - 0.5f));
+                    float dis = 2f;// 0.55f + tileMap.DisField.getDis(new Vector2((float)node.pos.x - 0.5f, (float)node.pos.y - 0.5f));
 
                     for (int i = 0; i < stepDirections.Count; ++i)
                     {

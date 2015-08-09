@@ -6,25 +6,22 @@ using System.Text;
 
 namespace RTS_test
 {
-    class TileEntityMap
+    public class DisField
     {
-        private Map<bool> tiles;
+        private int2 size;
         private float[,] disField;
-        private int width;
-        private int height;
-
+        private bool[,] tiles;
         private Queue<int2> updateQueue = new Queue<int2>();
         private HashSet<int2> updateTiles = new HashSet<int2>();
 
-        public TileEntityMap(int width, int height)
+        public DisField(int2 size)
         {
-            this.width = width;
-            this.height = height;
-            tiles = new Map<bool>(width, height);
-            disField = new float[width, height];
+            this.size = size;
+            disField = new float[size.x, size.y];
+            tiles = new bool[size.x, size.y]; ;
         }
 
-        public void updateDisField()
+        public void update()
         {
             while (updateQueue.Count > 0)
             {
@@ -33,7 +30,7 @@ namespace RTS_test
 
                 float dis = 3f;
 
-                bool isSolid = getTileSolid(pos.x, pos.y);
+                bool isSolid = getTile(pos.x, pos.y);
 
                 if (isSolid)
                     dis = 1f;
@@ -45,20 +42,25 @@ namespace RTS_test
                         if (xx == 0 && yy == 0)
                             continue;
 
-                        bool tile = getTileSolid(pos.x + xx, pos.y + yy);
-                        if (!(tile ^ tile))
+                        bool tileIsSolid = getTile(pos.x + xx, pos.y + yy);
+                        if (!(tileIsSolid ^ isSolid))
                             continue;
 
                         Vector2 b = new Vector2(0.5f, 0.5f);
                         Vector2 p = new Vector2((float)(xx), (float)(yy));
 
+
                         Vector2 d = new Vector2(Math.Abs(p.X), Math.Abs(p.Y)) - b;
                         float dd = Math.Min(Math.Max(d.X, d.Y), 0f) +
                                  Vector2.Max(d, new Vector2(0f, 0f)).Length();
 
+
                         dis = Math.Min(dis, dd);
+
+
                     }
                 }
+
                 if (isSolid)
                     disField[pos.x, pos.y] = -dis;
                 else
@@ -66,12 +68,21 @@ namespace RTS_test
             }
         }
 
+
+        public bool getTile(int x, int y)
+        {
+            if (x < 0 || y < 0 || x >= size.x || y >= size.y)
+                return true;
+
+            return tiles[x, y];
+        }
+
         public float getDis(Vector2 pos)
         {
             int2 floorPos = new int2((int)pos.X, (int)pos.Y);
             int2 ceilPos = new int2((int)pos.X + 1, (int)pos.Y + 1);
 
-            if (floorPos.x < 0 || floorPos.y < 0 || ceilPos.x >= width || ceilPos.y >= height)
+            if (floorPos.x < 0 || floorPos.y < 0 || ceilPos.x >= size.x || ceilPos.y >= size.y)
                 return 5f;
 
             Vector2 localPos = new Vector2(pos.X % 1f, pos.Y % 1f);
@@ -79,7 +90,7 @@ namespace RTS_test
             float b = 1f - localPos.Y;
             float c = 1f - a;
             float d = 1f - b;
-            float[] dis = {
+            float[] dis = { 
                 disField[floorPos.x, floorPos.y],
                 disField[ceilPos.x, floorPos.y],
                 disField[floorPos.x, ceilPos.y],
@@ -110,27 +121,22 @@ namespace RTS_test
             return normal;
         }
 
-        public bool getTileSolid(int x, int y)
+        public void setTile(int x, int y, bool isSolid)
         {
-            if (x < 0 || y < 0 || x >= width || y >= height)
-                return true;
-            return tiles.getData(x, y);
-        }
-
-        public void setTileSolid(int x, int y, bool tile)
-        {
-            if (x < 0 || y < 0 || x >= width || y >= height)
+            if (x < 0 || y < 0 || x >= size.x || y >= size.y)
                 return;
 
+            if (tiles[x, y] == isSolid)
+                return;
 
-            tiles.setData(x, y, tile);
+            tiles[x, y] = isSolid;
 
             for (int xx = -2; xx <= 2; ++xx)
             {
                 for (int yy = -2; yy <= 2; ++yy)
                 {
                     int2 pos = new int2(x + xx, y + yy);
-                    if (pos.x < 0 || pos.y < 0 || pos.x >= width || pos.y >= height)
+                    if (pos.x < 0 || pos.y < 0 || pos.x >= size.x || pos.y >= size.y)
                         continue;
 
                     if (updateTiles.Contains(pos))
@@ -142,14 +148,10 @@ namespace RTS_test
             }
         }
 
-        public int getWidth()
+        public int2 Size
         {
-            return this.width;
+            get { return size; }
         }
 
-        public int getHeight()
-        {
-            return this.height;
-        }
     }
 }

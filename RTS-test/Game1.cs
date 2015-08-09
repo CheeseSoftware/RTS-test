@@ -25,7 +25,8 @@ namespace RTS_test
 
         private InputState _inputState;
         private TileMap tileMap;
-        private TileEntityMap tileEntityMap;
+        private DisField entityDisField;
+        private DisFieldMixer disFieldMixer;
         private TileManager tileManager;
         private TextureManager textureManager;
         private EntityWorld entityWorld;
@@ -58,8 +59,9 @@ namespace RTS_test
         {
             _inputState = new InputState();
             tileManager = new TileManager();
-            tileMap = new TileMap(tileManager, Global.mapWidth, Global.mapHeight);
-            tileEntityMap = new TileEntityMap(Global.mapWidth, Global.mapHeight);
+            tileMap = new TileMap(tileManager, new int2(Global.mapWidth, Global.mapHeight));
+            entityDisField = new DisField(new int2(Global.mapWidth, Global.mapHeight));
+            disFieldMixer = new DisFieldMixer();
             textureManager = new TextureManager();
             unitController = new UnitController();
             world = new FarseerPhysics.Dynamics.World(new Vector2(0f, 0f));
@@ -78,9 +80,9 @@ namespace RTS_test
             EntitySystem.BlackBoard.SetEntry<SpriteBatch>("SpriteBatch", spriteBatch);
             EntitySystem.BlackBoard.SetEntry<TextureManager>("TextureManager", textureManager);
             EntitySystem.BlackBoard.SetEntry<TileMap>("TileMap", tileMap);
-            EntitySystem.BlackBoard.SetEntry<TileEntityMap>("TileEntityMap", tileEntityMap);
+            EntitySystem.BlackBoard.SetEntry<DisField>("EntityDisField", entityDisField);
+            EntitySystem.BlackBoard.SetEntry<DisFieldMixer>("DisFieldMixer", disFieldMixer);
             EntitySystem.BlackBoard.SetEntry<FarseerPhysics.Dynamics.World>("PhysicsWorld", world);
-            EntitySystem.BlackBoard.SetEntry<TileMap>("TileMap", tileMap);
             EntitySystem.BlackBoard.SetEntry<Generator>("Generator", generator);
             this.entityWorld.InitializeAll(true);
 
@@ -130,8 +132,11 @@ namespace RTS_test
 
             tileMap.load();
             generator.generate(tileMap, entityWorld);
-            tileMap.updateDisField();
-            tileEntityMap.updateDisField();
+            tileMap.update();
+            entityDisField.update();
+
+            disFieldMixer.addDisField(tileMap.DisField);
+            disFieldMixer.addDisField(entityDisField);
 
             for (int i = 0; i < 50; ++i)
                 entityWorld.CreateEntityFromTemplate("Test", new object[] {
@@ -158,18 +163,18 @@ namespace RTS_test
 
             //Generate resources and natural object entities
             /*Random r = new Random();
-			for (int i = 0; i < tileMap.getWidth(); i++)
+			for (int i = 0; i < tileMap.Size.x; i++)
 			{
 				entityWorld.CreateEntityFromTemplate("Tree", new object[] {
-					new Vector2(r.Next(tileMap.getWidth() * 32), r.Next(tileMap.getHeight() * 32)),
+					new Vector2(r.Next(tileMap.Size.x * 32), r.Next(tileMap.Size.y() * 32)),
 					});
 
 				entityWorld.CreateEntityFromTemplate("Stone", new object[] {
-					new Vector2(r.Next(tileMap.getWidth() * 32), r.Next(tileMap.getHeight() * 32)),
+					new Vector2(r.Next(tileMap.Size.x * 32), r.Next(tileMap.Size.y() * 32)),
 					});
 
 				entityWorld.CreateEntityFromTemplate("BerryBush", new object[] {
-					new Vector2(r.Next(tileMap.getWidth() * 32), r.Next(tileMap.getHeight() * 32)),
+					new Vector2(r.Next(tileMap.Size.x * 32), r.Next(tileMap.Size.y() * 32)),
 					});
 			}*/
 

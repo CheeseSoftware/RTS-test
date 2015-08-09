@@ -37,7 +37,7 @@ namespace RTS_test
                     );
 
                 TileMap tileMap = EntitySystem.BlackBoard.GetEntry<TileMap>("TileMap");
-                float dis = tileMap.getDis(physics.Position * Global.tileSize) / 4f;
+                float dis = tileMap.DisField.getDis(physics.Position * Global.tileSize) / 4f;
                 Color color = new Color(dis, dis, dis);
 
 
@@ -70,7 +70,7 @@ namespace RTS_test
                     );
 
                 TileMap tileMap = EntitySystem.BlackBoard.GetEntry<TileMap>("TileMap");
-                float dis = tileMap.getDis(tileEntity.Position.toVector2() * Global.tileSize) / 4f;
+                float dis = tileMap.DisField.getDis(tileEntity.Position.toVector2() * Global.tileSize) / 4f;
                 Color color = new Color(dis, dis, dis);
 
                 spriteBatch.Draw(drawable.texture, null, rectangle, null, new Vector2(drawable.texture.Width / 2, drawable.texture.Height / 2), tileEntity.Rotation, null, color, SpriteEffects.None, 0);
@@ -140,8 +140,7 @@ namespace RTS_test
         [ArtemisEntitySystem(GameLoopType = GameLoopType.Update, Layer = 0)]
         public class TerrainPhysics : EntityProcessingSystem<component.Physics>
         {
-            private TileMap tileMap;
-            private TileEntityMap tileEntityMap;
+            private DisFieldMixer disFieldMixer;
 
             public TerrainPhysics()
                 : base(Aspect.All(typeof(component.Physics)))
@@ -152,8 +151,7 @@ namespace RTS_test
 
             public override void LoadContent()
             {
-                tileMap = EntitySystem.BlackBoard.GetEntry<TileMap>("TileMap");
-                tileEntityMap = EntitySystem.BlackBoard.GetEntry<TileEntityMap>("TileEntityMap");
+                disFieldMixer = EntitySystem.BlackBoard.GetEntry<DisFieldMixer>("DisFieldMixer");
             }
 
             protected override void Process(Entity e, component.Physics physics)
@@ -163,8 +161,8 @@ namespace RTS_test
                 float dis;
                 for (int i = 0; i < 8; ++i)
                 {
-                    dis = tileMap.getDis(physics.Position - new Vector2(0.5f, 0.5f)) - 1.0f + 0.5f;
-                    Vector2 normal = tileMap.getNormal(physics.Position);
+                    dis = disFieldMixer.getDis(physics.Position - new Vector2(0.5f, 0.5f)) - 1.0f + 0.5f;
+                    Vector2 normal = disFieldMixer.getNormal(physics.Position);
                     if (dis < 0f)
                     {
                         physics.Body.ApplyLinearImpulse(-2.0f * normal * dis);

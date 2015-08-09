@@ -39,7 +39,7 @@
 //                    float dis;
 //                    for (int i = 0; i < 8; ++i )
 //                    {
-//                        dis = tileMap.getDis(transformComponent.pos / 32f) - 1.0f;
+//                        dis = tileMap.DisField.getDis(transformComponent.pos / 32f) - 1.0f;
 //                        Vector2 normal = tileMap.getNormal(transformComponent.pos / 32f);
 //                        if (dis < 0f)
 //                            transformComponent.pos += -32f * normal * dis;

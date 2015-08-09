@@ -97,12 +97,12 @@ namespace RTS_test
                 size = new int2(width, height);
                 this.rotation = rotation;
 
-                TileEntityMap tileEntityMap = EntitySystem.BlackBoard.GetEntry<TileEntityMap>("TileEntityMap");
+                DisField entityDisField = EntitySystem.BlackBoard.GetEntry<DisField>("EntityDisField");
                 for (int i = position.x; i < position.x + size.x; i++)
                 {
                     for (int j = position.y; j < position.y + size.y; j++)
                     {
-                        tileEntityMap.setTileSolid(position.x, position.y, true);
+                        entityDisField.setTile(position.x, position.y, true);
                     }
                 }
             }
@@ -132,12 +132,12 @@ namespace RTS_test
 
             public void remove()
             {
-                TileEntityMap tileEntityMap = EntitySystem.BlackBoard.GetEntry<TileEntityMap>("TileEntityMap");
+                DisField entityDisField = EntitySystem.BlackBoard.GetEntry<DisField>("EntityDisField");
                 for (int i = position.x; i < position.x + size.x; i++)
                 {
                     for (int j = position.y; j < position.y + size.y; j++)
                     {
-                        tileEntityMap.setTileSolid(position.x, position.y, false);
+                        entityDisField.setTile(position.x, position.y, false);
                     }
                 }
             }
