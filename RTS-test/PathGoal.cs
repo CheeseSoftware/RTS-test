@@ -275,7 +275,7 @@ namespace RTS_test
 
             float dis2 = a * b * dis[0] + c * b * dis[1] + a * d * dis[2] + c * d * dis[3];
 
-            return dis2;
+            return dis2 - 0.25f*disFieldMixer.getDis(pos);
         }
 
         public Vector2 getDirection(Vector2 pos)
@@ -325,10 +325,11 @@ namespace RTS_test
             ////pos = new Vector2((int)Math.Round(pos.X), (int)Math.Round(pos.Y));
             //////////////
             ////// Epsilon: 0.01f
-            Vector2 a = getDis(pos + new Vector2(-0.51f, +0.00f)) * Vector2.Normalize(new Vector2(-1f, +0f));
-            Vector2 b = getDis(pos + new Vector2(+0.51f, -0.00f)) * Vector2.Normalize(new Vector2(+1f, -0f));
-            Vector2 c = getDis(pos + new Vector2(-0.00f, +0.51f)) * Vector2.Normalize(new Vector2(-0f, +1f));
-            Vector2 d = getDis(pos + new Vector2(+0.00f, -0.51f)) * Vector2.Normalize(new Vector2(+0f, -1f));
+            pos = pos-new Vector2(0.5f, 0.5f);
+            Vector2 a = getDis(pos + new Vector2(-0.01f, +0.01f)) * Vector2.Normalize(new Vector2(-1f, +1f));
+            Vector2 b = getDis(pos + new Vector2(+0.01f, +0.01f)) * Vector2.Normalize(new Vector2(+1f, +1f));
+            Vector2 c = getDis(pos + new Vector2(-0.01f, -0.01f)) * Vector2.Normalize(new Vector2(-1f, -1f));
+            Vector2 d = getDis(pos + new Vector2(+0.01f, -0.01f)) * Vector2.Normalize(new Vector2(+1f, -1f));
 
             Vector2 normal = new Vector2(a.X + b.X + c.X + d.X, a.Y + b.Y + c.Y + d.Y);
             if (normal.Length() > 0f)

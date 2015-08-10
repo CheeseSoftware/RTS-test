@@ -191,8 +191,8 @@ namespace RTS_test
                         //physics.Position += -1f * normal * (dis);
                         //physics.Velocity *= 0.5f;
 
-                        if (dis < -0.5f)
-                            physics.Position += -1.0f * normal * (dis + 0.5f);
+                        if (dis < -0.25f)
+                            physics.Position += -1.0f * normal * (dis + 0.25f);
                         //physics.Velocity += -0.5f * normal * dis;
                     }
                     else
