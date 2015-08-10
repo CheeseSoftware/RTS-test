@@ -29,6 +29,7 @@ namespace RTS_test
         private DisFieldMixer disFieldMixer;
         private TileManager tileManager;
         private TextureManager textureManager;
+        private AnimationManager animationManager;
         private EntityWorld entityWorld;
         private UnitController unitController;
         private FarseerPhysics.Dynamics.World world;
@@ -63,6 +64,7 @@ namespace RTS_test
             entityDisField = new DisField(new int2(Global.mapWidth, Global.mapHeight));
             disFieldMixer = new DisFieldMixer();
             textureManager = new TextureManager();
+            animationManager = new AnimationManager();
             unitController = new UnitController();
             world = new FarseerPhysics.Dynamics.World(new Vector2(0f, 0f));
             generator = new Generator();
@@ -84,6 +86,8 @@ namespace RTS_test
             EntitySystem.BlackBoard.SetEntry<DisFieldMixer>("DisFieldMixer", disFieldMixer);
             EntitySystem.BlackBoard.SetEntry<FarseerPhysics.Dynamics.World>("PhysicsWorld", world);
             EntitySystem.BlackBoard.SetEntry<Generator>("Generator", generator);
+            EntitySystem.BlackBoard.SetEntry<AnimationManager>("AnimationManager", animationManager);
+
             this.entityWorld.InitializeAll(true);
 
 
@@ -120,6 +124,7 @@ namespace RTS_test
         {
             font = Content.Load<SpriteFont>("SpriteFont1");
             textureManager.loadTextures(Content);
+            animationManager.load();
 
             TileData tileGrass = new TileData("grass", textureManager.getTexture(1), false);
             TileData tileSand = new TileData("sand", textureManager.getTexture(3), false);
@@ -141,7 +146,7 @@ namespace RTS_test
 
             for (int i = 0; i < 50; ++i)
                 entityWorld.CreateEntityFromTemplate("Test", new object[] {
-                    new Vector2(0.2f*i, 4f*(float)Math.Sin(0.5f*i)),
+                    new Vector2(7 + 0.2f*i, 7 + 4f*(float)Math.Sin(0.5f*i)),
                     new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
                 });
 
@@ -285,7 +290,7 @@ namespace RTS_test
             SharpCEGui.Base.WidgetLookManager.SetDefaultResourceGroup("looknfeels");
             SharpCEGui.Base.WindowManager.SetDefaultResourceGroup("layouts");
             //CEGUI::ScriptModule::setDefaultResourceGroup("lua_scripts");
-            AnimationManager.SetDefaultResourceGroup("animations");
+            //AnimationManager.SetDefaultResourceGroup("animations");
 
             //// setup default group for validation schemas
             //CEGUI::XMLParser* parser = CEGUI::System::getSingleton().getXMLParser();

@@ -40,24 +40,33 @@ namespace RTS_test
 
                 TileMap tileMap = EntitySystem.BlackBoard.GetEntry<TileMap>("TileMap");
                 float dis = tileMap.DisField.getDis(physics.Position * Global.tileSize) / 4f;
-                Color color = new Color(dis, dis, dis);
 
-                spriteBatch.Draw(drawable.texture, null, rectangle, null, new Vector2(drawable.texture.Width / 2, drawable.texture.Height / 2), physics.Rotation, null, color, SpriteEffects.None, 0);
+                if (!e.HasComponent<component.AnimationComponent>())
+                {
+                    Color color = new Color(dis, dis, dis);
+                    spriteBatch.Draw(drawable.texture, null, rectangle, null, new Vector2(drawable.texture.Width / 2, drawable.texture.Height / 2), physics.Rotation + drawable.AdditionalRotation, null, color, SpriteEffects.None, 0);
+                }
+                else
+                {
+                    component.AnimationComponent animationComponent = e.GetComponent<component.AnimationComponent>();
+                    if (!animationComponent.isAnimating())
+                        animationComponent.startAnimation(14);
+                    Texture2D currentTexture = textureManager.getTexture(animationComponent.getCurrentTexture());
+
+                    spriteBatch.Draw(currentTexture, null, rectangle, animationComponent.getCurrentFrame(), new Vector2(rectangle.Width / 2, rectangle.Height / 2), physics.Rotation + drawable.AdditionalRotation, null, null, SpriteEffects.None, 0);
+                }
 
                 // Draw HP bar
-                if(e.HasComponent<component.HealthComponent>())
+                if (e.HasComponent<component.HealthComponent>())
                 {
                     component.HealthComponent healthComponent = e.GetComponent<component.HealthComponent>();
-                    healthComponent.Health += 0.4f;
-                    if (healthComponent.Health > 50)
-                        healthComponent.Health = 0;
                     Texture2D hpbar = textureManager.getTexture(11);
                     Texture2D hp = textureManager.getTexture(12);
 
                     Vector2 pos = physics.Position * 32;
                     Vector2 offset = new Vector2(0, -12);
                     Rectangle hpbarRectangle = new Rectangle((int)(offset.X + pos.X), (int)(offset.Y + pos.Y), 52, 4);
-                    Rectangle hpRectangle = new Rectangle((int)(offset.X + pos.X), (int)(offset.Y + pos.Y), (int)healthComponent.Health, 2);
+                    Rectangle hpRectangle = new Rectangle((int)(offset.X + pos.X), (int)(offset.Y + pos.Y), (int)(healthComponent.Health/healthComponent.MaxHealth*100/2), 2);
 
                     spriteBatch.Draw(hpbar, null, hpbarRectangle, null, new Vector2(hpbar.Width / 2, hpbar.Height / 2), 0f, null, null, SpriteEffects.None, 0);
 

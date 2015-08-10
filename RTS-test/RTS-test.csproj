@@ -39,6 +39,8 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Animation.cs" />
+    <Compile Include="AnimationManager.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Components.cs" />
     <Compile Include="DisField.cs" />

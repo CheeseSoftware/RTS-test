@@ -17,6 +17,7 @@ namespace RTS_test
         public Entity BuildEntity(Entity entity, EntityWorld entityWorld, params object[] args)
         {
             TextureManager textureManager = EntitySystem.BlackBoard.GetEntry<TextureManager>("TextureManager");
+            AnimationManager animationManager = EntitySystem.BlackBoard.GetEntry<AnimationManager>("AnimationManager");
             FarseerPhysics.Dynamics.World world = EntitySystem.BlackBoard.GetEntry<FarseerPhysics.Dynamics.World>("PhysicsWorld");
 
             Vector2 pos = new Vector2(0f, 0f);
@@ -43,7 +44,10 @@ namespace RTS_test
             entity.AddComponent(new component.HealthComponent(100));
             entity.AddComponent(new component.Physics(body));
             entity.AddComponent(new component.MaxVelocity(0.85f));
-            entity.AddComponent(new component.Drawable(textureManager.getTexture(9)));
+            entity.AddComponent(new component.Drawable(textureManager.getTexture(13), (float)Math.PI/2));
+            component.AnimationComponent animationComponent = new component.AnimationComponent();
+            animationComponent.addAnimation(14, animationManager.getAnimation("smallworker-gather"));
+            entity.AddComponent(animationComponent);
             entity.AddComponent(new component.Goal());
             return entity;
         }
