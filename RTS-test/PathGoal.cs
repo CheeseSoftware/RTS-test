@@ -99,10 +99,11 @@ namespace RTS_test
             }
         }
 
-        private float calcF(float dis, int2 a, int2 b)
+        private float calcF(float dis, int2 point, int2 goal)
         {
-            Vector2 delta = new Vector2(a.x - b.x, a.y - b.y);
-            return dis + delta.Length();
+            Vector2 delta = new Vector2(point.x - goal.x, point.y - goal.y);
+            float tileDis = 0f;// disFieldMixer.getDis(new Vector2(point.x, point.y));
+            return dis + delta.Length() + tileDis;
         }
 
         public PathGoal(Bag<Entity> units, DisFieldMixer disFieldMixer, int2 size, int2 goalPos)
@@ -175,7 +176,7 @@ namespace RTS_test
 
                 foreach (Node node in nodesToExplore)
                 {
-                    node.f = calcF(node.dis, entityPos, node.pos);
+                    node.f = calcF(node.dis, node.pos, entityPos);
                 }
                 nodesToExplore.Sort();
 
@@ -196,7 +197,7 @@ namespace RTS_test
                             break;
 
                         int2 newNodePos = node.pos + stepDirection.pos;
-                        float newNodeDis = nodeDis + stepDirection.dis;
+                        float newNodeDis = nodeDis + stepDirection.dis + 4f - disFieldMixer.getDis(new Vector2(newNodePos.x, newNodePos.y)); ;
 
                         if (newNodePos.x < 0 || newNodePos.y < 0 || newNodePos.x >= size.x || newNodePos.y >= size.y)
                             continue;
@@ -230,7 +231,7 @@ namespace RTS_test
                             nodesToExploreMap.Remove(newNodePos);
                         }
 
-                        Node newNode = new Node(newNodePos, newNodeDis, calcF(newNodeDis, entityPos, node.pos));
+                        Node newNode = new Node(newNodePos, newNodeDis, calcF(newNodeDis, node.pos, entityPos));
                         int index = nodesToExplore.BinarySearch(newNode);
                         if (index < 0)
                             index = ~index;
@@ -275,7 +276,7 @@ namespace RTS_test
 
             float dis2 = a * b * dis[0] + c * b * dis[1] + a * d * dis[2] + c * d * dis[3];
 
-            return dis2 - 0.25f*disFieldMixer.getDis(pos);
+            return dis2 + 0.25f*disFieldMixer.getDis(pos);
         }
 
         public Vector2 getDirection(Vector2 pos)
