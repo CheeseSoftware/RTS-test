@@ -125,6 +125,15 @@ namespace RTS_test
                     return;
 
                 Vector2 dir = goal.pathGoal.getDirection(physics.Position);
+                if (e.HasComponent<component.Formation>())
+                {
+                    component.Formation formation = e.GetComponent<component.Formation>();
+                    dir = (formation.Pos).toVector2()-physics.Position;
+                    if (dir.Length() > 0.25f)
+                        dir.Normalize();
+                    else
+                        dir = new Vector2(0f, 0f);
+                }
                 float oldRotation = physics.Rotation;
                 float rotation = (float)Math.Atan2(dir.Y, dir.X);
 

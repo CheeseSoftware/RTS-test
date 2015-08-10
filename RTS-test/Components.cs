@@ -264,6 +264,32 @@ namespace RTS_test
             }
 
         }
+
+        public class Formation : IComponent
+        {
+            int2 pos;
+            EntityFormation entityFormation = null;
+
+            public Formation()
+            {
+                pos = new int2(-1, -1);
+            }
+
+            public EntityFormation EntityFormation
+            {
+                get { return entityFormation; }
+                set { entityFormation = value; }
+            }
+
+            public int2 Pos
+            {
+                get { return pos; }
+                set { pos = value; }
+            }
+
+        }
+
+
     }
 
 }

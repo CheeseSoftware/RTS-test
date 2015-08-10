@@ -27,6 +27,7 @@ namespace RTS_test
 
 			// Generate tilemap
 			Graphics.Tools.Noise.Primitive.BevinsGradient noise = new Graphics.Tools.Noise.Primitive.BevinsGradient(seed, NoiseQuality.Best);
+            Graphics.Tools.Noise.Primitive.BevinsGradient noise2 = new Graphics.Tools.Noise.Primitive.BevinsGradient(seed, NoiseQuality.Best);
 
 			for (int x = 0; x < tileMap.Size.x; x++)
 			{
@@ -35,12 +36,14 @@ namespace RTS_test
 
 					ushort id = 0;
 
-					float zoom = 0.03f;
+					float zoom = 0.01f;
+                    float value = 0.67f*noise.GetValue(zoom * x, zoom * y, 0)
+                        + 0.335f*noise2.GetValue(2*zoom * x, 2*zoom * y, 0);
 
-					if (noise.GetValue(zoom * x, zoom * y, 0) > 0.3f)
+					if (value > 0.3f)
 						id = 3;
 
-					else if (noise.GetValue(zoom * x, zoom * y, 0) > 0.0001f)
+					else if (value > 0.0001f)
 						id = 2;
 
 					else

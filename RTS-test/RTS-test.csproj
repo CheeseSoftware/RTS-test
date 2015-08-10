@@ -45,6 +45,7 @@
     <Compile Include="Components.cs" />
     <Compile Include="DisField.cs" />
     <Compile Include="DisFieldMixer.cs" />
+    <Compile Include="EntityFormation.cs" />
     <Compile Include="EntityTemplates.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Generator.cs" />
