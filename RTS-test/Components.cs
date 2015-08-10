@@ -9,6 +9,7 @@ using Artemis.Attributes;
 using Artemis.Interface;
 using Artemis.System;
 using Artemis.Blackboard;
+using Jitter2D.Dynamics;
 
 namespace RTS_test
 {
@@ -166,18 +167,18 @@ namespace RTS_test
 
         public class Physics : IComponent
         {
-            private FarseerPhysics.Dynamics.Body body;
+            private RigidBody body;
             private Vector2 oldPosition = new Vector2();
 
-            public Physics(FarseerPhysics.Dynamics.Body body)
+            public Physics(RigidBody body)
             {
                 this.body = body;
             }
 
             public Vector2 Position
             {
-                get { return body.Position; }
-                set { oldPosition = body.Position; body.Position = value; }
+                get { return new Vector2(body.Position.X, body.Position.Y); }
+                set { oldPosition = new Vector2(body.Position.X, body.Position.Y); body.Position = new Jitter2D.LinearMath.JVector(value.X, value.Y); }
             }
 
             public Vector2 OldPosition
@@ -187,17 +188,17 @@ namespace RTS_test
 
             public Vector2 Velocity
             {
-                get { return body.LinearVelocity; }
-                set { body.LinearVelocity = value; }
+                get { return new Vector2(body.LinearVelocity.X, body.LinearVelocity.Y); }
+                set { body.LinearVelocity = new Jitter2D.LinearMath.JVector(value.X, value.Y); }
             }
 
             public float Rotation
             {
-                get { return body.Rotation; }
-                set { body.Rotation = value; }
+                get { return body.Orientation; }
+                set { body.Orientation = value; }
             }
 
-            public FarseerPhysics.Dynamics.Body Body
+            public RigidBody Body
             {
                 get { return body; }
             }

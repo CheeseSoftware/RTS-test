@@ -2,6 +2,7 @@
 using Artemis.Manager;
 using Artemis.System;
 using Artemis.Utils;
+using Jitter2D.Collision;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -32,7 +33,7 @@ namespace RTS_test
         private AnimationManager animationManager;
         private EntityWorld entityWorld;
         private UnitController unitController;
-        private FarseerPhysics.Dynamics.World world;
+        private Jitter2D.World world;
         private Generator generator;
 
         private int frameRate;
@@ -66,7 +67,12 @@ namespace RTS_test
             textureManager = new TextureManager();
             animationManager = new AnimationManager();
             unitController = new UnitController();
-            world = new FarseerPhysics.Dynamics.World(new Vector2(0f, 0f));
+
+            CollisionSystem collision = new CollisionSystemBrute();
+            collision.EnableSpeculativeContacts = false;
+            world = new Jitter2D.World(collision);
+            world.AllowDeactivation = false;
+
             generator = new Generator();
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -84,7 +90,7 @@ namespace RTS_test
             EntitySystem.BlackBoard.SetEntry<TileMap>("TileMap", tileMap);
             EntitySystem.BlackBoard.SetEntry<DisField>("EntityDisField", entityDisField);
             EntitySystem.BlackBoard.SetEntry<DisFieldMixer>("DisFieldMixer", disFieldMixer);
-            EntitySystem.BlackBoard.SetEntry<FarseerPhysics.Dynamics.World>("PhysicsWorld", world);
+            EntitySystem.BlackBoard.SetEntry<Jitter2D.World>("PhysicsWorld", world);
             EntitySystem.BlackBoard.SetEntry<Generator>("Generator", generator);
             EntitySystem.BlackBoard.SetEntry<AnimationManager>("AnimationManager", animationManager);
 
@@ -144,7 +150,7 @@ namespace RTS_test
             disFieldMixer.addDisField(entityDisField);
             tileMap.setTreeDis(entityDisField);
 
-            for (int i = 0; i < 50; ++i)
+            for (int i = 0; i < 500; ++i)
                 entityWorld.CreateEntityFromTemplate("Test", new object[] {
                     new Vector2(7 + 0.2f*i, 7 + 4f*(float)Math.Sin(0.5f*i)),
                     new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
@@ -218,7 +224,11 @@ namespace RTS_test
 
 
             unitController.updateGoal(entityWorld, Global.Camera);
-            world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
+
+            float step = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (step > 1.0f / 100.0f) step = 1.0f / 100.0f;
+            world.Step(step, true);
+
             entityWorld.Update();
             // FPS-counter stuff
             ++this.frameCounter;

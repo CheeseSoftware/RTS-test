@@ -2,6 +2,7 @@
 using Artemis.Attributes;
 using Artemis.Manager;
 using Artemis.System;
+using Jitter2D.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -140,7 +141,7 @@ namespace RTS_test
                     physics.Velocity = new Vector2();
                 }
                 else if (Math.Abs(oldRotation - rotation) <= 1)
-                    physics.Body.ApplyLinearImpulse(1.1f * dir);
+                    physics.Body.ApplyImpulse(new JVector((1.1f * dir).X, (1.1f * dir).Y));
             }
         }
 
@@ -195,7 +196,7 @@ namespace RTS_test
                     Vector2 normal = disFieldMixer.getNormal(physics.Position);
                     if (dis < 0f && normal.Length() > 0f)
                     {
-                        physics.Body.ApplyLinearImpulse(-1.0f * normal * dis);
+                        physics.Body.ApplyImpulse(new JVector((-1.0f * normal * dis).X, (-1.0f * normal * dis).Y));
                         //physics.Body.ApplyForce(-100.0f * normal * (dis));
                         //physics.Position += -1f * normal * (dis);
                         //physics.Velocity *= 0.5f;

@@ -2,6 +2,9 @@
 using Artemis.Attributes;
 using Artemis.Interface;
 using Artemis.System;
+using Jitter2D.Collision.Shapes;
+using Jitter2D.Dynamics;
+using Jitter2D.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -18,7 +21,7 @@ namespace RTS_test
         {
             TextureManager textureManager = EntitySystem.BlackBoard.GetEntry<TextureManager>("TextureManager");
             AnimationManager animationManager = EntitySystem.BlackBoard.GetEntry<AnimationManager>("AnimationManager");
-            FarseerPhysics.Dynamics.World world = EntitySystem.BlackBoard.GetEntry<FarseerPhysics.Dynamics.World>("PhysicsWorld");
+            Jitter2D.World world = EntitySystem.BlackBoard.GetEntry<Jitter2D.World>("PhysicsWorld");
 
             Vector2 pos = new Vector2(0f, 0f);
             Vector2 velocity = new Vector2(0f, 0f);
@@ -31,14 +34,32 @@ namespace RTS_test
 
 
 
-            FarseerPhysics.Dynamics.Body body = FarseerPhysics.Factories.BodyFactory.CreateEllipse(world, 1.0f, 0.5f, 4, 1.0f);
-            body.BodyType = FarseerPhysics.Dynamics.BodyType.Dynamic;
-            body.Position = pos;
-            body.Friction = 0.0f;
-            body.Restitution = 0.0f;
-            body.Mass = 0.0f;
-            body.FixedRotation = true;
-            body.LinearVelocity = velocity;
+            //RigidBody body = FarseerPhysics.Factories.BodyFactory.CreateEllipse(world, 1.0f, 0.5f, 4, 1.0f);
+            //body.BodyType = FarseerPhysics.Dynamics.BodyType.Dynamic;
+            //body.Position = pos;
+            //body.Friction = 0.0f;
+            //body.Restitution = 0.0f;
+            //body.Mass = 0.0f;
+            //body.FixedRotation = true;
+            //body.LinearVelocity = velocity;
+
+
+            RigidBody body = new RigidBody(new CircleShape(0.5f))
+            {
+                //EnableDebugDraw = true,
+                //Position = new JVector((float)rand.NextDouble(), 0),
+                AngularVelocity = 0,
+                Position = new JVector(pos.X, pos.Y),
+                LinearVelocity = new JVector(velocity.X, velocity.Y),
+                Orientation = 0f,
+                Material = new Material()
+                {
+                    DynamicFriction = 0f,
+                    StaticFriction = 0f,
+                    Restitution = 0f,
+                },
+            };
+            world.AddBody(body);
 
 
             entity.AddComponent(new component.HealthComponent(100));
@@ -60,7 +81,7 @@ namespace RTS_test
         public Entity BuildEntity(Entity entity, EntityWorld entityWorld, params object[] args)
         {
             TextureManager textureManager = EntitySystem.BlackBoard.GetEntry<TextureManager>("TextureManager");
-            FarseerPhysics.Dynamics.World world = EntitySystem.BlackBoard.GetEntry<FarseerPhysics.Dynamics.World>("PhysicsWorld");
+            Jitter2D.World world = EntitySystem.BlackBoard.GetEntry<Jitter2D.World>("PhysicsWorld");
 
             Vector2 pos = new Vector2(0f, 0f);
             Vector2 velocity = new Vector2(0f, 0f);
@@ -73,15 +94,32 @@ namespace RTS_test
 
 
 
-            FarseerPhysics.Dynamics.Body body = FarseerPhysics.Factories.BodyFactory.CreateEllipse(world, 1.0f, 0.5f, 4, 1.0f);
-            body.BodyType = FarseerPhysics.Dynamics.BodyType.Dynamic;
-            body.Position = pos;
-            body.Friction = 0.0f;
-            body.Restitution = 0.0f;
-            body.Mass = 0.0f;
-            body.FixedRotation = true;
-            body.LinearVelocity = velocity;
-            body.LinearDamping = 5f;
+            //FarseerPhysics.Dynamics.Body body = FarseerPhysics.Factories.BodyFactory.CreateEllipse(world, 1.0f, 0.5f, 4, 1.0f);
+            //body.BodyType = FarseerPhysics.Dynamics.BodyType.Dynamic;
+            //body.Position = pos;
+            //body.Friction = 0.0f;
+            //body.Restitution = 0.0f;
+            //body.Mass = 0.0f;
+            //body.FixedRotation = true;
+            //body.LinearVelocity = velocity;
+            //body.LinearDamping = 5f;
+
+            RigidBody body = new RigidBody(new CircleShape(0.5f))
+            {
+                //EnableDebugDraw = true,
+                //Position = new JVector((float)rand.NextDouble(), 0),
+                AngularVelocity = 0,
+                Position = new JVector(pos.X, pos.Y),
+                LinearVelocity = new JVector(velocity.X, velocity.Y),
+                Orientation = 0f,
+                Material = new Material()
+                {
+                    DynamicFriction = 1f,
+                    StaticFriction = 1f,
+                    Restitution = 0f,
+                },
+            };
+            world.AddBody(body);
 
             entity.AddComponent(new component.Physics(body));
             //entity.AddComponent(new component.MaxVelocity(0.90f));
@@ -98,7 +136,7 @@ namespace RTS_test
         public Entity BuildEntity(Entity entity, EntityWorld entityWorld, params object[] args)
         {
             TextureManager textureManager = EntitySystem.BlackBoard.GetEntry<TextureManager>("TextureManager");
-            FarseerPhysics.Dynamics.World world = EntitySystem.BlackBoard.GetEntry<FarseerPhysics.Dynamics.World>("PhysicsWorld");
+           // FarseerPhysics.Dynamics.World world = EntitySystem.BlackBoard.GetEntry<FarseerPhysics.Dynamics.World>("PhysicsWorld");
 
             int2 pos = new int2(0, 0);
             float rotation = 0.0f;
