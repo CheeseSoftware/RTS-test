@@ -72,7 +72,7 @@ namespace RTS_test
         private int2 size;
         private int2 goalPos;
         private DisFieldMixer disFieldMixer;
-        private Bag<Entity> units;
+        private List<Entity> units;
         //private List<uint2> unitPositions;
 
         private List<StepDirection> stepDirections = new List<StepDirection>();
@@ -106,7 +106,7 @@ namespace RTS_test
             return dis + delta.Length() + tileDis;
         }
 
-        public PathGoal(Bag<Entity> units, DisFieldMixer disFieldMixer, int2 size, int2 goalPos)
+        public PathGoal(List<Entity> units, DisFieldMixer disFieldMixer, int2 size, int2 goalPos)
         {
             this.units = units;
             this.disFieldMixer = disFieldMixer;
@@ -338,7 +338,7 @@ namespace RTS_test
             return -normal;
         }
 
-        public Bag<Entity> getEntities()
+        public List<Entity> getEntities()
         {
             return units;
         }
