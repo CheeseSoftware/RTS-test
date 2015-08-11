@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Animation.cs" />
     <Compile Include="AnimationManager.cs" />
+    <Compile Include="Area.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Components.cs" />
     <Compile Include="DisField.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextureManager.cs" />
     <Compile Include="TileMap.cs" />
+    <Compile Include="Types\PagedArray2D.cs" />
     <Compile Include="UnitController.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -20,49 +20,7 @@ namespace RTS_test
         }
     }
 
-   class PagedMap<T>
-    {
-        struct Page<T>
-        {
-            public T[,] nodes;
-        }
-
-        private Dictionary<int2, Page<T>> pages = new Dictionary<int2,Page<T>>();
-        private T nullNode;
-
-        public PagedMap(T nullNode)
-        {
-            this.nullNode = nullNode;
-        }
-
-        T getNode(int2 pos)
-        {
-            int2 pagePos = pos/16;
-            int2 localPos = pos - pagePos;
-
-            if (!pages.ContainsKey(pagePos))
-                return nullNode;
-
-            return pages[pagePos].nodes[localPos.x, localPos.y];
-        }
-
-        void setNode(int2 pos, T node)
-        {
-            int2 pagePos = pos/16;
-            int2 localPos = pos - pagePos;
-
-            if (!pages.ContainsKey(pagePos))
-            {
-                Page<T> page = new Page<T>();
-                page.nodes = new T[8, 8];
-                page.nodes[localPos.x, localPos.y] = node;
-                pages.Add(pagePos, new Page<T>());
-
-            }
-            else
-                pages[pagePos].nodes[localPos.x, localPos.y] = node;
-        }
-    }
+   
 
     public class PathGoal
     {

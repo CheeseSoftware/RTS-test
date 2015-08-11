@@ -2,6 +2,7 @@
 using Graphics.Tools.Noise;
 using Graphics.Tools.Noise.Builder;
 using Microsoft.Xna.Framework;
+using RTS_test.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,32 +41,32 @@ namespace RTS_test
 
 
             // Create border forest
-            createLand(tileMap.Size / 2, (float)tileMap.Size.x+1, (float)tileMap.Size.x+1, 4);
-            createLand(tileMap.Size / 2, 0f, (float)tileMap.Size.x / 2, 1);
+            fillArea(generateArea(tileMap.Size / 2, (float)tileMap.Size.x+1, (float)tileMap.Size.x+1), 4);
+            fillArea(generateArea(tileMap.Size / 2, 0f, (float)tileMap.Size.x / 2), 1);
 
             // Forest
             for (int i = 0; i < 16; ++i)
             {
                 int2 pos = new int2(random.Next(tileMap.Size.x), random.Next(tileMap.Size.y));
-                createClump(pos, 256, 4);
+                fillArea(generateArea(pos, 8f, 16f), 4);
             }
 
             // Small Forest
             for (int i = 0; i < 32; ++i)
             {
                 int2 pos = new int2(random.Next(tileMap.Size.x), random.Next(tileMap.Size.y));
-                createClump(pos, 64, 4);
+                fillArea(generateArea(pos, 2f, 4), 4);
             }
 
             // Create lakes
-            for (int i = 0; i < 16; ++i )
+            for (int i = 0; i < 16; ++i)
             {
                 int2 pos = new int2(random.Next(tileMap.Size.x), random.Next(tileMap.Size.y));
-                createLand(pos, 4, 16, 3);
+                fillArea(generateArea(pos, 4f, 16f), 3);
             }
 
             // Create player land
-            createLand(new int2(18, 18), 32, 64, 2);
+            fillArea(generateArea(new int2(18, 18), 32, 64), 2);
 
             for (int x = 0; x < tileMap.Size.x; x++)
             {
@@ -134,53 +135,88 @@ namespace RTS_test
             
 		}
 
-        public void createClump(int2 pos, int size, UInt16 tileID)
+        //public void createClump(int2 pos, int size, UInt16 tileID)
+        //{
+        //    HashSet<int2> positionSet = new HashSet<int2>();
+        //    List<int2> expandPositions = new List<int2>();
+        //    List<int2> expandDirections = new List<int2>();
+        //    expandDirections.Add(new int2(-1, 0));
+        //    expandDirections.Add(new int2(1, 0));
+        //    expandDirections.Add(new int2(0, -1));
+        //    expandDirections.Add(new int2(0, 1));
+        //    //expandDirections.Add(new int2(-1, -1));
+        //    //expandDirections.Add(new int2(1, 1));
+        //    //expandDirections.Add(new int2(1, -1));
+        //    //expandDirections.Add(new int2(-1, 1));
+
+        //    expandPositions.Add(pos);
+
+        //    for (int i = 0; i < size && expandPositions.Count > 0; ++i)
+        //    {
+        //        int index = random.Next(random.Next(expandPositions.Count)+8) % expandPositions.Count;
+        //        int2 nodePos = expandPositions[index];
+        //        expandPositions.RemoveAt(index);
+        //        tileMap.setTile(nodePos.x, nodePos.y, tileID);
+
+        //        for (int j = 0; j < expandDirections.Count; ++j)
+        //        {
+        //            int2 newPos = nodePos + expandDirections[j];
+
+        //            if (newPos.x < 0 || newPos.y < 0 || newPos.x >= tileMap.Size.x || newPos.y >= tileMap.Size.y)
+        //                continue;
+
+        //            if (positionSet.Contains(newPos))
+        //                continue;
+
+        //            expandPositions.Add(newPos);
+        //            positionSet.Add(newPos);
+        //        }
+        //    }
+        //}
+
+        //public Land createLand(int2 pos, float minRadius, float maxRadius, UInt16 tileID)
+        //{
+        //    Rectangle rect = new Rectangle(pos.x - (int)maxRadius, pos.y - (int)maxRadius, (int)(2 * maxRadius), (int)(2 * maxRadius));
+        //    Land land = new Land();
+
+        //    float noiseRadius = maxRadius - minRadius;
+
+        //    Graphics.Tools.Noise.Primitive.BevinsGradient noise = new Graphics.Tools.Noise.Primitive.BevinsGradient(random.Next(10000), NoiseQuality.Best);
+
+        //    for (int y = rect.Y; y < rect.Y + rect.Height; ++y)
+        //    {
+        //        for (int x = rect.X; x < rect.X + rect.Width; ++x)
+        //        {
+        //            if (x < 0 || y < 0 || x >= tileMap.Size.x || y >= tileMap.Size.y)
+        //                continue;
+
+        //            float dis = new Vector2(x - pos.x, y - pos.y).Length()/maxRadius;
+        //            float nvalue = Math.Abs(noise.GetValue((float)x / 64f, (float)y / 64f, 0f));
+
+        //            if (dis+noiseRadius/maxRadius*(nvalue) < 1f)
+        //            {
+        //                //tileLands[x, y] = land;
+        //                tileMap.setTile(x, y, tileID);
+        //            }
+
+
+        //        }
+        //    }
+
+        //    return land;
+        //}
+
+
+        public Area generateArea(int2 pos, float minRadius, float maxRadius)
         {
-            HashSet<int2> positionSet = new HashSet<int2>();
-            List<int2> expandPositions = new List<int2>();
-            List<int2> expandDirections = new List<int2>();
-            expandDirections.Add(new int2(-1, 0));
-            expandDirections.Add(new int2(1, 0));
-            expandDirections.Add(new int2(0, -1));
-            expandDirections.Add(new int2(0, 1));
-            //expandDirections.Add(new int2(-1, -1));
-            //expandDirections.Add(new int2(1, 1));
-            //expandDirections.Add(new int2(1, -1));
-            //expandDirections.Add(new int2(-1, 1));
+            PagedArray2D<bool> tiles = new PagedArray2D<bool>(false);
 
-            expandPositions.Add(pos);
-
-            for (int i = 0; i < size && expandPositions.Count > 0; ++i)
-            {
-                int index = random.Next(random.Next(expandPositions.Count)+8) % expandPositions.Count;
-                int2 nodePos = expandPositions[index];
-                expandPositions.RemoveAt(index);
-                tileMap.setTile(nodePos.x, nodePos.y, tileID);
-
-                for (int j = 0; j < expandDirections.Count; ++j)
-                {
-                    int2 newPos = nodePos + expandDirections[j];
-
-                    if (newPos.x < 0 || newPos.y < 0 || newPos.x >= tileMap.Size.x || newPos.y >= tileMap.Size.y)
-                        continue;
-
-                    if (positionSet.Contains(newPos))
-                        continue;
-
-                    expandPositions.Add(newPos);
-                    positionSet.Add(newPos);
-                }
-            }
-        }
-
-        public Land createLand(int2 pos, float minRadius, float maxRadius, UInt16 tileID)
-        {
             Rectangle rect = new Rectangle(pos.x - (int)maxRadius, pos.y - (int)maxRadius, (int)(2 * maxRadius), (int)(2 * maxRadius));
             Land land = new Land();
 
             float noiseRadius = maxRadius - minRadius;
 
-            Graphics.Tools.Noise.Primitive.BevinsGradient noise = new Graphics.Tools.Noise.Primitive.BevinsGradient(random.Next(10000), NoiseQuality.Best);
+            Graphics.Tools.Noise.Primitive.BevinsGradient noise = new Graphics.Tools.Noise.Primitive.BevinsGradient(random.Next(), NoiseQuality.Best);
 
             for (int y = rect.Y; y < rect.Y + rect.Height; ++y)
             {
@@ -189,20 +225,34 @@ namespace RTS_test
                     if (x < 0 || y < 0 || x >= tileMap.Size.x || y >= tileMap.Size.y)
                         continue;
 
-                    float dis = new Vector2(x - pos.x, y - pos.y).Length()/maxRadius;
+                    float dis = new Vector2(x - pos.x, y - pos.y).Length() / maxRadius;
                     float nvalue = Math.Abs(noise.GetValue((float)x / 64f, (float)y / 64f, 0f));
 
-                    if (dis+noiseRadius/maxRadius*(nvalue) < 1f)
+                    if (dis + noiseRadius / maxRadius * (nvalue) < 1f)
                     {
-                        //tileLands[x, y] = land;
-                        tileMap.setTile(x, y, tileID);
+                        tiles[x, y] = true;
                     }
 
 
                 }
             }
 
-            return land;
+            return new Area(tiles);
+        }
+
+        public void fillArea(Area area, UInt16 tileID)
+        {
+            foreach (Point p in area)
+                tileMap.setTile(p.X, p.Y, tileID);
+        }
+
+        public void replaceArea(Area area, UInt16 TileIDA, UInt16 TileIDB)
+        {
+            foreach (Point p in area)
+            {
+                if (tileMap.getTileID(p.X, p.Y) == TileIDA)
+                    tileMap.setTile(p.X, p.Y, TileIDB);
+            }
         }
 
 	}
