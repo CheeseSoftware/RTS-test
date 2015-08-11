@@ -341,8 +341,8 @@ namespace RTS_test
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
     SamplerState.AnisotropicClamp, null, null, null, Global.Camera.TranslationMatrix);
             tileMap.draw(spriteBatch, tileManager);
-            entityTileMap.draw(spriteBatch);
             entityWorld.Draw();
+            entityTileMap.draw(spriteBatch);
 
             if (isSelecting)
             {

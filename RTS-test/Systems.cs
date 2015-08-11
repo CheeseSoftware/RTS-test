@@ -79,8 +79,6 @@ namespace RTS_test
             }
         }
 
-        
-
         [ArtemisEntitySystem(GameLoopType = GameLoopType.Update, Layer = 0)]
         public class UnitWalker : EntityProcessingSystem<component.Goal, component.Physics>
         {
