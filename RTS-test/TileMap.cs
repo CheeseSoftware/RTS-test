@@ -67,12 +67,12 @@ namespace RTS_test
                      * Debug code!
                      * // TODO: Remove debug code.
                      * *********************/
-                    if (pathGoal != null)
-                    {
-                        Vector2 dir = pathGoal.getDirection(new Vector2((float)x + 0.5f, (float)y + 0.5f));
-                        color = new Color(dir.Length(), 0.5f + 0.5f * dir.X, 0.5f + 0.5f * dir.Y);//new Color(0.5f + 0.5f * dir.Length(), 0.5f + 0.5f * dir.Length(), 0.5f + 0.5f * dir.Length());//
-                    }
-                    if (treeDis != null)
+                    //if (pathGoal != null)
+                    //{
+                    //    Vector2 dir = pathGoal.getDirection(new Vector2((float)x + 0.5f, (float)y + 0.5f));
+                    //    color = new Color(dir.Length(), 0.5f + 0.5f * dir.X, 0.5f + 0.5f * dir.Y);//new Color(0.5f + 0.5f * dir.Length(), 0.5f + 0.5f * dir.Length(), 0.5f + 0.5f * dir.Length());//
+                    //}
+                    /*if (treeDis != null)
                     {
                         Vector2 dir = treeDis.getNormal(new Vector2((float)x + 0.5f, (float)y + 0.5f));
                         float tdis = treeDis.getDis(new Vector2((float)x + 0.5f, (float)y + 0.5f));
@@ -82,7 +82,12 @@ namespace RTS_test
                             color = Color.Gray;
                         else
                             color = Color.White;
-                    }
+                    }*/
+
+                    //if (treeDis.getTile(x, y))
+                    //    color = Color.Gray;
+                    //else
+                    //    color = Color.White;
 
 					if (x < 0 || y < 0 || x >= Global.mapWidth || y >= Global.mapHeight)
 						continue;

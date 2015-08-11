@@ -210,6 +210,7 @@ namespace RTS_test
                     Vector2 pos = Global.Camera.ScreenToWorld(mouseState.Position.ToVector2());
                     Bag<Entity> entities = entityWorld.EntityManager.GetEntities(Aspect.All(typeof(component.Goal), typeof(component.Physics), typeof(component.Formation)));
                     int2 goalPos = new int2((int)pos.X / Global.tileSize, (int)pos.Y / Global.tileSize);
+                    Console.WriteLine(goalPos.x + " - " + goalPos.y);
                     PathGoal pathGoal = new PathGoal(entities, disFieldMixer, new int2(Global.mapWidth, Global.mapHeight), goalPos);
                     unitController.setPathGoal(pathGoal);
                     pathGoal.updatePath();

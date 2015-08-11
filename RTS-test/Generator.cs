@@ -96,9 +96,6 @@ namespace RTS_test
             //                500,
             //                5
             //            });
-
-                        
-
             //            for (int xt = 0; xt < treeWidth; xt++)
             //            {
             //                for (int yt = 0; yt < treeHeight; yt++)

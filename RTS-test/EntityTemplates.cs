@@ -45,7 +45,7 @@ namespace RTS_test
             entity.AddComponent(new component.HealthComponent(100));
             entity.AddComponent(new component.Physics(entity, body));
             entity.AddComponent(new component.MaxVelocity(0.85f));
-            entity.AddComponent(new component.Drawable(textureManager.getTexture(13), (float)Math.PI/2));
+            entity.AddComponent(new component.Drawable(textureManager.getTexture(13), (float)Math.PI / 2));
             component.AnimationComponent animationComponent = new component.AnimationComponent();
             animationComponent.addAnimation(14, animationManager.getAnimation("smallworker-gather"));
             entity.AddComponent(animationComponent);
@@ -126,10 +126,13 @@ namespace RTS_test
 
             Texture2D texture = textureManager.getTexture(textureId);
 
-            //entity.AddComponent(new component.Physics(body));
-            entity.AddComponent(new component.TileEntity(new Rectangle(pos.x, pos.y, texture.Width / Global.tileSize, texture.Height / Global.tileSize),
-                new Rectangle(pos.x + 1, pos.y + 1, texture.Width / Global.tileSize - 1, texture.Height / Global.tileSize - 1)
-                , rotation));
+            Rectangle col;
+            if (resourceType.Equals("wood"))
+                col = new Rectangle(pos.x + 1, pos.y + 1, 2, 2);
+            else
+                col = new Rectangle(pos.x, pos.y, texture.Width / Global.tileSize, texture.Height / Global.tileSize);
+
+            entity.AddComponent(new component.TileEntity(new Rectangle(pos.x, pos.y, texture.Width / Global.tileSize, texture.Height / Global.tileSize), col, rotation));
             entity.AddComponent(new component.Size(texture.Width, texture.Height));
             entity.AddComponent(new component.Drawable(texture));
             entity.AddComponent(new component.DepletableResource(resourceAmount, resourceType));
