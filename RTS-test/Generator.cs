@@ -161,7 +161,13 @@ namespace RTS_test
             for (int i = 0; i < 32; ++i)
             {
                 int2 pos = new int2(random.Next(tileMap.Size.x), random.Next(tileMap.Size.y));
-                createClump(pos, 256, 4);
+                createClump(pos, 1024, 4);
+            }
+
+            for (int i = 0; i < 1024; ++i)
+            {
+                int2 pos = new int2(random.Next(tileMap.Size.x), random.Next(tileMap.Size.y));
+                createClump(pos, 64, 4);
             }
 
             for (int x = 0; x < tileMap.Size.x; x++)
