@@ -103,13 +103,10 @@ namespace RTS_test
                 this.rotation = rotation;
 
                 DisField entityDisField = EntitySystem.BlackBoard.GetEntry<DisField>("EntityDisField");
-                for (int i = collision.Left; i < collision.Right; i++)
-                {
-                    for (int j = collision.Top; j < collision.Bottom + collision.Height; j++)
-                    {
-                        entityDisField.setTile(i, j, true);
-                    }
-                }
+
+                IEnumerator<int2> i = this.getCollisonTiles();
+                while (i.MoveNext())
+                    entityDisField.setTile(i.Current.x, i.Current.y, true);
             }
 
             ~TileEntity()
@@ -140,7 +137,7 @@ namespace RTS_test
                 DisField entityDisField = EntitySystem.BlackBoard.GetEntry<DisField>("EntityDisField");
                 for (int i = collision.Left; i < collision.Right; i++)
                 {
-                    for (int j = collision.Top; j < collision.Bottom + collision.Height; j++)
+                    for (int j = collision.Top; j < collision.Bottom; j++)
                     {
                         entityDisField.setTile(i, j, false);
                     }
@@ -154,9 +151,20 @@ namespace RTS_test
 
             public IEnumerator<int2> getTiles()
             {
+                for (int i = position.Left; i < position.Right; i++)
+                {
+                    for (int j = position.Top; j < position.Bottom; j++)
+                    {
+                        yield return new int2(i, j);
+                    }
+                }
+            }
+
+            public IEnumerator<int2> getCollisonTiles()
+            {
                 for (int i = collision.Left; i < collision.Right; i++)
                 {
-                    for (int j = collision.Top; j < collision.Bottom + collision.Height; j++)
+                    for (int j = collision.Top; j < collision.Bottom; j++)
                     {
                         yield return new int2(i, j);
                     }
@@ -201,6 +209,17 @@ namespace RTS_test
             public FarseerPhysics.Dynamics.Body Body
             {
                 get { return body; }
+            }
+
+            public void rotateTo(float newRotation, float speed)
+            {
+                if (Rotation.Equals(newRotation))
+                    return;
+
+                var newDir = new Vector2((float)Math.Cos(newRotation), (float)Math.Sin(newRotation));
+                var oldDir = new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation));
+                oldDir += (newDir - oldDir) * speed;
+                Rotation = (float)Math.Atan2(oldDir.Y, oldDir.X);
             }
         }
 
@@ -271,6 +290,7 @@ namespace RTS_test
             int2 pos;
             EntityFormation entityFormation = null;
             int formationIndex = 0;
+            public float rot = (float)Math.PI;
 
             public Formation()
             {
