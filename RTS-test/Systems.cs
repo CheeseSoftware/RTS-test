@@ -128,12 +128,21 @@ namespace RTS_test
                 if (e.HasComponent<component.Formation>())
                 {
                     component.Formation formation = e.GetComponent<component.Formation>();
-                    dir = (formation.Pos).toVector2()-physics.Position;
-                    if (dir.Length() > 0.25f)
-                        dir.Normalize();
-                    else
-                        dir = new Vector2(0f, 0f);
+
+                    Vector2 dir2 = (1.1f*(formation.Pos.toVector2())+goal.pathGoal.GoalPos.toVector2())-physics.Position;
+                    if (dir2.Length() < 1.5f*formation.EntityFormation.Radius)
+                    {
+                        if (dir2.Length() > 0.25f)
+                            dir2.Normalize();
+                        else
+                            dir2 = new Vector2(0f, 0f);
+
+                        dir = dir2;
+                    }
                 }
+                if (dir.Length() == 0f)
+                    return;
+
                 float oldRotation = physics.Rotation;
                 float rotation = (float)Math.Atan2(dir.Y, dir.X);
 

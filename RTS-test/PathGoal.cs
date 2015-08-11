@@ -343,5 +343,10 @@ namespace RTS_test
             return units;
         }
 
+        public int2 GoalPos
+        {
+            get { return goalPos; }
+        }
+
     }
 }

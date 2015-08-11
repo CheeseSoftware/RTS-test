@@ -11,6 +11,7 @@ using RTS_test.system;
 using SharpCEGui.Base;
 using SharpCEGui.Base.Widgets;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace RTS_test
@@ -146,7 +147,7 @@ namespace RTS_test
 
             for (int i = 0; i < 50; ++i)
                 entityWorld.CreateEntityFromTemplate("Test", new object[] {
-                    new Vector2(7 + 0.2f*i, 7 + 4f*(float)Math.Sin(0.5f*i)),
+                    new Vector2(17 + 0.2f*i, 17 + 4f*(float)Math.Sin(0.5f*i)),
                     new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
                 });
 
@@ -214,7 +215,7 @@ namespace RTS_test
                     pathGoal.updatePath();
                     tileMap.setPathGoal(pathGoal);
 
-                    EntityFormation formation = new EntityFormation(entities, disFieldMixer, goalPos);
+                    EntityFormation formation = new EntityFormation(new List<Entity>(entities), disFieldMixer, goalPos);
                     foreach (Entity e in entities)
                     {
                         e.GetComponent<component.Formation>().EntityFormation = formation;

@@ -9,7 +9,7 @@ namespace RTS_test
 {
     public class EntityFormation
     {
-        private Bag<Entity> entities;
+        private List<Entity> entities;
         private HashSet<int2> nodes = new HashSet<int2>();
         private List<int2> nodeList = new List<int2>();
         private Queue<int2> nodeExpandList = new Queue<int2>();
@@ -20,25 +20,66 @@ namespace RTS_test
             new int2(-1, 0),
             new int2(1, 0),
             new int2(0, -1),
-            new int2(0, 1)
+            new int2(0, 1),
+            new int2(-1, -1),
+            new int2(1, 1),
+            new int2(1, -1),
+            new int2(-1, 1)
+            
         };
         float radius = 0f;
 
-        public EntityFormation(Bag<Entity> entities, DisFieldMixer disFieldMixer, int2 goalPos)
+        public EntityFormation(List<Entity> entities, DisFieldMixer disFieldMixer, int2 goalPos)
         {
             this.entities = entities;
             this.disFieldMixer = disFieldMixer;
             this.goalPos = goalPos;
+
+            int formationIndex = 0;
+
+            entities.Sort(delegate(Entity a, Entity b)
+            {
+                // sort by formationIndex
+                return a.GetComponent<component.Formation>().FormationIndex.CompareTo(b.GetComponent<component.Formation>().FormationIndex);
+            });
+
+            foreach(Entity e in entities)
+            {
+                if (!e.HasComponent<component.Physics>())
+                    continue;
+
+                e.GetComponent<component.Physics>().Body.OnCollision += this.onEntityCollision;
+
+                e.GetComponent<component.Formation>().FormationIndex = formationIndex;
+                formationIndex++;
+            }
+        }
+
+        ~EntityFormation()
+        {
+            foreach (Entity e in entities)
+            {
+                if (!e.HasComponent<component.Physics>())
+                    continue;
+
+                e.GetComponent<component.Physics>().Body.OnCollision -= this.onEntityCollision;
+            }
         }
 
         public void update()
         {
             if (nodeList.Count == 0)
             {
+                entities.Sort(delegate(Entity a, Entity b)
+                {
+                    // sort by formationIndex
+                    return a.GetComponent<component.Formation>().FormationIndex.CompareTo(b.GetComponent<component.Formation>().FormationIndex);
+                });
+
                 radius = 0f;
 
-                nodeExpandList.Enqueue(goalPos);
-                nodes.Add(goalPos);
+                nodeExpandList.Enqueue(new int2(0));
+                nodes.Add(new int2(0));
 
                 for (int i = 0; i < entities.Count; ++i)
                 {
@@ -47,13 +88,13 @@ namespace RTS_test
 
                     int2 nodePos = nodeExpandList.Dequeue();
                     nodeList.Add(nodePos);
-                    radius = Math.Max(radius, (nodePos-goalPos).toVector2().Length()+1f);
+                    radius = Math.Max(radius, nodePos.toVector2().Length()+1f);
 
                     for (int j = 0; j < stepDirections.Count(); ++j)
                     {
                         int2 newPos = nodePos + stepDirections[j];
 
-                        if (disFieldMixer.getDis(newPos.toVector2()) < 0)
+                        if (disFieldMixer.getDis(1.1f*newPos.toVector2()+goalPos.toVector2()) < 0)
                             continue;
 
                         if (nodes.Contains(newPos))
@@ -71,6 +112,47 @@ namespace RTS_test
                     formation.Pos = nodeList[i];
                 }
             }
+        }
+
+        public bool onEntityCollision(FarseerPhysics.Dynamics.Fixture f1, FarseerPhysics.Dynamics.Fixture f2, FarseerPhysics.Dynamics.Contacts.Contact contact)
+        {
+            if (f1.Body.UserData is Entity && f1.Body.UserData is Entity)
+            {
+                Entity e1 = f1.Body.UserData as Entity;
+                Entity e2 = f2.Body.UserData as Entity;
+
+                if (!entities.Contains(e1) || !entities.Contains(e2))
+                    return true;
+
+                if (!e1.HasComponent<component.Physics>() || !e2.HasComponent<component.Physics>())
+                    return true;
+
+                component.Formation fo1 = e1.GetComponent<component.Formation>();
+                component.Formation fo2 = e2.GetComponent<component.Formation>();
+                component.Physics p1 = e1.GetComponent<component.Physics>();
+                component.Physics p2 = e2.GetComponent<component.Physics>();
+
+                float disA = (p1.Position - fo1.Pos.toVector2()).Length() + (p2.Position - fo2.Pos.toVector2()).Length();
+                float disB = (p1.Position - fo2.Pos.toVector2()).Length() + (p2.Position - fo1.Pos.toVector2()).Length();
+
+                if (disA <= disB)
+                    return true;
+
+                int2 temp = fo1.Pos;
+                fo1.Pos = fo2.Pos;
+                fo2.Pos = temp;
+
+                int temp2 = fo1.FormationIndex;
+                fo1.FormationIndex = fo2.FormationIndex;
+                fo2.FormationIndex = temp2;
+
+            }
+            return true;
+        }
+
+        public float Radius
+        {
+            get { return radius; }
         }
 
     }

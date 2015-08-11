@@ -169,9 +169,10 @@ namespace RTS_test
             private FarseerPhysics.Dynamics.Body body;
             private Vector2 oldPosition = new Vector2();
 
-            public Physics(FarseerPhysics.Dynamics.Body body)
+            public Physics(Entity entity, FarseerPhysics.Dynamics.Body body)
             {
                 this.body = body;
+                body.UserData = entity;
             }
 
             public Vector2 Position
@@ -269,6 +270,7 @@ namespace RTS_test
         {
             int2 pos;
             EntityFormation entityFormation = null;
+            int formationIndex = 0;
 
             public Formation()
             {
@@ -285,6 +287,12 @@ namespace RTS_test
             {
                 get { return pos; }
                 set { pos = value; }
+            }
+
+            public int FormationIndex
+            {
+                get { return formationIndex; }
+                set { formationIndex = value; }
             }
 
         }
