@@ -51,7 +51,6 @@ namespace RTS_test
 					tileMap.setTile(x, y, id);
 				}
 			}
-
 			// Generate forest
 			Graphics.Tools.Noise.Primitive.SimplexPerlin forestNoise = new Graphics.Tools.Noise.Primitive.SimplexPerlin(seed, NoiseQuality.Best);
 			for (int x = 0; x < tileMap.Size.x; x++)

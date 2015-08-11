@@ -128,7 +128,7 @@ namespace RTS_test
 
             Rectangle col;
             if (resourceType.Equals("wood"))
-                col = new Rectangle(pos.x - 1, pos.y - 1, 2, 2);
+                col = new Rectangle(pos.x + 1, pos.y + 1, 2, 2);
             else
                 col = new Rectangle(pos.x, pos.y, texture.Width / Global.tileSize, texture.Height / Global.tileSize);
 
