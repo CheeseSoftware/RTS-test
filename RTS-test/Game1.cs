@@ -311,6 +311,8 @@ namespace RTS_test
                 }
             }
 
+            Global.Camera.update();
+
             //GUI
             var ms = Mouse.GetState();
             GUIContext.InjectMousePosition(ms.X, ms.Y);
@@ -365,6 +367,7 @@ namespace RTS_test
             spriteBatch.Begin();
             string fps = string.Format("fps: {0}", this.frameRate);
             spriteBatch.DrawString(font, fps, new Vector2(16, 16), Color.White);
+            spriteBatch.DrawString(font, "Camera zoom: " + Global.Camera.Zoom, new Vector2(16, 32), Color.White);
 
             // GUI
             GUISystem.RenderAllGUIContexts();
