@@ -13,6 +13,7 @@ using SharpCEGui.Base.Widgets;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using RectangleF = System.Drawing.RectangleF;
 
 namespace RTS_test
 {
@@ -250,16 +251,18 @@ namespace RTS_test
                 Vector2 secondCorner = Global.Camera.ScreenToWorld(Mouse.GetState().Position.ToVector2());
                 Vector2 topLeft = new Vector2(Math.Min(firstCorner.X, secondCorner.X), Math.Min(firstCorner.Y, secondCorner.Y));
                 Vector2 bottomRight = new Vector2(Math.Max(firstCorner.X, secondCorner.X), Math.Max(firstCorner.Y, secondCorner.Y));
-                Rectangle rect = new Rectangle(topLeft.ToPoint(), (bottomRight - topLeft).ToPoint());
+                RectangleF rect = new RectangleF(topLeft.X, topLeft.Y, bottomRight.X - topLeft.X, bottomRight.Y - topLeft.Y);
 
                 if (rect.Width > 0 && rect.Height > 0)
                 {
                     Bag<Entity> entities = entityWorld.EntityManager.GetEntities(Aspect.All(typeof(component.Physics), typeof(component.Formation), typeof(component.HealthComponent)));
+                    
                     foreach (Entity e in entities)
                     {
                         component.Physics phys = e.GetComponent<component.Physics>();
                         Vector2 newPos = new Vector2(phys.Position.X * Global.tileSize, phys.Position.Y * Global.tileSize);
-                        if (rect.Contains(newPos))
+                        RectangleF entityRect = new RectangleF(newPos.X - 0.5f * 32f, newPos.Y - 0.5f * 32f, 1f * 32f, 1f * 32f);
+                        if (rect.IntersectsWith(entityRect))
                         {
                             e.GetComponent<component.HealthComponent>().Visible = true;
                             entitiesInSelection.Add(e);
@@ -287,7 +290,7 @@ namespace RTS_test
                 Vector2 secondCorner = Global.Camera.ScreenToWorld(Mouse.GetState().Position.ToVector2());
                 Vector2 topLeft = new Vector2(Math.Min(firstCorner.X, secondCorner.X), Math.Min(firstCorner.Y, secondCorner.Y));
                 Vector2 bottomRight = new Vector2(Math.Max(firstCorner.X, secondCorner.X), Math.Max(firstCorner.Y, secondCorner.Y));
-                Rectangle rect = new Rectangle(topLeft.ToPoint(), (bottomRight - topLeft).ToPoint());
+                RectangleF rect = new RectangleF(topLeft.X, topLeft.Y, bottomRight.X - topLeft.X, bottomRight.Y - topLeft.Y);
 
                 foreach(Entity e in tempEntitiesInSelection)
                 {
@@ -302,7 +305,8 @@ namespace RTS_test
                     {
                         component.Physics phys = e.GetComponent<component.Physics>();
                         Vector2 newPos = new Vector2(phys.Position.X * Global.tileSize, phys.Position.Y * Global.tileSize);
-                        if (rect.Contains(newPos))
+                        RectangleF entityRect = new RectangleF(newPos.X - 0.5f * 32f, newPos.Y - 0.5f * 32f, 1f * 32f, 1f * 32f);
+                        if (rect.IntersectsWith(entityRect))
                         {
                             e.GetComponent<component.HealthComponent>().Visible = true;
                             tempEntitiesInSelection.Add(e);

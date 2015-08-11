@@ -11,14 +11,15 @@ namespace RTS_test
         private int2 size;
         private float[,] disField;
         private bool[,] tiles;
+        private bool[,] updateTiles;
         private Queue<int2> updateQueue = new Queue<int2>();
-        private HashSet<int2> updateTiles = new HashSet<int2>();
 
         public DisField(int2 size)
         {
             this.size = size;
             disField = new float[size.x, size.y];
-            tiles = new bool[size.x, size.y]; ;
+            tiles = new bool[size.x, size.y];
+            updateTiles = new bool[size.x, size.y];
 
             for (int y = 0; y < size.y; ++y)
             {
@@ -26,6 +27,7 @@ namespace RTS_test
                 {
                     disField[x, y] = 3f;
                     tiles[x, y] = false;
+                    updateTiles[x, y] = false;
                 }
             }
         }
@@ -35,7 +37,7 @@ namespace RTS_test
             while (updateQueue.Count > 0)
             {
                 int2 pos = updateQueue.Dequeue();
-                updateTiles.Remove(pos);
+                updateTiles[pos.x, pos.y] = false;
 
                 float dis = 3f;
 
@@ -144,14 +146,15 @@ namespace RTS_test
             {
                 for (int yy = -2; yy <= 2; ++yy)
                 {
+
                     int2 pos = new int2(x + xx, y + yy);
                     if (pos.x < 0 || pos.y < 0 || pos.x >= size.x || pos.y >= size.y)
                         continue;
 
-                    if (updateTiles.Contains(pos))
+                    if (updateTiles[pos.x, pos.y])
                         continue;
 
-                    updateTiles.Add(pos);
+                    updateTiles[pos.x, pos.y] = true;
                     updateQueue.Enqueue(pos);
                 }
             }

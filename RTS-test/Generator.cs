@@ -218,7 +218,6 @@ namespace RTS_test
                                 int checkX = xt + x;
                                 int checkY = yt + y;
                                 occupied[checkX, checkY] = true;
-                                tileMap.setTile(x+xt, y+yt, 1);
                             }
                         }
                     }
