@@ -13,16 +13,18 @@ namespace RTS_test
         private Entity entityFollowing = null;
         private float cameraSpeed = 0.01f;
         private Vector2 position;
+        private float toZoom = float.NaN;
+        private float zoomSpeed;
 
         public Camera()
         {
             Zoom = 1.0f;
         }
 
-        // Centered Position of the Camera in pixels.
         public Vector2 Position
         {
-            get { return this.position; } private set
+            get { return this.position; }
+            private set
             {
                 position = value;
                 int borderWidth = Global.tileSize;
@@ -37,13 +39,10 @@ namespace RTS_test
                     position.Y = borderWidth - ViewportCenter.Y + Global.mapHeight * Global.tileSize;
             }
         }
-        // Current Zoom level with 1.0f being standard
         public float Zoom { get; private set; }
-        // Current Rotation amount with 0.0f being standard orientation
+
         public float Rotation { get; private set; }
 
-        // Height and width of the viewport window which we need to adjust
-        // any time the player resizes the game window.
         public int ViewportWidth { get; set; }
         public int ViewportHeight { get; set; }
 
@@ -57,10 +56,6 @@ namespace RTS_test
             }
         }
 
-        // Create a matrix for the camera to offset everything we draw,
-        // the map and our objects. since the camera coordinates are where
-        // the camera is, we offset everything by the negative of that to simulate
-        // a camera moving. We also cast to integers to avoid filtering artifacts.
         public Matrix TranslationMatrix
         {
             get
@@ -73,23 +68,33 @@ namespace RTS_test
             }
         }
 
-        // Call this method with negative values to zoom out
-        // or positive values to zoom in. It looks at the current zoom
-        // and adjusts it by the specified amount. If we were at a 1.0f
-        // zoom level and specified -0.5f amount it would leave us with
-        // 1.0f - 0.5f = 0.5f so everything would be drawn at half size.
-        public void AdjustZoom(float amount)
+        public void AdjustZoom(float amount, float speed = 0.15f)
         {
-            Zoom += amount;
-            //if (Zoom < 0.25f)
+            ZoomTo(Zoom + amount, speed);
+        }
+
+        public void ZoomTo(float zoom, float speed = 0.15f)
+        {
+            toZoom = zoom;
+            zoomSpeed = speed;
+        }
+
+        public void update()
+        {
+            if (!float.IsNaN(toZoom) && toZoom != Zoom)
             {
-                //Zoom = 1f;
+                Zoom = MathHelper.Lerp(Zoom, toZoom, zoomSpeed);
+                if (Zoom < 0.09f)
+                {
+                    Zoom = 0.09f;
+                    toZoom = float.NaN;
+                }
+
+                if (Zoom == toZoom)
+                    toZoom = float.NaN;
             }
         }
 
-        // Move the camera in an X and Y amount based on the cameraMovement param.
-        // if clampToMap is true the camera will try not to pan outside of the
-        // bounds of the map.
         public void MoveCamera(Vector2 cameraMovement)
         {
             Vector2 newPosition = Position + cameraMovement;
@@ -132,13 +137,10 @@ namespace RTS_test
 
         public Vector2 ScreenToWorld(Vector2 screenPosition)
         {
-            return Vector2.Transform(screenPosition,
-                Matrix.Invert(TranslationMatrix));
+            return Vector2.Transform(screenPosition, Matrix.Invert(TranslationMatrix));
         }
 
-        // Move the camera's position based on input
-        public void HandleInput(InputState inputState,
-           PlayerIndex? controllingPlayer)
+        public void HandleInput(InputState inputState, PlayerIndex? controllingPlayer)
         {
             if (entityFollowing != null)
             {
@@ -180,9 +182,6 @@ namespace RTS_test
                     AdjustZoom(0.1f);
                 }
 
-                // When using a controller, to match the thumbstick behavior,
-                // we need to normalize non-zero vectors in case the user
-                // is pressing a diagonal direction.
                 if (cameraMovement != Vector2.Zero)
                 {
                     cameraMovement.Normalize();
