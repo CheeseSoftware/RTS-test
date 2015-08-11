@@ -60,17 +60,20 @@ namespace RTS_test
                 if (e.HasComponent<component.HealthComponent>())
                 {
                     component.HealthComponent healthComponent = e.GetComponent<component.HealthComponent>();
-                    Texture2D hpbar = textureManager.getTexture(11);
-                    Texture2D hp = textureManager.getTexture(12);
+                    if (healthComponent.Visible)
+                    {
+                        Texture2D hpbar = textureManager.getTexture(11);
+                        Texture2D hp = textureManager.getTexture(12);
 
-                    Vector2 pos = physics.Position * 32;
-                    Vector2 offset = new Vector2(0, -12);
-                    Rectangle hpbarRectangle = new Rectangle((int)(offset.X + pos.X), (int)(offset.Y + pos.Y), 52, 4);
-                    Rectangle hpRectangle = new Rectangle((int)(offset.X + pos.X), (int)(offset.Y + pos.Y), (int)(healthComponent.Health/healthComponent.MaxHealth*100/2), 2);
+                        Vector2 pos = physics.Position * 32;
+                        Vector2 offset = new Vector2(0, -12);
+                        Rectangle hpbarRectangle = new Rectangle((int)(offset.X + pos.X), (int)(offset.Y + pos.Y), 52, 4);
+                        Rectangle hpRectangle = new Rectangle((int)(offset.X + pos.X), (int)(offset.Y + pos.Y), (int)(healthComponent.Health / healthComponent.MaxHealth * 100 / 2), 2);
 
-                    spriteBatch.Draw(hpbar, null, hpbarRectangle, null, new Vector2(hpbar.Width / 2, hpbar.Height / 2), 0f, null, null, SpriteEffects.None, 0);
+                        spriteBatch.Draw(hpbar, null, hpbarRectangle, null, new Vector2(hpbar.Width / 2, hpbar.Height / 2), 0f, null, null, SpriteEffects.None, 0);
 
-                    spriteBatch.Draw(hp, null, hpRectangle, hpRectangle, new Vector2(hp.Width / 2, hp.Height / 2), 0f, null, null, SpriteEffects.None, 0);
+                        spriteBatch.Draw(hp, null, hpRectangle, hpRectangle, new Vector2(hp.Width / 2, hp.Height / 2), 0f, null, null, SpriteEffects.None, 0);
+                    }
 
                 }
             }
@@ -132,8 +135,8 @@ namespace RTS_test
                 {
                     component.Formation formation = e.GetComponent<component.Formation>();
 
-                    Vector2 dir2 = (1.1f*(formation.Pos.toVector2())+goal.pathGoal.GoalPos.toVector2())-physics.Position;
-                    if (dir2.Length() < 1.5f*formation.EntityFormation.Radius)
+                    Vector2 dir2 = (1.1f * (formation.Pos.toVector2()) + goal.pathGoal.GoalPos.toVector2()) - physics.Position;
+                    if (dir2.Length() < 1.5f * formation.EntityFormation.Radius)
                     {
                         if (dir2.Length() > 0.25f)
                             dir2.Normalize();

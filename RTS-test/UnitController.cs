@@ -29,7 +29,7 @@ namespace RTS_test
 			this.pathGoal = pathGoal;
             pathGoal.updatePath();
 
-            Bag<Entity> entities = pathGoal.getEntities();
+            List<Entity> entities = pathGoal.getEntities();
             foreach (Entity entity in entities)
             {
                 entity.GetComponent<component.Goal>().pathGoal = pathGoal;

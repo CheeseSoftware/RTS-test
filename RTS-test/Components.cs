@@ -227,6 +227,7 @@ namespace RTS_test
         {
             float health;
             float maxHealth;
+            bool visible = false;
 
             public HealthComponent(float health, float maxHealth = 100)
             {
@@ -238,6 +239,7 @@ namespace RTS_test
 
             public float MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
 
+            public bool Visible { get { return visible; } set { visible = value; } }
         }
 
         public class AnimationComponent : IComponent
