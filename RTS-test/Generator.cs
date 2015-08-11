@@ -9,11 +9,23 @@ using System.Text;
 
 namespace RTS_test
 {
-    
+    class Land
+    {
+        private object o = new object();
+
+        public Land()
+        {
+
+        }
+    }
+
+
 	class Generator
 	{
 
 		bool[,] occupied;
+        Land[,] tileLands;
+        List<Land> lands = new List<Land>();
         TileMap tileMap;
         Random random = new Random();
 
@@ -24,151 +36,36 @@ namespace RTS_test
 
 		public void generate(EntityWorld entityWorld)
 		{
-            int seed = 1337; //random.Next(10000);
-
             occupied = new bool[tileMap.Size.x, tileMap.Size.y];
-            Random random = new Random();
-
-            // Generate tilemap
-            Graphics.Tools.Noise.Primitive.BevinsGradient noise = new Graphics.Tools.Noise.Primitive.BevinsGradient(seed, NoiseQuality.Best);
-            Graphics.Tools.Noise.Primitive.BevinsGradient noise2 = new Graphics.Tools.Noise.Primitive.BevinsGradient(seed, NoiseQuality.Best);
-
-            for (int x = 0; x < tileMap.Size.x; x++)
-            {
-                for (int y = 0; y < tileMap.Size.y; y++)
-                {
-
-                    ushort id = 0;
-
-                    float zoom = 0.01f;
-                    float value = 0.67f * noise.GetValue(zoom * x, zoom * y, 0)
-                        + 0.335f * noise2.GetValue(2 * zoom * x, 2 * zoom * y, 0);
-
-                    if (value > 0.3f)
-                        id = 3;
-
-                    else if (value > 0.0001f)
-                        id = 2;
-
-                    else
-                        id = 1;
-                    tileMap.setTile(x, y, 1);
-                }
-            }
-
-            //// Generate forest
-            //Graphics.Tools.Noise.Primitive.SimplexPerlin forestNoise = new Graphics.Tools.Noise.Primitive.SimplexPerlin(seed, NoiseQuality.Best);
-            //for (int x = 0; x < tileMap.Size.x; x++)
-            //{
-            //    for (int y = 0; y < tileMap.Size.y; y++)
-            //    {
-            //        float zoom = 0.05f;
-            //        if (forestNoise.GetValue(zoom * x, zoom * y) > 0.2f)
-            //        {
-            //            int treeWidth = 2;
-            //            int treeHeight = 2;
-
-            //            bool canPlaceTree = true;
-            //            for (int xt = 0; xt < treeWidth; xt++)
-            //            {
-            //                for (int yt = 0; yt < treeHeight; yt++)
-            //                {
-            //                    int checkX = xt + x;
-            //                    int checkY = yt + y;
-
-            //                    if (checkX >= tileMap.Size.x || checkY >= tileMap.Size.y || occupied[checkX, checkY] || !tileMap.getTile(checkX, checkY).Name.Equals("grass"))
-            //                    {
-            //                        canPlaceTree = false;
-            //                        break;
-            //                    }
-            //                }
-            //                if (!canPlaceTree)
-            //                    break;
-            //            }
-            //            if (!canPlaceTree)
-            //                continue;
 
 
-            //            entityWorld.CreateEntityFromTemplate("Resource", new object[] {
-            //                new int2(x, y),
-            //                (float)random.Next(360),
-            //                "wood",
-            //                500,
-            //                5
-            //            });
-            //            for (int xt = 0; xt < treeWidth; xt++)
-            //            {
-            //                for (int yt = 0; yt < treeHeight; yt++)
-            //                {
-            //                    int checkX = xt + x;
-            //                    int checkY = yt + y;
-            //                    occupied[checkX, checkY] = true;
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
+            // Create border forest
+            createLand(tileMap.Size / 2, (float)tileMap.Size.x+1, (float)tileMap.Size.x+1, 4);
+            createLand(tileMap.Size / 2, 0f, (float)tileMap.Size.x / 2, 1);
 
-            //// Generate stone resource 
-            //for (int i = 0; i < Math.Sqrt(tileMap.Size.x * tileMap.Size.y) / 10; i++)
-            //{
-            //    int x = random.Next(tileMap.Size.x);
-            //    int y = random.Next(tileMap.Size.y);
-
-            //    int resourceWidth = 2;
-            //    int resourceHeight = 2;
-            //    bool canPlaceResource = true;
-
-            //    for (int xt = 0; xt < resourceWidth; xt++)
-            //    {
-            //        for (int yt = 0; yt < resourceHeight; yt++)
-            //        {
-            //            int checkX = xt + x;
-            //            int checkY = yt + y;
-
-            //            if (checkX >= tileMap.Size.x || checkY >= tileMap.Size.y || occupied[checkX, checkY] || !tileMap.getTile(checkX, checkY).Name.Equals("grass"))
-            //            {
-            //                canPlaceResource = false;
-            //                break;
-            //            }
-            //        }
-            //        if (!canPlaceResource)
-            //            break;
-            //    }
-            //    if (!canPlaceResource)
-            //        continue;
-
-            //    entityWorld.CreateEntityFromTemplate("Resource", new object[] {
-            //                new int2(x, y),
-            //                (float)0,
-            //                "stone",
-            //                500,
-            //                8
-            //            });
-
-            //    for (int xt = 0; xt < resourceWidth; xt++)
-            //    {
-            //        for (int yt = 0; yt < resourceHeight; yt++)
-            //        {
-            //            int checkX = xt + x;
-            //            int checkY = yt + y;
-            //            occupied[checkX, checkY] = true;
-            //        }
-            //    }
-
-            //}
-
-            for (int i = 0; i < 32; ++i)
+            // Forest
+            for (int i = 0; i < 16; ++i)
             {
                 int2 pos = new int2(random.Next(tileMap.Size.x), random.Next(tileMap.Size.y));
-                createClump(pos, 1024, 4);
+                createClump(pos, 256, 4);
             }
 
-            for (int i = 0; i < 1024; ++i)
+            // Small Forest
+            for (int i = 0; i < 32; ++i)
             {
                 int2 pos = new int2(random.Next(tileMap.Size.x), random.Next(tileMap.Size.y));
                 createClump(pos, 64, 4);
             }
+
+            // Create lakes
+            for (int i = 0; i < 16; ++i )
+            {
+                int2 pos = new int2(random.Next(tileMap.Size.x), random.Next(tileMap.Size.y));
+                createLand(pos, 4, 16, 3);
+            }
+
+            // Create player land
+            createLand(new int2(18, 18), 32, 64, 2);
 
             for (int x = 0; x < tileMap.Size.x; x++)
             {
@@ -234,7 +131,7 @@ namespace RTS_test
             }
 
 
-
+            
 		}
 
         public void createClump(int2 pos, int size, UInt16 tileID)
@@ -275,6 +172,39 @@ namespace RTS_test
                 }
             }
         }
+
+        public Land createLand(int2 pos, float minRadius, float maxRadius, UInt16 tileID)
+        {
+            Rectangle rect = new Rectangle(pos.x - (int)maxRadius, pos.y - (int)maxRadius, (int)(2 * maxRadius), (int)(2 * maxRadius));
+            Land land = new Land();
+
+            float noiseRadius = maxRadius - minRadius;
+
+            Graphics.Tools.Noise.Primitive.BevinsGradient noise = new Graphics.Tools.Noise.Primitive.BevinsGradient(random.Next(10000), NoiseQuality.Best);
+
+            for (int y = rect.Y; y < rect.Y + rect.Height; ++y)
+            {
+                for (int x = rect.X; x < rect.X + rect.Width; ++x)
+                {
+                    if (x < 0 || y < 0 || x >= tileMap.Size.x || y >= tileMap.Size.y)
+                        continue;
+
+                    float dis = new Vector2(x - pos.x, y - pos.y).Length()/maxRadius;
+                    float nvalue = Math.Abs(noise.GetValue((float)x / 64f, (float)y / 64f, 0f));
+
+                    if (dis+noiseRadius/maxRadius*(nvalue) < 1f)
+                    {
+                        //tileLands[x, y] = land;
+                        tileMap.setTile(x, y, tileID);
+                    }
+
+
+                }
+            }
+
+            return land;
+        }
+
 	}
 
 }
