@@ -68,7 +68,7 @@ namespace RTS_test
             animationManager = new AnimationManager();
             unitController = new UnitController();
             world = new FarseerPhysics.Dynamics.World(new Vector2(0f, 0f));
-            generator = new Generator();
+            generator = new Generator(tileMap);
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -137,7 +137,7 @@ namespace RTS_test
             tileManager.registerTile(tileTree);
 
             tileMap.load();
-            generator.generate(tileMap, entityWorld);
+            generator.generate(entityWorld);
             tileMap.update();
             entityDisField.update();
 

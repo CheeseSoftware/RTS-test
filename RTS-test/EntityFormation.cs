@@ -12,6 +12,7 @@ namespace RTS_test
         private List<Entity> entities;
         private HashSet<int2> nodes = new HashSet<int2>();
         private List<int2> nodeList = new List<int2>();
+        private Dictionary<int2, Entity> entityPositions = new Dictionary<int2, Entity>();
         private Queue<int2> nodeExpandList = new Queue<int2>();
         private int2 goalPos;
         private DisFieldMixer disFieldMixer;
@@ -28,6 +29,7 @@ namespace RTS_test
             
         };
         float radius = 0f;
+        private int updateIndex = 0;
 
         public EntityFormation(List<Entity> entities, DisFieldMixer disFieldMixer, int2 goalPos)
         {
@@ -106,11 +108,34 @@ namespace RTS_test
 
                 }
 
+                entityPositions.Clear();
                 for (int i = 0; i < nodeList.Count; ++i)
                 {
                     component.Formation formation = entities[i].GetComponent<component.Formation>();
                     formation.Pos = nodeList[i];
+                    entityPositions.Add(nodeList[i], entities[i]);
                 }
+            }
+
+            {
+                int2 posA = entities[updateIndex].GetComponent<component.Formation>().Pos;
+
+                // Get every neighbor
+                for (int i = 0; i < stepDirections.Length; ++i)
+                {
+                    int2 posB = posA + stepDirections[i];
+
+                    if (!entityPositions.ContainsKey(posB))
+                        continue;
+
+                    Entity e1 = entityPositions[posA];
+                    Entity e2 = entityPositions[posB];
+
+                    checkSwapEntities(e1, e2);
+                }
+
+
+                updateIndex++;
             }
         }
 
@@ -121,33 +146,43 @@ namespace RTS_test
                 Entity e1 = f1.Body.UserData as Entity;
                 Entity e2 = f2.Body.UserData as Entity;
 
-                if (!entities.Contains(e1) || !entities.Contains(e2))
-                    return true;
-
-                if (!e1.HasComponent<component.Physics>() || !e2.HasComponent<component.Physics>())
-                    return true;
-
-                component.Formation fo1 = e1.GetComponent<component.Formation>();
-                component.Formation fo2 = e2.GetComponent<component.Formation>();
-                component.Physics p1 = e1.GetComponent<component.Physics>();
-                component.Physics p2 = e2.GetComponent<component.Physics>();
-
-                float disA = (p1.Position - fo1.Pos.toVector2()).Length() + (p2.Position - fo2.Pos.toVector2()).Length();
-                float disB = (p1.Position - fo2.Pos.toVector2()).Length() + (p2.Position - fo1.Pos.toVector2()).Length();
-
-                if (disA <= disB)
-                    return true;
-
-                int2 temp = fo1.Pos;
-                fo1.Pos = fo2.Pos;
-                fo2.Pos = temp;
-
-                int temp2 = fo1.FormationIndex;
-                fo1.FormationIndex = fo2.FormationIndex;
-                fo2.FormationIndex = temp2;
-
+                checkSwapEntities(e1, e2);
             }
             return true;
+        }
+
+        private void checkSwapEntities(Entity e1, Entity e2)
+        {
+            if (!entities.Contains(e1) || !entities.Contains(e2))
+                return;
+
+            if (!e1.HasComponent<component.Physics>() || !e2.HasComponent<component.Physics>())
+                return;
+
+            component.Formation fo1 = e1.GetComponent<component.Formation>();
+            component.Formation fo2 = e2.GetComponent<component.Formation>();
+            component.Physics p1 = e1.GetComponent<component.Physics>();
+            component.Physics p2 = e2.GetComponent<component.Physics>();
+
+            float disA = (p1.Position - fo1.Pos.toVector2()).Length() + (p2.Position - fo2.Pos.toVector2()).Length();
+            float disB = (p1.Position - fo2.Pos.toVector2()).Length() + (p2.Position - fo1.Pos.toVector2()).Length();
+
+            if (disA <= disB)
+                return;
+
+            // Swap
+            int2 temp = fo1.Pos;
+            fo1.Pos = fo2.Pos;
+            fo2.Pos = temp;
+
+            // Swap
+            int temp2 = fo1.FormationIndex;
+            fo1.FormationIndex = fo2.FormationIndex;
+            fo2.FormationIndex = temp2;
+
+            // Swap
+            entityPositions[fo1.Pos] = e1;
+            entityPositions[fo2.Pos] = e2;
         }
 
         public float Radius
