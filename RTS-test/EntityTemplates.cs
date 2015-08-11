@@ -132,7 +132,7 @@ namespace RTS_test
             else
                 col = new Rectangle(pos.x, pos.y, texture.Width / Global.tileSize, texture.Height / Global.tileSize);
 
-            entity.AddComponent(new component.TileEntity(new Rectangle(pos.x, pos.y, texture.Width / Global.tileSize, texture.Height / Global.tileSize), col, rotation));
+            entity.AddComponent(new component.TileEntity(entity, new Rectangle(pos.x, pos.y, texture.Width / Global.tileSize, texture.Height / Global.tileSize), col, rotation));
             entity.AddComponent(new component.Size(texture.Width, texture.Height));
             entity.AddComponent(new component.Drawable(texture));
             entity.AddComponent(new component.DepletableResource(resourceAmount, resourceType));

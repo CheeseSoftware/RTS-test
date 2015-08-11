@@ -96,17 +96,17 @@ namespace RTS_test
             private Rectangle collision;
             private float rotation = 0f;
 
-            public TileEntity(Rectangle position, Rectangle collision, float rotation = 0f)
+            public TileEntity(Entity entity, Rectangle position, Rectangle collision, float rotation = 0f)
             {
                 this.position = position;
                 this.collision = collision;
                 this.rotation = rotation;
 
-                DisField entityDisField = EntitySystem.BlackBoard.GetEntry<DisField>("EntityDisField");
+                EntityTileMap entityTileMap = EntitySystem.BlackBoard.GetEntry<EntityTileMap>("EntityTileMap");
 
                 IEnumerator<int2> i = this.getCollisonTiles();
                 while (i.MoveNext())
-                    entityDisField.setTile(i.Current.x, i.Current.y, true);
+                    entityTileMap.setTile(i.Current.x, i.Current.y, entity);
             }
 
             ~TileEntity()
@@ -134,12 +134,12 @@ namespace RTS_test
 
             public void remove()
             {
-                DisField entityDisField = EntitySystem.BlackBoard.GetEntry<DisField>("EntityDisField");
+                EntityTileMap entityTileMap = EntitySystem.BlackBoard.GetEntry<EntityTileMap>("EntityTileMap");
                 for (int i = collision.Left; i < collision.Right; i++)
                 {
                     for (int j = collision.Top; j < collision.Bottom; j++)
                     {
-                        entityDisField.setTile(i, j, false);
+                        entityTileMap.setTile(i, j, null);
                     }
                 }
             }

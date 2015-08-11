@@ -79,36 +79,7 @@ namespace RTS_test
             }
         }
 
-        [ArtemisEntitySystem(GameLoopType = GameLoopType.Draw, Layer = 1)]
-        public class TileEntityRenderer : EntityProcessingSystem<component.TileEntity, component.Drawable>
-        {
-            private SpriteBatch spriteBatch;
-
-            public TileEntityRenderer()
-                : base(Aspect.All(typeof(component.TileEntity), typeof(component.Drawable)))
-            {
-                spriteBatch = EntitySystem.BlackBoard.GetEntry<SpriteBatch>("SpriteBatch");
-            }
-
-            public override void LoadContent()
-            {
-                this.spriteBatch = BlackBoard.GetEntry<SpriteBatch>("SpriteBatch");
-            }
-
-            protected override void Process(Entity e, component.TileEntity tileEntity, component.Drawable drawable)
-            {
-                Vector2 origin = new Vector2(drawable.texture.Width / 2, drawable.texture.Height / 2);
-                Rectangle rectangle = new Rectangle(
-                    new Point((int)(tileEntity.Position.X * Global.tileSize + origin.X), (int)(tileEntity.Position.Y * Global.tileSize + origin.Y)),
-                    new Point(drawable.texture.Width, drawable.texture.Height)
-                    );
-
-
-                Color color = Color.White;
-                color.A = 255;
-                spriteBatch.Draw(drawable.texture, null, rectangle, null, origin, tileEntity.Rotation, null, color, SpriteEffects.None, 0);
-            }
-        }
+        
 
         [ArtemisEntitySystem(GameLoopType = GameLoopType.Update, Layer = 0)]
         public class UnitWalker : EntityProcessingSystem<component.Goal, component.Physics>

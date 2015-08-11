@@ -27,7 +27,7 @@ namespace RTS_test
 
         private InputState _inputState;
         private TileMap tileMap;
-        private DisField entityDisField;
+        private EntityTileMap entityTileMap;
         private DisFieldMixer disFieldMixer;
         private TileManager tileManager;
         private TextureManager textureManager;
@@ -69,7 +69,8 @@ namespace RTS_test
             _inputState = new InputState();
             tileManager = new TileManager();
             tileMap = new TileMap(tileManager, new int2(Global.mapWidth, Global.mapHeight));
-            entityDisField = new DisField(new int2(Global.mapWidth, Global.mapHeight));
+            entityWorld = new EntityWorld();
+            entityTileMap = new EntityTileMap(entityWorld, new int2(Global.mapWidth, Global.mapHeight));
             disFieldMixer = new DisFieldMixer();
             textureManager = new TextureManager();
             animationManager = new AnimationManager();
@@ -86,11 +87,11 @@ namespace RTS_test
             Global.Camera.ViewportWidth = graphics.GraphicsDevice.Viewport.Width;
             Global.Camera.ViewportHeight = graphics.GraphicsDevice.Viewport.Height;
 
-            entityWorld = new EntityWorld();
+            
             EntitySystem.BlackBoard.SetEntry<SpriteBatch>("SpriteBatch", spriteBatch);
             EntitySystem.BlackBoard.SetEntry<TextureManager>("TextureManager", textureManager);
             EntitySystem.BlackBoard.SetEntry<TileMap>("TileMap", tileMap);
-            EntitySystem.BlackBoard.SetEntry<DisField>("EntityDisField", entityDisField);
+            EntitySystem.BlackBoard.SetEntry<EntityTileMap>("EntityTileMap", entityTileMap);
             EntitySystem.BlackBoard.SetEntry<DisFieldMixer>("DisFieldMixer", disFieldMixer);
             EntitySystem.BlackBoard.SetEntry<FarseerPhysics.Dynamics.World>("PhysicsWorld", world);
             EntitySystem.BlackBoard.SetEntry<Generator>("Generator", generator);
@@ -144,13 +145,14 @@ namespace RTS_test
             tileManager.registerTile(tileTree);
 
             tileMap.load();
+            entityTileMap.load();
             generator.generate(entityWorld);
             tileMap.update();
-            entityDisField.update();
+            entityTileMap.update();
 
             disFieldMixer.addDisField(tileMap.DisField);
-            disFieldMixer.addDisField(entityDisField);
-            tileMap.setTreeDis(entityDisField);
+            disFieldMixer.addDisField(entityTileMap.DisField);
+            tileMap.setTreeDis(entityTileMap.DisField);
 
             for (int i = 0; i < 50; ++i)
                 entityWorld.CreateEntityFromTemplate("Test", new object[] {
@@ -205,6 +207,7 @@ namespace RTS_test
                 Exit();
 
             _inputState.Update();
+            entityTileMap.update();
             Global.Camera.HandleInput(_inputState, PlayerIndex.One);
 
             MouseState mouseState;
@@ -223,6 +226,7 @@ namespace RTS_test
                         unitController.setPathGoal(pathGoal);
                         pathGoal.updatePath();
                         tileMap.setPathGoal(pathGoal);
+                        
 
                         EntityFormation formation = new EntityFormation(entitiesInSelection, disFieldMixer, goalPos);
                         foreach (Entity e in entitiesInSelection)
@@ -337,6 +341,7 @@ namespace RTS_test
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
     SamplerState.AnisotropicClamp, null, null, null, Global.Camera.TranslationMatrix);
             tileMap.draw(spriteBatch, tileManager);
+            entityTileMap.draw(spriteBatch);
             entityWorld.Draw();
 
             if (isSelecting)

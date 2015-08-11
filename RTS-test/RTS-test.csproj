@@ -47,6 +47,7 @@
     <Compile Include="DisFieldMixer.cs" />
     <Compile Include="EntityFormation.cs" />
     <Compile Include="EntityTemplates.cs" />
+    <Compile Include="EntityTileMap.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Generator.cs" />
     <Compile Include="GUI\MonoGameGeometryBuffer.cs" />
