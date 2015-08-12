@@ -139,10 +139,13 @@ namespace RTS_test
             TileData tileSand = new TileData("sand", textureManager.getTexture(3), false);
             TileData tileWater = new TileData("water", textureManager.getTexture(4), true);
             TileData tileTree = new TileData("tree", textureManager.getTexture(5), true);
+            TileData tileShallowWater = new TileData("shallowwater", textureManager.getTexture(15), true);
+
             tileManager.registerTile(tileGrass);
             tileManager.registerTile(tileSand);
             tileManager.registerTile(tileWater);
             tileManager.registerTile(tileTree);
+            tileManager.registerTile(tileShallowWater); //5
 
             tileMap.load();
             entityTileMap.load();

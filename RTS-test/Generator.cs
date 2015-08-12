@@ -88,7 +88,7 @@ namespace RTS_test
             {
                 fillArea(createPath(players[i], players[(i+1)%8], 5, 0.25f), 2);
                 fillArea(generateArea(new int2(players[i].X, players[i].Y), 2, 16), 2);
-                fillArea(generateArea(new int2(players[i].X, players[i].Y), 2, 4), 3);
+                fillArea(generateArea(new int2(players[i].X, players[i].Y), 2, 4), 5);
             }
 
             // River:
