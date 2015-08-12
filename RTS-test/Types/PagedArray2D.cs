@@ -37,8 +37,12 @@ namespace RTS_test.Types
             set
             {
                 Point pos = new Point(x, y);
-                Point localPos = new Point(pos.X % 16, pos.Y % 16);
+                Point localPos = new Point((int)((uint)pos.X % 16), (int)((uint)pos.Y % 16));
                 Point pagePos = pos - localPos;
+                if (pos.X < 0)
+                    pagePos.X--;
+                if (pos.Y < 0)
+                    pagePos.Y--;
 
                 if (!pages.ContainsKey(pagePos))
                 {
