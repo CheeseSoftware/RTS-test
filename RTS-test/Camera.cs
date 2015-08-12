@@ -176,6 +176,14 @@ namespace RTS_test
                 {
                     AdjustZoom(0.1f);
                 }
+                if (Keyboard.GetState().IsKeyDown(Keys.Subtract))
+                {
+                    AdjustZoom(-0.05f);
+                }
+                else if (Keyboard.GetState().IsKeyDown(Keys.Add))
+                {
+                    AdjustZoom(0.05f);
+                }
 
                 if (cameraMovement != Vector2.Zero)
                 {
