@@ -8,13 +8,15 @@ namespace RTS_test
 {
     class FrameRate
     {
-        float msPerUpdate = 100;
+        float msPerUpdate = 50;
 
+        DateTime updateLastCheck = DateTime.Now;
         DateTime updateLastReset = DateTime.Now;
-        double updateAverageTime = 0;
+        TimeSpan updateAverageTime = new TimeSpan();
 
+        DateTime drawLastCheck = DateTime.Now;
         DateTime drawLastReset = DateTime.Now;
-        double drawAverageTime = 0;
+        TimeSpan drawAverageTime = new TimeSpan();
 
         public FrameRate()
         {
@@ -26,8 +28,9 @@ namespace RTS_test
             if ((DateTime.Now - updateLastReset).TotalMilliseconds >= msPerUpdate)
             {
                 updateLastReset = DateTime.Now;
-                updateAverageTime = gameTime.ElapsedGameTime.TotalMilliseconds;
+                updateAverageTime = (DateTime.Now - updateLastCheck);
             }
+            updateLastCheck = DateTime.Now;
         }
 
         public void draw(GameTime gameTime)
@@ -35,17 +38,18 @@ namespace RTS_test
             if ((DateTime.Now - drawLastReset).TotalMilliseconds >= msPerUpdate)
             {
                 drawLastReset = DateTime.Now;
-                drawAverageTime = gameTime.ElapsedGameTime.TotalMilliseconds;
+                drawAverageTime = (DateTime.Now - drawLastCheck);
             }
+            drawLastCheck = DateTime.Now;
         }
 
-        public double UpdateTime { get { return updateAverageTime; } }
+        public double UpdateTime { get { return updateAverageTime.TotalMilliseconds; } }
 
-        public double FrameTime { get { return drawAverageTime; } }
+        public double FrameTime { get { return drawAverageTime.TotalMilliseconds; } }
 
-        public double UPS { get { return Math.Round(1000 / updateAverageTime, 2); } }
+        public double UPS { get { return Math.Round((double)(1000) / updateAverageTime.TotalMilliseconds, 2); } }
 
-        public double FPS { get { return Math.Round(1000 / drawAverageTime, 2, MidpointRounding.AwayFromZero); } }
+        public double FPS { get { return Math.Round((double)(1000) / drawAverageTime.TotalMilliseconds, 2); } }
 
     }
 }
