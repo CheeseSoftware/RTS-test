@@ -30,8 +30,12 @@ namespace RTS_test.Types
             get
             {
                 Point pos = new Point(x, y);
-                Point localPos = new Point(pos.X % sizeX, pos.Y % sizeY);
+                Point localPos = new Point((int)((uint)pos.X % sizeX), (int)((uint)pos.Y % sizeY));
                 Point pagePos = pos - localPos;
+                if (pos.X < 0)
+                    pagePos.X--;
+                if (pos.Y < 0)
+                    pagePos.Y--;
 
                 if (!pages.ContainsKey(pagePos))
                     return nullNode;
