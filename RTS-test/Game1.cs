@@ -49,8 +49,9 @@ namespace RTS_test
             Content.RootDirectory = "Content";
 
             //this.IsFixedTimeStep = false; // Remove fps limit
-            //graphics.SynchronizeWithVerticalRetrace = false;
-            //graphics.ApplyChanges();
+            graphics.SynchronizeWithVerticalRetrace = false;
+            graphics.ApplyChanges();
+            this.TargetElapsedTime = TimeSpan.FromMilliseconds(10);
             IsMouseVisible = true;
         }
 
@@ -147,7 +148,6 @@ namespace RTS_test
                         Vector2 pos = Global.Camera.ScreenToWorld(mouseState.Position.ToVector2());
                         //Bag<Entity> entities = entityWorld.EntityManager.GetEntities(Aspect.All(typeof(component.Goal), typeof(component.Physics), typeof(component.Formation)));
                         int2 goalPos = new int2((int)pos.X / Global.tileSize, (int)pos.Y / Global.tileSize);
-                        //Console.WriteLine(goalPos.x + " - " + goalPos.y);
                         Bag<Entity> bag = new Bag<Entity>();
                         PathGoal pathGoal = new PathGoal(entitiesInSelection, disFieldMixer, new int2(Global.mapWidth, Global.mapHeight), goalPos);
                         unitController.setPathGoal(pathGoal);
@@ -183,6 +183,8 @@ namespace RTS_test
                 Vector2 topLeft = new Vector2(Math.Min(firstCorner.X, secondCorner.X), Math.Min(firstCorner.Y, secondCorner.Y));
                 Vector2 bottomRight = new Vector2(Math.Max(firstCorner.X, secondCorner.X), Math.Max(firstCorner.Y, secondCorner.Y));
                 RectangleF rect = new RectangleF(topLeft.X, topLeft.Y, bottomRight.X - topLeft.X, bottomRight.Y - topLeft.Y);
+
+                Console.WriteLine(rect.X/32 + " - " + rect.Y/32);
 
                 if (rect.Width > 0 && rect.Height > 0)
                 {
