@@ -163,7 +163,7 @@ namespace RTS_test
 
         public Area generateArea(int2 pos, float minRadius, float maxRadius)
         {
-            PagedArray2D<bool> tiles = new PagedArray2D<bool>(false);
+            Area area = new Area();
 
             Rectangle rect = new Rectangle(pos.x - (int)maxRadius, pos.y - (int)maxRadius, (int)(2 * maxRadius), (int)(2 * maxRadius));
             Land land = new Land();
@@ -184,17 +184,17 @@ namespace RTS_test
 
                     if (dis + noiseRadius / maxRadius * (nvalue) < 1f)
                     {
-                        tiles[x, y] = true;
+                        area[x, y] = true;
                     }
 
 
                 }
             }
 
-            return new Area(tiles);
+            return area;
         }
 
-        public void createLine(Point a, Point b, int radius, ref PagedArray2D<bool> tiles)
+        public void createLine(Point a, Point b, int radius, ref Area area)
         {
             Queue<Point> points = new Queue<Point>();
             HashSet<Point> expandPoints = new HashSet<Point>();
@@ -252,7 +252,7 @@ namespace RTS_test
                 for (int j = 0; j < size; ++j)
                 {
                     Point point = points.Dequeue();
-                    tiles[point.X, point.Y] = true;
+                    area[point.X, point.Y] = true;
                     expandPoints.Remove(point);
 
                     foreach(Point p in expandDirections)
@@ -302,15 +302,15 @@ namespace RTS_test
                 }
             }
 
-            PagedArray2D<bool> tiles = new PagedArray2D<bool>(false);
+            Area area = new Area();
             for (int i = 0; i < points.Count - 1; ++i)
             {
                 Point a = points[i];
                 Point b = points[i + 1];
-                createLine(a, b, radius, ref tiles);
+                createLine(a, b, radius, ref area);
             }
 
-            return new Area(tiles);
+            return area;
         }
 
         public void fillArea(Area area, UInt16 tileID)

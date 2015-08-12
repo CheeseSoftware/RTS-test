@@ -15,10 +15,14 @@ namespace RTS_test.Types
 
         private Dictionary<Point, Page> pages = new Dictionary<Point, Page>();
         private T nullNode;
+        private int sizeX;
+        private int sizeY;
 
-        public PagedArray2D(T nullNode)
+        public PagedArray2D(T nullNode, int sizeX, int sizeY)
         {
             this.nullNode = nullNode;
+            this.sizeX = sizeX;
+            this.sizeY = sizeY;
         }
 
         public T this[int x, int y]
@@ -26,7 +30,7 @@ namespace RTS_test.Types
             get
             {
                 Point pos = new Point(x, y);
-                Point localPos = new Point(pos.X % 16, pos.Y % 16);
+                Point localPos = new Point(pos.X % sizeX, pos.Y % sizeY);
                 Point pagePos = pos - localPos;
 
                 if (!pages.ContainsKey(pagePos))
@@ -37,7 +41,7 @@ namespace RTS_test.Types
             set
             {
                 Point pos = new Point(x, y);
-                Point localPos = new Point((int)((uint)pos.X % 16), (int)((uint)pos.Y % 16));
+                Point localPos = new Point((int)((uint)pos.X % sizeX), (int)((uint)pos.Y % sizeY));
                 Point pagePos = pos - localPos;
                 if (pos.X < 0)
                     pagePos.X--;
@@ -47,7 +51,7 @@ namespace RTS_test.Types
                 if (!pages.ContainsKey(pagePos))
                 {
                     Page page = new Page();
-                    page.nodes = new T[16, 16];
+                    page.nodes = new T[sizeX, sizeY];
                     page.nodes[localPos.X, localPos.Y] = value;
                     pages.Add(pagePos, page);
 
@@ -62,5 +66,14 @@ namespace RTS_test.Types
             get { return pages; }
         }
 
+        public int SizeX
+        {
+            get { return sizeX; }
+        }
+
+        public int SizeY
+        {
+            get { return sizeY; }
+        }
     }
 }
