@@ -6,10 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RTS_test.component;
-using RTS_test.GUI;
 using RTS_test.system;
-using SharpCEGui.Base;
-using SharpCEGui.Base.Widgets;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,15 +34,8 @@ namespace RTS_test
         private FarseerPhysics.Dynamics.World world;
         private Generator generator;
 
-        private int frameRate;
-        private TimeSpan elapsedTime;
-        private int frameCounter;
-        private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
+        private FrameRate frameMeter = new FrameRate();
         private SpriteFont font; // Font for fps-counter
-
-        private SharpCEGui.Base.System GUISystem;
-        protected GUIContext GUIContext;
-        private Window GUIWindow;
 
         private bool isSelecting = false;
         private Vector2 firstCorner;
@@ -80,14 +70,10 @@ namespace RTS_test
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            graphics.PreferredBackBufferWidth = 1000;  // set this value to the desired width of your window
-            graphics.PreferredBackBufferHeight = 600;   // set this value to the desired height of your window
+            graphics.PreferredBackBufferWidth = Global.ViewportWidth;
+            graphics.PreferredBackBufferHeight = Global.ViewportHeight;
             graphics.ApplyChanges();
 
-            Global.Camera.ViewportWidth = graphics.GraphicsDevice.Viewport.Width;
-            Global.Camera.ViewportHeight = graphics.GraphicsDevice.Viewport.Height;
-
-            
             EntitySystem.BlackBoard.SetEntry<SpriteBatch>("SpriteBatch", spriteBatch);
             EntitySystem.BlackBoard.SetEntry<TextureManager>("TextureManager", textureManager);
             EntitySystem.BlackBoard.SetEntry<TileMap>("TileMap", tileMap);
@@ -98,33 +84,6 @@ namespace RTS_test
             EntitySystem.BlackBoard.SetEntry<AnimationManager>("AnimationManager", animationManager);
 
             this.entityWorld.InitializeAll(true);
-
-
-            //GUI
-            var renderer = MonoGameRenderer.Create(GraphicsDevice, Content);
-            GUISystem = SharpCEGui.Base.System.Create(renderer, null, new DefaultXmlParser());
-
-            InitialiseDefaultResourceGroups();
-            InitialiseResourceGroupDirectories();
-
-            GUIContext = GUISystem.GetDefaultGUIContext();
-
-            //SchemeManager.GetSingleton().CreateFromFile("Generic.scheme");
-            ////GUIContext.GetMouseCursor().SetDefaultImage("TaharezLook/MouseArrow");
-            //GUIContext.GetMouseCursor().SetImage(GUIContext.GetMouseCursor().GetDefaultImage());
-
-            //var winMgr = WindowManager.GetSingleton();
-            //GUIWindow = winMgr.CreateWindow("DefaultWindow", "Root");
-
-            //var defaultFont = FontManager.GetSingleton().CreateFromFile("1.font");
-            //GUIContext.SetDefaultFont(defaultFont);
-            //GUIContext.SetRootWindow(GUIWindow);
-
-            //var label = winMgr.CreateWindow("Generic/Label", "Demo Window");
-            //label.SetText("MOOOOOOO");
-            //label.SetPosition(new UVector2(UDim.Absolute(100.0f), UDim.Absolute(100.0f)));
-            //label.SetSize(new USize(UDim.Absolute(600.0f), UDim.Absolute(100.0f)));
-            //GUIWindow.AddChild(label);
 
             base.Initialize();
         }
@@ -162,42 +121,6 @@ namespace RTS_test
                     new Vector2(17 + 0.2f*i, 17 + 4f*(float)Math.Sin(0.5f*i)),
                     new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
                 });
-
-            /*for (int i = 0; i < 50; ++i)
-                entityWorld.CreateEntityFromTemplate("Test2", new object[] {
-                    new Vector2(0.2f*i, 4f*(float)Math.Sin(0.5f*i)),
-                    new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
-                });*/
-
-
-            /*Entity e = entityWorld.CreateEntityFromTemplate("Test", new object[] {
-                    new Vector2(10, 10),
-                });
-            Global.Camera.followEntity(e, 0.1f);*/
-
-            int2 a = new int2(0);
-            int2 b = new int2(3);
-            int2 c = a * b;
-
-
-            //Generate resources and natural object entities
-            /*Random r = new Random();
-			for (int i = 0; i < tileMap.Size.x; i++)
-			{
-				entityWorld.CreateEntityFromTemplate("Tree", new object[] {
-					new Vector2(r.Next(tileMap.Size.x * 32), r.Next(tileMap.Size.y() * 32)),
-					});
-
-				entityWorld.CreateEntityFromTemplate("Stone", new object[] {
-					new Vector2(r.Next(tileMap.Size.x * 32), r.Next(tileMap.Size.y() * 32)),
-					});
-
-				entityWorld.CreateEntityFromTemplate("BerryBush", new object[] {
-					new Vector2(r.Next(tileMap.Size.x * 32), r.Next(tileMap.Size.y() * 32)),
-					});
-			}*/
-
-
         }
 
         protected override void UnloadContent()
@@ -206,6 +129,7 @@ namespace RTS_test
 
         protected override void Update(GameTime gameTime)
         {
+            frameMeter.update(gameTime);
             if (_inputState.IsExitGame(PlayerIndex.One))
                 Exit();
 
@@ -218,7 +142,7 @@ namespace RTS_test
             {
                 if (_inputState.IsNewRightMouseClick(out mouseState))
                 {
-                    if (Global.Camera.Viewport.Contains(mouseState.Position))
+                    if (Global.Viewport.Contains(mouseState.Position))
                     {
                         Vector2 pos = Global.Camera.ScreenToWorld(mouseState.Position.ToVector2());
                         //Bag<Entity> entities = entityWorld.EntityManager.GetEntities(Aspect.All(typeof(component.Goal), typeof(component.Physics), typeof(component.Formation)));
@@ -229,7 +153,7 @@ namespace RTS_test
                         unitController.setPathGoal(pathGoal);
                         pathGoal.updatePath();
                         tileMap.setPathGoal(pathGoal);
-                        
+
 
                         EntityFormation formation = new EntityFormation(entitiesInSelection, disFieldMixer, goalPos);
                         foreach (Entity e in entitiesInSelection)
@@ -263,7 +187,7 @@ namespace RTS_test
                 if (rect.Width > 0 && rect.Height > 0)
                 {
                     Bag<Entity> entities = entityWorld.EntityManager.GetEntities(Aspect.All(typeof(component.Physics), typeof(component.Formation), typeof(component.HealthComponent)));
-                    
+
                     foreach (Entity e in entities)
                     {
                         component.Physics phys = e.GetComponent<component.Physics>();
@@ -282,15 +206,6 @@ namespace RTS_test
             unitController.updateGoal(entityWorld, Global.Camera);
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
             entityWorld.Update();
-            // FPS-counter stuff
-            ++this.frameCounter;
-            this.elapsedTime += gameTime.ElapsedGameTime;
-            if (this.elapsedTime > OneSecond)
-            {
-                this.elapsedTime -= OneSecond;
-                this.frameRate = this.frameCounter;
-                this.frameCounter = 0;
-            }
 
             if (isSelecting)
             {
@@ -299,7 +214,7 @@ namespace RTS_test
                 Vector2 bottomRight = new Vector2(Math.Max(firstCorner.X, secondCorner.X), Math.Max(firstCorner.Y, secondCorner.Y));
                 RectangleF rect = new RectangleF(topLeft.X, topLeft.Y, bottomRight.X - topLeft.X, bottomRight.Y - topLeft.Y);
 
-                foreach(Entity e in tempEntitiesInSelection)
+                foreach (Entity e in tempEntitiesInSelection)
                 {
                     e.GetComponent<component.HealthComponent>().Visible = false;
                 }
@@ -324,25 +239,15 @@ namespace RTS_test
 
             Global.Camera.update();
 
-            //GUI
-            var ms = Mouse.GetState();
-            GUIContext.InjectMousePosition(ms.X, ms.Y);
-            if (ms.LeftButton == ButtonState.Pressed)
-                GUIContext.InjectMouseButtonDown(MouseButton.LeftButton);
-            else if (ms.LeftButton == ButtonState.Released)
-                GUIContext.InjectMouseButtonUp(MouseButton.LeftButton);
-            GUIContext.InjectTimePulse((float)gameTime.ElapsedGameTime.TotalSeconds);
-            GUISystem.InjectTimePulse((float)gameTime.ElapsedGameTime.TotalSeconds);
-
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
+            frameMeter.draw(gameTime);
             GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
-    SamplerState.AnisotropicClamp, null, null, null, Global.Camera.TranslationMatrix);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Global.Camera.TranslationMatrix);
             tileMap.draw(spriteBatch, tileManager);
             entityWorld.Draw();
             entityTileMap.draw(spriteBatch);
@@ -377,12 +282,20 @@ namespace RTS_test
 
 
             spriteBatch.Begin();
-            string fps = string.Format("fps: {0}", this.frameRate);
-            spriteBatch.DrawString(font, fps, new Vector2(16, 16), Color.White);
-            spriteBatch.DrawString(font, "Camera zoom: " + Global.Camera.Zoom, new Vector2(16, 32), Color.White);
 
-            // GUI
-            GUISystem.RenderAllGUIContexts();
+            //draw black rectangle behind values
+            Texture2D t = new Texture2D(GraphicsDevice, 1, 1);
+            t.SetData<Color>(new Color[] { Color.Black });
+            Color color = Color.Black;
+            color.A = 128;
+            spriteBatch.Draw(t, new Rectangle(0, 0, 400, 65), null, color, 0f, new Vector2(0, 0), SpriteEffects.None, 0);
+
+            spriteBatch.DrawString(font, "FPS: " + frameMeter.FPS, new Vector2(16, 8), Color.White);
+            spriteBatch.DrawString(font, "UPS: " + frameMeter.UPS, new Vector2(16, 24), Color.White);
+
+            spriteBatch.DrawString(font, "frametime: " + frameMeter.FrameTime + "ms", new Vector2(164, 8), Color.White);
+            spriteBatch.DrawString(font, "updatetime: " + frameMeter.UpdateTime + "ms", new Vector2(164, 24), Color.White);
+
             spriteBatch.End();
 
             base.Draw(gameTime);
@@ -391,60 +304,11 @@ namespace RTS_test
         private void DrawLine(SpriteBatch sb, Vector2 start, Vector2 end)
         {
             Vector2 edge = end - start;
-            // calculate angle to rotate line
-            float angle =
-                (float)Math.Atan2(edge.Y, edge.X);
-
+            float angle = (float)Math.Atan2(edge.Y, edge.X);
             Texture2D t = new Texture2D(GraphicsDevice, 1, 1);
-            t.SetData<Color>(
-                new Color[] { Color.White });// fill the texture with white
+            t.SetData<Color>(new Color[] { Color.White });
+            sb.Draw(t, new Rectangle((int)start.X, (int)start.Y, (int)edge.Length(), 1), null, Color.Black, angle, new Vector2(0, 0), SpriteEffects.None, 0);
 
-            sb.Draw(t,
-                new Rectangle(// rectangle defines shape of line and position of start of line
-                    (int)start.X,
-                    (int)start.Y,
-                    (int)edge.Length(), //sb will strech the texture to fill this rectangle
-                    1), //width of line, change this to make thicker line
-                null,
-                Color.Black, //colour of line
-                angle,     //angle of line (calulated above)
-                new Vector2(0, 0), // point in line about which to rotate
-                SpriteEffects.None,
-                0);
-
-        }
-
-        private void InitialiseResourceGroupDirectories()
-        {
-            var resourceProvider = (DefaultResourceProvider)SharpCEGui.Base.System.GetSingleton().GetResourceProvider();
-            var dataPathPrefix = Path.Combine(Environment.CurrentDirectory, "resources");
-
-            // for each resource type, set a resource group directory
-            resourceProvider.SetResourceGroupDirectory("schemes", Path.Combine(dataPathPrefix, "schemes"));
-            resourceProvider.SetResourceGroupDirectory("imagesets", Path.Combine(dataPathPrefix, "imagesets"));
-            resourceProvider.SetResourceGroupDirectory("fonts", Path.Combine(dataPathPrefix, "fonts"));
-            resourceProvider.SetResourceGroupDirectory("layouts", Path.Combine(dataPathPrefix, "layouts"));
-            resourceProvider.SetResourceGroupDirectory("looknfeels", Path.Combine(dataPathPrefix, "looknfeel"));
-            resourceProvider.SetResourceGroupDirectory("lua_scripts", Path.Combine(dataPathPrefix, "lua_scripts"));
-            resourceProvider.SetResourceGroupDirectory("schemas", Path.Combine(dataPathPrefix, "xml_schemas"));
-            resourceProvider.SetResourceGroupDirectory("animations", Path.Combine(dataPathPrefix, "animations"));
-        }
-
-        private void InitialiseDefaultResourceGroups()
-        {
-            //// set the default resource groups to be used
-            SharpCEGui.Base.ImageManager.SetImagesetDefaultResourceGroup("imagesets");
-            SharpCEGui.Base.Font.SetDefaultResourceGroup("fonts");
-            SharpCEGui.Base.Scheme.SetDefaultResourceGroup("schemes");
-            SharpCEGui.Base.WidgetLookManager.SetDefaultResourceGroup("looknfeels");
-            SharpCEGui.Base.WindowManager.SetDefaultResourceGroup("layouts");
-            //CEGUI::ScriptModule::setDefaultResourceGroup("lua_scripts");
-            //AnimationManager.SetDefaultResourceGroup("animations");
-
-            //// setup default group for validation schemas
-            //CEGUI::XMLParser* parser = CEGUI::System::getSingleton().getXMLParser();
-            //if (parser->isPropertyPresent("SchemaDefaultResourceGroup"))
-            //    parser->setProperty("SchemaDefaultResourceGroup", "schemas");
         }
     }
 }

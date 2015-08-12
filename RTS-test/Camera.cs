@@ -43,16 +43,11 @@ namespace RTS_test
 
         public float Rotation { get; private set; }
 
-        public int ViewportWidth { get; set; }
-        public int ViewportHeight { get; set; }
-
-        public Rectangle Viewport { get { return new Rectangle(0, 0, ViewportWidth, ViewportHeight); } }
-
         public Vector2 ViewportCenter
         {
             get
             {
-                return new Vector2(ViewportWidth * 0.5f, ViewportHeight * 0.5f);
+                return new Vector2(Global.ViewportWidth * 0.5f, Global.ViewportHeight * 0.5f);
             }
         }
 
@@ -105,7 +100,7 @@ namespace RTS_test
         {
             Vector2 viewPortCorner = ScreenToWorld(new Vector2(0, 0));
             Vector2 viewPortBottomCorner =
-               ScreenToWorld(new Vector2(ViewportWidth, ViewportHeight));
+               ScreenToWorld(new Vector2(Global.ViewportWidth, Global.ViewportHeight));
 
             return new Rectangle((int)viewPortCorner.X,
                (int)viewPortCorner.Y,

@@ -35,7 +35,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\WindowsGL\Debug\</OutputPath>
+    <OutputPath>bin\Windows\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -58,6 +58,7 @@
     <Compile Include="AnimationManager.cs" />
     <Compile Include="Area.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="FrameRate.cs" />
     <Compile Include="Components.cs" />
     <Compile Include="DisField.cs" />
     <Compile Include="DisFieldMixer.cs" />
@@ -66,12 +67,6 @@
     <Compile Include="EntityTileMap.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Generator.cs" />
-    <Compile Include="GUI\MonoGameGeometryBuffer.cs" />
-    <Compile Include="GUI\MonoGameRenderer.cs" />
-    <Compile Include="GUI\MonoGameRenderTarget.cs" />
-    <Compile Include="GUI\MonoGameTexture.cs" />
-    <Compile Include="GUI\MonoGameTextureTarget.cs" />
-    <Compile Include="GUI\MonoGameViewportTarget.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MovementSystem.cs" />
     <Compile Include="PathGoal.cs" />
@@ -101,16 +96,13 @@
     <Reference Include="libnoise">
       <HintPath>..\..\..\..\..\..\libs\libnoise.dll</HintPath>
     </Reference>
+    <Reference Include="Lidgren.Network, Version=3.4.0.456, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\MonoGame\v3.0\Assemblies\Windows\Lidgren.Network.dll</HintPath>
+    </Reference>
     <Reference Include="MonoGame.Framework, Version=3.4.0.456, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\MonoGame\v3.0\Assemblies\WindowsGL\MonoGame.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\MonoGame\v3.0\Assemblies\WindowsGL\OpenTK.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpCEGui.Base">
-      <HintPath>..\..\..\..\..\..\libs\SharpCEGui.Base.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
