@@ -79,7 +79,7 @@ namespace RTS_test
             if (!float.IsNaN(toZoom) && toZoom != Zoom)
             {
                 Zoom = MathHelper.Lerp(Zoom, toZoom, zoomSpeed);
-                if (Zoom < -0.19f)
+                if (Zoom < 0.19f)
                 {
                     Zoom = 0.19f;
                     toZoom = float.NaN;
