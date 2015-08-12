@@ -112,7 +112,34 @@ namespace RTS_test
 						spriteBatch.Draw(texture, new Vector2(x * Global.tileSize, y * Global.tileSize), color);
 				}
 			}
-		}
+
+            VertexPositionColor[] vertices = new VertexPositionColor[6];
+            vertices[0] = new VertexPositionColor(new Vector3(0, 0, 0), Color.Red);
+            vertices[1] = new VertexPositionColor(new Vector3(1, 0, 0), Color.Red);
+            vertices[2] = new VertexPositionColor(new Vector3(1, 1, 0), Color.Red);
+            vertices[3] = new VertexPositionColor(new Vector3(0, 0, 0), Color.Red);
+            vertices[4] = new VertexPositionColor(new Vector3(0, 1, 0), Color.Red);
+            vertices[5] = new VertexPositionColor(new Vector3(1, 1, 0), Color.Red);
+
+            BasicEffect basicEffect = new BasicEffect(spriteBatch.GraphicsDevice);
+            //basicEffect.World = Global.Camera.TranslationMatrix;
+
+            if (vertices.Length > 0)
+            {
+                var vertexBuffer = new VertexBuffer(spriteBatch.GraphicsDevice, typeof(VertexPositionColor), vertices.Length, BufferUsage.WriteOnly);
+                vertexBuffer.SetData<VertexPositionColor>(vertices);
+                //basicEffect.View = camera.ViewMatrix;
+                //basicEffect.Projection = camera.ProjectionMatrix;
+                //graphics.GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
+
+                foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
+                {
+                    pass.Apply();
+                    spriteBatch.GraphicsDevice.SetVertexBuffer(vertexBuffer);
+                    spriteBatch.GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, vertices, 0, vertices.Length / 3);
+                }
+            }
+        }
 
         public TileData getTile(int x, int y)
         {
