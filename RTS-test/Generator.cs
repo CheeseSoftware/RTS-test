@@ -78,21 +78,25 @@ namespace RTS_test
             //}
 
             List<Point> players = new List<Point>();
-            for (int i = 0; i < 8; ++i)
-            {
-                Point pos = new Point(random.Next(tileMap.Size.x), random.Next(tileMap.Size.y));
-                players.Add(pos);
-            }
+            players.Add(new Point(tileMap.Size.x / 6, tileMap.Size.y / 6));
+            players.Add(new Point(tileMap.Size.x*3 / 6, tileMap.Size.y / 6));
+            players.Add(new Point(tileMap.Size.x*5 / 6, tileMap.Size.y / 6));
+            players.Add(new Point(tileMap.Size.x*5 / 6, tileMap.Size.y*5 / 6));
+            players.Add(new Point(tileMap.Size.x*3 / 6, tileMap.Size.y*5 / 6));
+            players.Add(new Point(tileMap.Size.x / 6, tileMap.Size.y*5 / 6));
 
-            for (int i = 0; i < 8; ++i)
+            for (int i = 0; i < players.Count; ++i)
             {
-                fillArea(createPath(players[i], players[(i+1)%8], 5, 0.25f), 2);
+                fillArea(createPath(players[i], players[(i+1)%players.Count], 5, 0.25f), 2);
                 fillArea(generateArea(new int2(players[i].X, players[i].Y), 2, 16), 2);
                 fillArea(generateArea(new int2(players[i].X, players[i].Y), 2, 4), 5);
             }
+            fillArea(createPath(players[1], players[4], 5, 0.25f), 2);
 
             // River:
-            fillArea(createPath(new Point(tileMap.Size.x - 1, 0), new Point(0, tileMap.Size.y - 1), 8, 0.5f), 3);
+            Area riverArea = createPath(new Point(tileMap.Size.x - 1, 0), new Point(0, tileMap.Size.y - 1), 8, 0.5f);
+            replaceArea(riverArea, 1, 3);
+            replaceArea(riverArea, 2, 5);
 
             for (int x = 0; x < tileMap.Size.x; x++)
             {

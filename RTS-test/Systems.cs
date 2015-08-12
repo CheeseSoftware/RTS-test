@@ -43,7 +43,7 @@ namespace RTS_test
 
                 if (!e.HasComponent<component.AnimationComponent>())
                 {
-                    Color color = new Color(dis, dis, dis);
+                    Color color = new Color(dis, dis, dis, 0.5f);
                     spriteBatch.Draw(drawable.texture, null, rectangle, null, new Vector2(drawable.texture.Width / 2, drawable.texture.Height / 2), physics.Rotation + drawable.AdditionalRotation, null, color, SpriteEffects.None, 0);
                 }
                 else
