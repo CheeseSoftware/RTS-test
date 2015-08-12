@@ -79,9 +79,9 @@ namespace RTS_test
             if (!float.IsNaN(toZoom) && toZoom != Zoom)
             {
                 Zoom = MathHelper.Lerp(Zoom, toZoom, zoomSpeed);
-                if (Zoom < 0.09f)
+                if (Zoom < -0.19f)
                 {
-                    Zoom = 0.09f;
+                    Zoom = 0.19f;
                     toZoom = float.NaN;
                 }
 
@@ -175,6 +175,14 @@ namespace RTS_test
                 else if (inputState.IsScrollUp(controllingPlayer))
                 {
                     AdjustZoom(0.1f);
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.Subtract))
+                {
+                    AdjustZoom(-0.05f);
+                }
+                else if (Keyboard.GetState().IsKeyDown(Keys.Add))
+                {
+                    AdjustZoom(0.05f);
                 }
 
                 if (cameraMovement != Vector2.Zero)

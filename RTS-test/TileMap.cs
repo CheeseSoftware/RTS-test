@@ -8,9 +8,9 @@ using System.Text;
 
 namespace RTS_test
 {
-	public class TileMap
-	{
-		private UInt16[,] tiles;
+    public class TileMap
+    {
+        private UInt16[,] tiles;
         private DisField disField;
         private TileManager tileManager;
         private int2 size;
@@ -30,11 +30,11 @@ namespace RTS_test
             this.treeDis = treeDis;
         }
 
-		public TileMap(TileManager tileManager, int2 size)
-		{
+        public TileMap(TileManager tileManager, int2 size)
+        {
             this.tileManager = tileManager;
             this.size = size;
-		}
+        }
 
         public void load()
         {
@@ -47,71 +47,80 @@ namespace RTS_test
             disField.update();
         }
 
-		public void draw(SpriteBatch spriteBatch, TileManager tileManager)
-		{
-			Rectangle viewportWorldBoundry = Global.Camera.ViewportWorldBoundry();
-			Rectangle tilesVisible = new Rectangle(viewportWorldBoundry.X / Global.tileSize, viewportWorldBoundry.Y / Global.tileSize, viewportWorldBoundry.Width / Global.tileSize, viewportWorldBoundry.Height / Global.tileSize);
+        public void draw(SpriteBatch spriteBatch, TileManager tileManager)
+        {
+            Rectangle viewportWorldBoundry = Global.Camera.ViewportWorldBoundry();
+            Rectangle tilesVisible = new Rectangle(viewportWorldBoundry.X / Global.tileSize, viewportWorldBoundry.Y / Global.tileSize, viewportWorldBoundry.Width / Global.tileSize, viewportWorldBoundry.Height / Global.tileSize);
 
-			for (int x = tilesVisible.X; x <= tilesVisible.Right + 1; x++)
-			{
-				for (int y = tilesVisible.Y; y <= tilesVisible.Bottom + 1; y++)
-				{
+            Rectangle sourceRectangle = new Rectangle(0, 0, Global.tileSize, Global.tileSize);
+            Vector2 startPos = new Vector2();
+            bool drawMultiTiles = false;
+            UInt16 currentTile = UInt16.MaxValue;
+            Random r = new Random();
+            //bool timeToDraw = false;
 
-                    float dis = 3f;// getDis(new Vector2((float)x, (float)y)) / 4f;
-					//Color color = new Color(dis, dis, dis);
+            for (int x = tilesVisible.X - 1; x <= tilesVisible.Right + 1; x++)
+            {
+                //drawMultiTiles = false;
+                for (int y = tilesVisible.Y - 1; y <= tilesVisible.Bottom + 1; y++)
+                {
+                    if (x < 0 || y < 0 || x >= Global.mapWidth || y >= Global.mapHeight)
+                        continue;
 
+                    Color color = Color.White;
+                    //color = new Color(r.Next(256), r.Next(256), r.Next(256));
 
-					Color color = Color.White;
+                    UInt16 tile = getTileID(x, y);
+                    TileData tileData = tileManager.getTile(tile);
+                    Texture2D texture = tileData.Texture;
 
-                    /***********************
-                     * Debug code!
-                     * // TODO: Remove debug code.
-                     * *********************/
-                    //if (pathGoal != null)
-                    //{
-                    //    Vector2 dir = pathGoal.getDirection(new Vector2((float)x + 0.5f, (float)y + 0.5f));
-                    //    color = new Color(dir.Length(), 0.5f + 0.5f * dir.X, 0.5f + 0.5f * dir.Y);//new Color(0.5f + 0.5f * dir.Length(), 0.5f + 0.5f * dir.Length(), 0.5f + 0.5f * dir.Length());//
-                    //}
-                    /*if (treeDis != null)
+                    if (texture.Width > Global.tileSize || texture.Height > Global.tileSize)
                     {
-                        Vector2 dir = treeDis.getNormal(new Vector2((float)x + 0.5f, (float)y + 0.5f));
-                        float tdis = treeDis.getDis(new Vector2((float)x + 0.5f, (float)y + 0.5f));
-                        bool solid = treeDis.getTile(x, y);
-                        //color = new Color(tdis, tdis, tdis);//new Color(0.5f + 0.5f * dir.Length(), 0.5f + 0.5f * dir.Length(), 0.5f + 0.5f * dir.Length());//
-                        if (solid)
-                            color = Color.Gray;
+                        // Draw parts of a larger texture to look nice
+                        int baseX = x * Global.tileSize % texture.Width;
+                        int baseY = y * Global.tileSize % texture.Height;
+
+                        int chunkY = y * Global.tileSize / texture.Height;
+                        int newChunkY = (y + 1) * Global.tileSize / texture.Height;
+
+                        if (y + 1 < tilesVisible.Bottom + 1 &&
+                            chunkY == newChunkY &&
+                            sourceRectangle.Bottom + Global.tileSize <= texture.Height && 
+                            sourceRectangle.Height + Global.tileSize <= texture.Height && 
+                            (getTileID(x, y + 1) == currentTile || currentTile == UInt16.MaxValue))
+                        {
+                            // tile under denna är samma
+
+                            if (!drawMultiTiles)
+                            {
+                                sourceRectangle.Location = new Point(baseX, baseY);
+                                startPos = new Vector2(x * Global.tileSize, y * Global.tileSize);
+                                currentTile = tile;
+                                drawMultiTiles = true;
+                            }
+                            sourceRectangle.Height += Global.tileSize;
+                        }
+                        else if (drawMultiTiles)
+                        {
+                            spriteBatch.Draw(texture, startPos, null, sourceRectangle, null, 0f, null, color, SpriteEffects.None, 0f);
+
+                            drawMultiTiles = false;
+                            sourceRectangle = new Rectangle(0, 0, Global.tileSize, Global.tileSize);
+                            currentTile = UInt16.MaxValue;
+                        }
                         else
-                            color = Color.White;
-                    }*/
+                        {
+                            sourceRectangle.X = baseX;
+                            sourceRectangle.Y = baseY;
 
-                    //if (treeDis.getTile(x, y))
-                    //    color = Color.Gray;
-                    //else
-                    //    color = Color.White;
-
-					if (x < 0 || y < 0 || x >= Global.mapWidth || y >= Global.mapHeight)
-						continue;
-					UInt16 tile = getTileID(x, y);
-					TileData tileData = tileManager.getTile(tile);
-					Texture2D texture = tileData.Texture;
-
-					if (texture == null)
-						continue;
-
-					if (texture.Width > Global.tileSize || texture.Height > Global.tileSize)
-					{
-						// Draw parts of a larger texture to look nice
-						int baseX = x * Global.tileSize % texture.Width;
-						int baseY = y * Global.tileSize % texture.Height;
-
-						Rectangle sourceRectangle = new Rectangle(baseX, baseY, Global.tileSize, Global.tileSize);
-
-						spriteBatch.Draw(texture, new Vector2(x * Global.tileSize, y * Global.tileSize), null, sourceRectangle, null, 0f, null, color, SpriteEffects.None, 0f);
-					}
-					else // Draw normally
-						spriteBatch.Draw(texture, new Vector2(x * Global.tileSize, y * Global.tileSize), color);
-				}
-			}
+                            spriteBatch.Draw(texture, new Vector2(x * Global.tileSize, y * Global.tileSize), null, sourceRectangle, null, 0f, null, color, SpriteEffects.None, 0f);
+                        }
+                    }
+                    else // Draw normally
+                        spriteBatch.Draw(texture, new Vector2(x * Global.tileSize, y * Global.tileSize), color);
+                }
+            }
+            return;
 
             VertexPositionColor[] vertices = new VertexPositionColor[6];
             vertices[0] = new VertexPositionColor(new Vector3(0, 0, 0), Color.Red);
@@ -132,12 +141,12 @@ namespace RTS_test
                 //basicEffect.Projection = camera.ProjectionMatrix;
                 //graphics.GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
 
-                foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
-                {
-                    pass.Apply();
-                    spriteBatch.GraphicsDevice.SetVertexBuffer(vertexBuffer);
-                    spriteBatch.GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, vertices, 0, vertices.Length / 3);
-                }
+                //foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
+                // {
+                //   pass.Apply();
+                spriteBatch.GraphicsDevice.SetVertexBuffer(vertexBuffer);
+                spriteBatch.GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, vertices, 0, vertices.Length / 3);
+                //}
             }
         }
 
@@ -155,19 +164,19 @@ namespace RTS_test
             return tiles[x, y];
         }
 
-		public void setTile(int x, int y, UInt16 tile)
-		{
+        public void setTile(int x, int y, UInt16 tile)
+        {
             if (x < 0 || y < 0 || x >= size.x || y >= size.y)
                 return;
 
             if (tiles[x, y] == tile)
                 return;
 
-			tiles[x, y] = tile;
+            tiles[x, y] = tile;
 
             // Notify disfield
             disField.setTile(x, y, tileManager.getTile(tile).IsSolid);
-		}
+        }
 
         public DisField DisField
         {
@@ -179,10 +188,10 @@ namespace RTS_test
             get { return tileManager; }
         }
 
-		public int2 Size
+        public int2 Size
         {
             get { return size; }
         }
 
-	}
+    }
 }
