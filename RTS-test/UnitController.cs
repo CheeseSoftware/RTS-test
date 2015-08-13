@@ -32,7 +32,7 @@ namespace RTS_test
             List<Entity> entities = pathGoal.getEntities();
             foreach (Entity entity in entities)
             {
-                entity.GetComponent<component.Goal>().pathGoal = pathGoal;
+                entity.GetComponent<component.Unit>().pathGoal = pathGoal;
             }
 		}
     }

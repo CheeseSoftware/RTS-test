@@ -80,10 +80,10 @@ namespace RTS_test
         }
 
         [ArtemisEntitySystem(GameLoopType = GameLoopType.Update, Layer = 0)]
-        public class UnitWalker : EntityProcessingSystem<component.Goal, component.Physics>
+        public class UnitWalker : EntityProcessingSystem<component.Unit, component.Physics>
         {
             public UnitWalker()
-                : base(Aspect.All(typeof(component.Goal), typeof(component.Physics)))
+                : base(Aspect.All(typeof(component.Unit), typeof(component.Physics)))
             {
             }
 
@@ -91,7 +91,7 @@ namespace RTS_test
             {
             }
 
-            protected override void Process(Entity e, component.Goal goal, component.Physics physics)
+            protected override void Process(Entity e, component.Unit goal, component.Physics physics)
             {
                 if (goal.pathGoal == null)
                     return;

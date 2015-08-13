@@ -49,7 +49,7 @@ namespace RTS_test
             component.AnimationComponent animationComponent = new component.AnimationComponent();
             animationComponent.addAnimation(14, animationManager.getAnimation("smallworker-gather"));
             entity.AddComponent(animationComponent);
-            entity.AddComponent(new component.Goal());
+            entity.AddComponent(new component.Unit());
             return entity;
         }
 
@@ -87,7 +87,7 @@ namespace RTS_test
             entity.AddComponent(new component.Physics(entity, body));
             //entity.AddComponent(new component.MaxVelocity(0.90f));
             entity.AddComponent(new component.Drawable(textureManager.getTexture(10)));
-            entity.AddComponent(new component.Goal());
+            entity.AddComponent(new component.Unit());
             return entity;
         }
 
