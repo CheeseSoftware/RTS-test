@@ -10,9 +10,15 @@ namespace RTS_test.component
     public class Unit : IComponent
     {
         public PathGoal pathGoal = null;
+        private Lord lord = null;
 
-        public Unit()
+        public Unit(Lord lord)
         {
+            this.lord = lord;
+        }
+
+        public Lord Lord {
+            get { return lord; }
         }
     }
 }

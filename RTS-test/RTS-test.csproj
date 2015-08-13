@@ -84,6 +84,7 @@
     <Compile Include="GUI\GUILayout.cs" />
     <Compile Include="GUI\GUIWindow.cs" />
     <Compile Include="InputManager.cs" />
+    <Compile Include="Lord.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MovementSystem.cs" />
     <Compile Include="PathGoal.cs" />

@@ -41,6 +41,14 @@ namespace RTS_test
                 TileMap tileMap = EntitySystem.BlackBoard.GetEntry<TileMap>("TileMap");
                 float dis = tileMap.DisField.getDis(physics.Position * Global.tileSize) / 4f;
 
+                Color lordColor = Color.White;
+
+                if (e.HasComponent<component.Unit>())
+                {
+                    component.Unit unit = e.GetComponent<component.Unit>();
+                    lordColor = unit.Lord.Color;
+                }
+
                 if (!e.HasComponent<component.AnimationComponent>())
                 {
                     Color color = new Color(dis, dis, dis, 0.5f);
@@ -53,8 +61,10 @@ namespace RTS_test
                         animationComponent.startAnimation(14);
                     Texture2D currentTexture = textureManager.getTexture(animationComponent.getCurrentTexture());
 
-                    spriteBatch.Draw(currentTexture, null, rectangle, animationComponent.getCurrentFrame(), new Vector2(rectangle.Width / 2, rectangle.Height / 2), physics.Rotation + drawable.AdditionalRotation, null, null, SpriteEffects.None, 0);
+                    spriteBatch.Draw(currentTexture, null, rectangle, animationComponent.getCurrentFrame(), new Vector2(rectangle.Width / 2, rectangle.Height / 2), physics.Rotation + drawable.AdditionalRotation, null, lordColor, SpriteEffects.None, 0);
                 }
+
+                
 
                 // Draw HP bar
                 if (e.HasComponent<component.HealthComponent>())

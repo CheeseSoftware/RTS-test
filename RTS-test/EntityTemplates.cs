@@ -22,12 +22,18 @@ namespace RTS_test
 
             Vector2 pos = new Vector2(0f, 0f);
             Vector2 velocity = new Vector2(0f, 0f);
+            Lord lord;
 
             if (args.Length >= 1)
-                pos = (Vector2)args[0];
+                lord = (Lord)args[0];
+            else
+                throw new Exception("No lord assigned to unit 'Test'!");
 
             if (args.Length >= 2)
-                velocity = (Vector2)args[1];
+                pos = (Vector2)args[1];
+
+            if (args.Length >= 3)
+                velocity = (Vector2)args[0];
 
 
 
@@ -49,7 +55,7 @@ namespace RTS_test
             component.AnimationComponent animationComponent = new component.AnimationComponent();
             animationComponent.addAnimation(14, animationManager.getAnimation("smallworker-gather"));
             entity.AddComponent(animationComponent);
-            entity.AddComponent(new component.Unit());
+            entity.AddComponent(new component.Unit(lord));
             return entity;
         }
 
@@ -65,12 +71,18 @@ namespace RTS_test
 
             Vector2 pos = new Vector2(0f, 0f);
             Vector2 velocity = new Vector2(0f, 0f);
+            Lord lord;
 
             if (args.Length >= 1)
-                pos = (Vector2)args[0];
+                lord = (Lord)args[0];
+            else
+                throw new Exception("No lord assigned to unit 'Test'!");
 
             if (args.Length >= 2)
-                velocity = (Vector2)args[1];
+                pos = (Vector2)args[1];
+
+            if (args.Length >= 3)
+                velocity = (Vector2)args[0];
 
 
 
@@ -87,7 +99,7 @@ namespace RTS_test
             entity.AddComponent(new component.Physics(entity, body));
             //entity.AddComponent(new component.MaxVelocity(0.90f));
             entity.AddComponent(new component.Drawable(textureManager.getTexture(10)));
-            entity.AddComponent(new component.Unit());
+            entity.AddComponent(new component.Unit(lord));
             return entity;
         }
 

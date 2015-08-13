@@ -34,6 +34,9 @@ namespace RTS_test
         private UnitController unitController;
         private FarseerPhysics.Dynamics.World world;
         private Generator generator;
+        private Lord lord;
+        private Lord enemyLord;
+
 
         private FrameRate frameMeter = new FrameRate();
         private SpriteFont font; // Font for fps-counter
@@ -68,6 +71,8 @@ namespace RTS_test
             unitController = new UnitController(null, _inputState, entityWorld, disFieldMixer);
             world = new FarseerPhysics.Dynamics.World(new Vector2(0f, 0f));
             generator = new Generator(tileMap);
+            lord = new Lord("Obama", Color.Red, 0);
+            enemyLord = new Lord("Justin Bieber", Color.Brown, 1);
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -132,8 +137,14 @@ namespace RTS_test
 
             for (int i = 0; i < 50; ++i)
                 entityWorld.CreateEntityFromTemplate("Test", new object[] {
+                    lord,
                     new Vector2(17 + 0.2f*i, 17 + 4f*(float)Math.Sin(0.5f*i)),
-                    new Vector2(0.001f*i, 0.05f*(float)Math.Cos(0.5f*i))
+                });
+
+            for (int i = 0; i < 10; ++i)
+                entityWorld.CreateEntityFromTemplate("Test", new object[] {
+                    enemyLord,
+                    new Vector2(0.5f*tileMap.Size.x - 17 - 0.2f*i, 0.5f*tileMap.Size.y - 17 - 4f*(float)Math.Sin(0.5f*i)),
                 });
         }
 
