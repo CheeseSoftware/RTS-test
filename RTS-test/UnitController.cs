@@ -13,11 +13,16 @@ namespace RTS_test
 {
     public class UnitController
     {
+        public delegate void OnSelectUnitDelegate();
+        public delegate void OnSelectBuildingDelegate();
+
         private PathGoal pathGoal;
         private InputState inputState;
         private InputManager inputManager;
         private EntityWorld entityWorld;
         private DisFieldMixer disFieldMixer;
+        public event OnSelectUnitDelegate onSelectUnit;
+        public event OnSelectBuildingDelegate onSelectBuilding;
 
         private bool isSelecting = false;
         private Vector2 firstCorner;
@@ -97,6 +102,8 @@ namespace RTS_test
                             entitiesInSelection.Add(e);
                         }
                     }
+
+                    onSelectUnit();
                 }
             }
 
@@ -189,5 +196,6 @@ namespace RTS_test
                 entity.GetComponent<component.Unit>().pathGoal = pathGoal;
             }
 		}
+
     }
 }
