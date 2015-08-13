@@ -122,7 +122,10 @@ namespace RTS_test
 
             GUIWindow = new GUIWindow();
             GUILayout layout = new GUILayout();
-            layout.addComponent("testComponent", new GUI.Components.TestComponent(textureManager.getTexture(1)));
+            //layout.addComponent("testComponent", new GUI.Components.TestComponent(textureManager.getTexture(1)));
+            GUI.Components.Label label = new GUI.Components.Label(new Point(), Color.Red, font);
+            label.Text = "banan";
+            layout.addComponent("testLabel", label);
             GUIWindow.addLayout("testLayout", layout);
 
             for (int i = 0; i < 50; ++i)
