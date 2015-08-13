@@ -55,7 +55,7 @@ namespace RTS_test
             Rectangle sourceRectangle = new Rectangle(0, 0, Global.tileSize, Global.tileSize);
             Vector2 startPos = new Vector2();
             bool drawMultiTiles = false;
-            UInt16 currentTile = UInt16.MaxValue;
+            String currentTile = "";
             Random r = new Random();
             //bool timeToDraw = false;
 
@@ -70,9 +70,8 @@ namespace RTS_test
                     Color color = Color.White;
                     //color = new Color(r.Next(256), r.Next(256), r.Next(256));
 
-                    UInt16 tile = getTileID(x, y);
-                    TileData tileData = tileManager.getTile(tile);
-                    Texture2D texture = tileData.Texture;
+                    TileData tile = getTile(x, y);
+                    Texture2D texture = tile.Texture;
 
                     if (texture.Width > Global.tileSize || texture.Height > Global.tileSize)
                     {
@@ -87,7 +86,7 @@ namespace RTS_test
                             chunkY == newChunkY &&
                             sourceRectangle.Bottom + Global.tileSize <= texture.Height && 
                             sourceRectangle.Height + Global.tileSize <= texture.Height && 
-                            (getTileID(x, y + 1) == currentTile || currentTile == UInt16.MaxValue))
+                            (getTile(x, y + 1).Name == currentTile || currentTile == ""))
                         {
                             // tile under denna är samma
 
@@ -95,7 +94,7 @@ namespace RTS_test
                             {
                                 sourceRectangle.Location = new Point(baseX, baseY);
                                 startPos = new Vector2(x * Global.tileSize, y * Global.tileSize);
-                                currentTile = tile;
+                                currentTile = tile.Name;
                                 drawMultiTiles = true;
                             }
                             sourceRectangle.Height += Global.tileSize;
@@ -106,7 +105,7 @@ namespace RTS_test
 
                             drawMultiTiles = false;
                             sourceRectangle = new Rectangle(0, 0, Global.tileSize, Global.tileSize);
-                            currentTile = UInt16.MaxValue;
+                            currentTile = "";
                         }
                         else
                         {
