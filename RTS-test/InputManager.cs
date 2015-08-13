@@ -97,7 +97,7 @@ namespace RTS_test
             {
                 rmb.setDown(isRmbDown);
                 rmb.setToggled(true);
-                rmbEvent(lmb.Down);
+                rmbEvent(rmb.Down);
             }
             if (mmb.Down != isMmbDown)
             {
