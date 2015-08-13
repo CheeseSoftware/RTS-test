@@ -22,8 +22,11 @@ namespace RTS_test.GUI.Components
         private Color borderColor;
         private Texture2D generatedTexture;
         private Texture2D generatedPressedTexture;
+        private Texture2D generatedHoverTexture;
+
 
         private bool pressed = false;
+        private bool hover = false;
         private Color pressedBackgroundColor;
         private Random r = new Random();
 
@@ -39,35 +42,100 @@ namespace RTS_test.GUI.Components
 
             pressedBackgroundColor = new Color(r.Next(256), r.Next(256), r.Next(256));
 
+            generatedTexture = generateButtonTexture(false, false);
+            generatedPressedTexture = generateButtonTexture(false, true);
+            generatedHoverTexture = generateButtonTexture(true, false);
+
+
+
+            Global.inputManager.lmbEvent += onLeftClick;
+        }
+
+        private Texture2D generateButtonTexture(bool hover, bool pressed)
+        {
             Bitmap bitmap = new Bitmap(Box.Width, Box.Height);
-            for (int x = 0; x < Box.Width; x++)
+
+            Point leftTop = new Point(borderWidth, borderWidth);
+            Point leftBottom = new Point(borderWidth, Box.Height - borderWidth - 1);
+            Point rightTop = new Point(Box.Width - borderWidth - 1, borderWidth);
+            Point rightBottom = new Point(Box.Width - borderWidth - 1, Box.Height - borderWidth - 1);
+
+            Color backgroundColor = this.backgroundColor;
+            if (pressed)
+            {
+                backgroundColor = Color.Black;
+                backgroundColor.A = 192;
+            }
+
+            bitmap = drawBitmapCircle(leftTop, borderWidth, bitmap, backgroundColor, hover);
+            bitmap = drawBitmapCircle(leftBottom, borderWidth, bitmap, backgroundColor, hover);
+            bitmap = drawBitmapCircle(rightTop, borderWidth, bitmap, backgroundColor, hover);
+            bitmap = drawBitmapCircle(rightBottom, borderWidth, bitmap, backgroundColor, hover);
+
+
+
+            for (int x = borderWidth; x < Box.Width - borderWidth; x++)
             {
                 for (int y = 0; y < Box.Height; y++)
                 {
                     bitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(backgroundColor.A, backgroundColor.R, backgroundColor.G, backgroundColor.B));
-                    if (x <= borderWidth || x >= Box.Width - borderWidth || y <= borderWidth || y >= Box.Height - borderWidth)
-                        bitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(borderColor.A, borderColor.R, borderColor.G, borderColor.B));
                 }
             }
-            generatedTexture = new Texture2D(EntitySystem.BlackBoard.GetEntry<SpriteBatch>("SpriteBatch").GraphicsDevice, Box.Width, Box.Height);
-            generatedTexture.SetData<byte>(Button.GetBytes(bitmap));
 
-            bitmap = new Bitmap(Box.Width, Box.Height);
             for (int x = 0; x < Box.Width; x++)
             {
-                for (int y = 0; y < Box.Height; y++)
+                for (int y = borderWidth; y < Box.Height - borderWidth; y++)
                 {
-                    if (x <= borderWidth || x >= Box.Width - borderWidth || y <= borderWidth || y >= Box.Height - borderWidth)
-                        bitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(borderColor.A, borderColor.R, borderColor.G, borderColor.B));
-                    else
-                        bitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(pressedBackgroundColor.A, pressedBackgroundColor.R, pressedBackgroundColor.G, pressedBackgroundColor.B));
-
+                    bitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(backgroundColor.A, backgroundColor.R, backgroundColor.G, backgroundColor.B));
                 }
             }
-            generatedPressedTexture = new Texture2D(EntitySystem.BlackBoard.GetEntry<SpriteBatch>("SpriteBatch").GraphicsDevice, Box.Width, Box.Height);
-            generatedPressedTexture.SetData<byte>(Button.GetBytes(bitmap));
 
-            Global.inputManager.lmbEvent += onLeftClick;
+            if (hover)
+            {
+                for (int x = borderWidth; x < Box.Width - borderWidth; x++)
+                {
+                    for (int y = 0; y < Box.Height; y++)
+                    {
+                        if (x == 0 || y == 0 || x == Box.Width - 1 || y == Box.Height - 1)
+                            bitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(borderColor.A, borderColor.R, borderColor.G, borderColor.B));
+                    }
+                }
+
+                for (int x = 0; x < Box.Width; x++)
+                {
+                    for (int y = borderWidth; y < Box.Height - borderWidth; y++)
+                    {
+                        if (x == 0 || y == 0 || x == Box.Width - 1 || y == Box.Height - 1)
+                            bitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(borderColor.A, borderColor.R, borderColor.G, borderColor.B));
+                    }
+                }
+            }
+
+            return BitmapToTexture2D(EntitySystem.BlackBoard.GetEntry<SpriteBatch>("SpriteBatch").GraphicsDevice, bitmap);
+        }
+
+        private Bitmap drawBitmapCircle(Point pos, int radius, Bitmap bitmap, Color color, bool border)
+        {
+            for (int x = pos.X - radius; x < pos.X + radius; x++)
+            {
+                for (int y = pos.Y - radius; y < pos.Y + radius; y++)
+                {
+                    if (border)
+                    {
+                        double dis = Math.Pow((double)(pos.Y - y), 2) + Math.Pow((double)(pos.X - x), 2);
+                        if (dis <= Math.Pow((double)radius, 2) && dis >= Math.Pow((double)radius - 1, 2))
+                            bitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(borderColor.A, borderColor.R, borderColor.G, borderColor.B));
+                        else if (dis < Math.Pow((double)radius, 2))
+                            bitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B));
+                    }
+                    else
+                    {
+                        if (Math.Pow((double)(pos.Y - y), 2) + Math.Pow((double)(pos.X - x), 2) <= Math.Pow((double)radius, 2))
+                            bitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B));
+                    }
+                }
+            }
+            return bitmap;
         }
 
         private void onLeftClick(bool isDown)
@@ -85,38 +153,44 @@ namespace RTS_test.GUI.Components
                 pressed = false;
         }
 
-        public static byte[] GetBytes(Bitmap bitmap)
+        public static Texture2D BitmapToTexture2D(GraphicsDevice GraphicsDevice, System.Drawing.Bitmap image)
         {
-            var data = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height),
-                System.Drawing.Imaging.ImageLockMode.ReadOnly, bitmap.PixelFormat);
+            // Buffer size is size of color array multiplied by 4 because   
+            // each pixel has four color bytes  
+            int bufferSize = image.Height * image.Width * 4;
 
-            // calculate the byte size: for PixelFormat.Format32bppArgb (standard for GDI bitmaps) it's the hight * stride
-            int bufferSize = data.Height * data.Stride; // stride already incorporates 4 bytes per pixel
+            // Create new memory stream and save image to stream so   
+            // we don't have to save and read file  
+            System.IO.MemoryStream memoryStream = new System.IO.MemoryStream(bufferSize);
+            image.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Png);
 
-            // create buffer
-            byte[] bytes = new byte[bufferSize];
+            // Creates a texture from IO.Stream - our memory stream  
+            Texture2D texture = Texture2D.FromStream(
+              GraphicsDevice, memoryStream);
 
-            // copy bitmap data into buffer
-            Marshal.Copy(data.Scan0, bytes, 0, bytes.Length);
-
-            // unlock the bitmap data
-            bitmap.UnlockBits(data);
-
-            return bytes;
-
+            return texture;
         }
 
         public override void update(GameTime gameTime)
         {
+            if (GlobalBox.Contains(Mouse.GetState().Position))
+            {
+                hover = true;
+            }
+            else
+                hover = false;
             base.update(gameTime);
         }
 
         public override void draw(SpriteBatch spriteBatch)
         {
-            if (!pressed)
-                spriteBatch.Draw(generatedTexture, null, GlobalBox, new Rectangle(0, 0, Box.Width, Box.Height), null, 0f, null, null, SpriteEffects.None, 0);
-            else
+            if (hover && !pressed)
+                spriteBatch.Draw(generatedHoverTexture, null, GlobalBox, new Rectangle(0, 0, Box.Width, Box.Height), null, 0f, null, null, SpriteEffects.None, 0);
+            else if (pressed)
                 spriteBatch.Draw(generatedPressedTexture, null, GlobalBox, new Rectangle(0, 0, Box.Width, Box.Height), null, 0f, null, null, SpriteEffects.None, 0);
+            else
+                spriteBatch.Draw(generatedTexture, null, GlobalBox, new Rectangle(0, 0, Box.Width, Box.Height), null, 0f, null, null, SpriteEffects.None, 0);
+
 
             Vector2 textSize = font.MeasureString(text);
             Vector2 drawPos = GlobalPosition.ToVector2();

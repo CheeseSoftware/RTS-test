@@ -127,11 +127,9 @@ namespace RTS_test
             //layout.addComponent("testComponent", new GUI.Components.TestComponent(textureManager.getTexture(1)));
             //GUI.Components.Label label = new GUI.Components.Label(new Point(), Color.Red, font);
             //label.Text = "banan";
-            layout.addComponent("testLabel1", new GUI.Components.Button(new Rectangle(0, 0, 200, 50), "Button1", font, Color.White, Color.DarkGreen, 2, Color.Red));
-            layout.addComponent("testLabel2", new GUI.Components.Button(new Rectangle(0, 100, 200, 50), "Button2", font, Color.White, Color.DarkGreen, 2, Color.Blue));
-            layout.addComponent("testLabel3", new GUI.Components.Button(new Rectangle(0, 200, 200, 50), "Button3", font, Color.White, Color.DarkGreen, 2, Color.Red));
-            layout.addComponent("testLabel4", new GUI.Components.Button(new Rectangle(0, 300, 200, 50), "Button2", font, Color.White, Color.DarkGreen, 2, Color.Red));
-            layout.addComponent("testLabel5", new GUI.Components.Button(new Rectangle(0, 400, 200, 50), "Button3", font, Color.White, Color.DarkGreen, 2, Color.Red));
+            Color color = Color.Gray;
+            color.A = 192;
+            layout.addComponent("testLabel1", new GUI.Components.Button(new Rectangle(400, 20, 200, 50), "Button1", font, Color.White, color, 15, Color.Black));
 
             GUIWindow.addLayout("testLayout", layout);
 
@@ -195,10 +193,10 @@ namespace RTS_test
 
             spriteBatch.End();
 
-            
 
+
+            //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, null);
             spriteBatch.Begin();
-            
 
             Texture2D t = new Texture2D(GraphicsDevice, 1, 1);
             t.SetData<Color>(new Color[] { Color.Black });
