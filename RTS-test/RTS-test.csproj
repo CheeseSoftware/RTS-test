@@ -90,9 +90,6 @@
     <Reference Include="FarseerPhysics MonoGame">
       <HintPath>..\..\..\..\..\..\libs\FarseerPhysics MonoGame.dll</HintPath>
     </Reference>
-    <Reference Include="Gwen">
-      <HintPath>..\..\..\..\..\..\libs\Gwen.dll</HintPath>
-    </Reference>
     <Reference Include="libnoise">
       <HintPath>..\..\..\..\..\..\libs\libnoise.dll</HintPath>
     </Reference>
@@ -107,6 +104,9 @@
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
+    <Reference Include="YogUILibrary">
+      <HintPath>..\..\..\..\..\..\libs\YogUILibrary.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icon.ico" />
