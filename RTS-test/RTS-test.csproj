@@ -76,12 +76,16 @@
     <Compile Include="EntityTileMap.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Generator.cs" />
+<<<<<<< HEAD
     <Compile Include="GUI\Alignment.cs" />
     <Compile Include="GUI\Components\Label.cs" />
     <Compile Include="GUI\Components\TestComponent.cs" />
     <Compile Include="GUI\GUIComponent.cs" />
     <Compile Include="GUI\GUILayout.cs" />
     <Compile Include="GUI\GUIWindow.cs" />
+=======
+    <Compile Include="InputManager.cs" />
+>>>>>>> origin/Buildings
     <Compile Include="Map.cs" />
     <Compile Include="MovementSystem.cs" />
     <Compile Include="PathGoal.cs" />
@@ -95,6 +99,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextureManager.cs" />
     <Compile Include="TileMap.cs" />
+    <Compile Include="Types\Event.cs" />
     <Compile Include="Types\PagedArray2D.cs" />
     <Compile Include="UnitController.cs" />
   </ItemGroup>
