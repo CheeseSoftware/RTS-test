@@ -91,19 +91,22 @@ namespace RTS_test
             {
                 lmb.setDown(isLmbDown);
                 lmb.setToggled(true);
-                lmbEvent(lmb.Down);
+                if (lmbEvent != null)
+                    lmbEvent(lmb.Down);
             }
             if (rmb.Down != isRmbDown)
             {
                 rmb.setDown(isRmbDown);
                 rmb.setToggled(true);
-                rmbEvent(rmb.Down);
+                if (rmbEvent != null)
+                    rmbEvent(rmb.Down);
             }
             if (mmb.Down != isMmbDown)
             {
                 mmb.setDown(isMmbDown);
                 mmb.setToggled(true);
-                mmbEvent(lmb.Down);
+                if (mmbEvent != null)
+                    mmbEvent(lmb.Down);
             }
         }
 

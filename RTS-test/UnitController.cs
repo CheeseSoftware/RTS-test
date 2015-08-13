@@ -103,7 +103,8 @@ namespace RTS_test
                         }
                     }
 
-                    onSelectUnit();
+                    if (onSelectUnit != null)
+                        onSelectUnit();
                 }
             }
 
