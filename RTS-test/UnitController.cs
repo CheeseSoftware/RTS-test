@@ -21,6 +21,7 @@ namespace RTS_test
         private InputManager inputManager;
         private EntityWorld entityWorld;
         private DisFieldMixer disFieldMixer;
+        private Lord lord;
         public event OnSelectUnitDelegate onSelectUnit;
         public event OnSelectBuildingDelegate onSelectBuilding;
 
@@ -29,12 +30,13 @@ namespace RTS_test
         private List<Entity> entitiesInSelection = new List<Entity>();
         private List<Entity> tempEntitiesInSelection = new List<Entity>();
 
-        public UnitController(InputManager inputManager, InputState inputState, EntityWorld entityWorld, DisFieldMixer disFieldMixer)
+        public UnitController(InputManager inputManager, InputState inputState, EntityWorld entityWorld, DisFieldMixer disFieldMixer, Lord lord)
         {
             this.inputManager = inputManager;
             this.inputState = inputState;
             this.entityWorld = entityWorld;
             this.disFieldMixer = disFieldMixer;
+            this.lord = lord;
             pathGoal = null;
         }
 
@@ -89,10 +91,13 @@ namespace RTS_test
 
                 if (rect.Width > 0 && rect.Height > 0)
                 {
-                    Bag<Entity> entities = entityWorld.EntityManager.GetEntities(Aspect.All(typeof(component.Physics), typeof(component.Formation), typeof(component.HealthComponent)));
+                    Bag<Entity> entities = entityWorld.EntityManager.GetEntities(Aspect.All(typeof(component.Physics), typeof(component.Formation), typeof(component.HealthComponent), typeof(component.Unit)));
 
                     foreach (Entity e in entities)
                     {
+                        if (e.GetComponent<component.Unit>().Lord != lord)
+                            continue;
+
                         component.Physics phys = e.GetComponent<component.Physics>();
                         Vector2 newPos = new Vector2(phys.Position.X * Global.tileSize, phys.Position.Y * Global.tileSize);
                         RectangleF entityRect = new RectangleF(newPos.X - 0.5f * 32f, newPos.Y - 0.5f * 32f, 1f * 32f, 1f * 32f);

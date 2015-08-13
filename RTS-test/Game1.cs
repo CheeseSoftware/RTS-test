@@ -68,11 +68,11 @@ namespace RTS_test
             disFieldMixer = new DisFieldMixer();
             textureManager = new TextureManager();
             animationManager = new AnimationManager();
-            unitController = new UnitController(null, _inputState, entityWorld, disFieldMixer);
             world = new FarseerPhysics.Dynamics.World(new Vector2(0f, 0f));
             generator = new Generator(tileMap);
             lord = new Lord("Obama", Color.Red, 0);
             enemyLord = new Lord("Justin Bieber", Color.Brown, 1);
+            unitController = new UnitController(null, _inputState, entityWorld, disFieldMixer, lord);
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
