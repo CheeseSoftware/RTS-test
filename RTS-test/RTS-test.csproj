@@ -76,6 +76,11 @@
     <Compile Include="EntityTileMap.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Generator.cs" />
+    <Compile Include="GUI\Alignment.cs" />
+    <Compile Include="GUI\Components\TestComponent.cs" />
+    <Compile Include="GUI\GUIComponent.cs" />
+    <Compile Include="GUI\GUILayout.cs" />
+    <Compile Include="GUI\GUIWindow.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MovementSystem.cs" />
     <Compile Include="PathGoal.cs" />
@@ -113,9 +118,6 @@
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
-    <Reference Include="YogUILibrary">
-      <HintPath>..\..\..\..\..\..\libs\YogUILibrary.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icon.ico" />

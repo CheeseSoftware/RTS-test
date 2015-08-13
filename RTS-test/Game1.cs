@@ -6,13 +6,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RTS_test.component;
+using RTS_test.GUI;
 using RTS_test.system;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using YogUILibrary;
-using YogUILibrary.Structs;
-using YogUILibrary.UIComponents;
 using RectangleF = System.Drawing.RectangleF;
 
 namespace RTS_test
@@ -45,8 +43,8 @@ namespace RTS_test
         private List<Entity> entitiesInSelection = new List<Entity>();
         private List<Entity> tempEntitiesInSelection = new List<Entity>();
 
-        private static Button button;
-
+        //private static Button button;
+        private GUIWindow GUIWindow;
 
         public Game1()
         {
@@ -122,11 +120,10 @@ namespace RTS_test
             disFieldMixer.addDisField(entityTileMap.DisField);
             tileMap.setTreeDis(entityTileMap.DisField);
 
-            YogUI.YogUI_LoadContent(this);
-            //Create a new button at (500, 100), with the text "Button", Adding a new item to the listbox when it is clicked, the text being from the TextField.
-            button = new Button(new Vector2(500, 100), "Button", font, () => { Console.WriteLine("clicked"); });
-            //   button.paddingHeight = 10;
-            // button.paddingWidth = 200;
+            GUIWindow = new GUIWindow();
+            GUILayout layout = new GUILayout();
+            layout.addComponent("testComponent", new GUI.Components.TestComponent(textureManager.getTexture(1)));
+            GUIWindow.addLayout("testLayout", layout);
 
             for (int i = 0; i < 50; ++i)
                 entityWorld.CreateEntityFromTemplate("Test", new object[] {
@@ -252,8 +249,7 @@ namespace RTS_test
 
             Global.Camera.update();
 
-            YogUI.YogUI_Update(gameTime);
-            button.Update(gameTime);
+            GUIWindow.update(gameTime);
 
             base.Update(gameTime);
         }
@@ -299,7 +295,6 @@ namespace RTS_test
 
             spriteBatch.Begin();
 
-            //draw black rectangle behind values
             Texture2D t = new Texture2D(GraphicsDevice, 1, 1);
             t.SetData<Color>(new Color[] { Color.Black });
             Color color = Color.Black;
@@ -312,7 +307,7 @@ namespace RTS_test
             spriteBatch.DrawString(font, "frametime: " + frameMeter.FrameTime + "ms", new Vector2(164, 8), Color.White);
             spriteBatch.DrawString(font, "updatetime: " + frameMeter.UpdateTime + "ms", new Vector2(164, 24), Color.White);
 
-            button.Draw(spriteBatch);
+            GUIWindow.draw(spriteBatch);
 
             spriteBatch.End();
 
