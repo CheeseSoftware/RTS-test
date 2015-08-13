@@ -20,7 +20,8 @@ namespace RTS_test.GUI
 
         public override void update(GameTime gameTime)
         {
-            base.update(gameTime);
+            if (!hidden)
+                base.update(gameTime);
         }
 
         public override void draw(SpriteBatch spriteBatch)

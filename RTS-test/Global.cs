@@ -16,5 +16,6 @@ namespace RTS_test
         public static int ViewportWidth { get { return Viewport.Width; } }
         public static int ViewportHeight { get { return Viewport.Height; } }
         public static PathGoal globalGoal = null; //TEMP
+        public static InputManager inputManager = new InputManager();
     }
 }

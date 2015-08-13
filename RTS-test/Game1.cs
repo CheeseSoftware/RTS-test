@@ -123,9 +123,14 @@ namespace RTS_test
             GUIWindow = new GUIWindow();
             GUILayout layout = new GUILayout();
             //layout.addComponent("testComponent", new GUI.Components.TestComponent(textureManager.getTexture(1)));
-            GUI.Components.Label label = new GUI.Components.Label(new Point(), Color.Red, font);
-            label.Text = "banan";
-            layout.addComponent("testLabel", label);
+            //GUI.Components.Label label = new GUI.Components.Label(new Point(), Color.Red, font);
+            //label.Text = "banan";
+            layout.addComponent("testLabel1", new GUI.Components.Button(new Rectangle(0, 0, 200, 50), "Button1", font, Color.White, Color.DarkGreen, 2, Color.Red));
+            layout.addComponent("testLabel2", new GUI.Components.Button(new Rectangle(0, 100, 200, 50), "Button2", font, Color.White, Color.DarkGreen, 2, Color.Blue));
+            layout.addComponent("testLabel3", new GUI.Components.Button(new Rectangle(0, 200, 200, 50), "Button3", font, Color.White, Color.DarkGreen, 2, Color.Red));
+            layout.addComponent("testLabel4", new GUI.Components.Button(new Rectangle(0, 300, 200, 50), "Button2", font, Color.White, Color.DarkGreen, 2, Color.Red));
+            layout.addComponent("testLabel5", new GUI.Components.Button(new Rectangle(0, 400, 200, 50), "Button3", font, Color.White, Color.DarkGreen, 2, Color.Red));
+
             GUIWindow.addLayout("testLayout", layout);
 
             for (int i = 0; i < 50; ++i)
@@ -142,6 +147,9 @@ namespace RTS_test
         protected override void Update(GameTime gameTime)
         {
             frameMeter.update(gameTime);
+
+            Global.inputManager.update();
+
             if (_inputState.IsExitGame(PlayerIndex.One))
                 Exit();
 

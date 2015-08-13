@@ -47,9 +47,9 @@ namespace RTS_test
         public event MouseDelegate lmbEvent;
         public event MouseDelegate mmbEvent;
         public event MouseDelegate rmbEvent;
-        private KeyState lmb = new KeyState(false, false);
-        private KeyState rmb = new KeyState(false, false);
-        private KeyState mmb = new KeyState(false, false);
+        public KeyState lmb = new KeyState(false, false);
+        public KeyState rmb = new KeyState(false, false);
+        public KeyState mmb = new KeyState(false, false);
 
         public InputManager()
         {
