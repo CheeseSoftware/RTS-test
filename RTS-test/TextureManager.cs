@@ -39,7 +39,7 @@ namespace RTS_test
 			insertTexture("berrybush");
 			insertTexture("boulder");
 			insertTexture("stone");
-            insertTexture("worker");
+            insertTexture("Spider");
             insertTexture("worker2");
             insertTexture("hpbar"); // 11
             insertTexture("hp"); // 12

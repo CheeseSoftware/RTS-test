@@ -164,8 +164,8 @@ namespace RTS_test
             component.Physics p1 = e1.GetComponent<component.Physics>();
             component.Physics p2 = e2.GetComponent<component.Physics>();
 
-            float disA = (p1.Position - fo1.Pos.toVector2()).Length() + (p2.Position - fo2.Pos.toVector2()).Length();
-            float disB = (p1.Position - fo2.Pos.toVector2()).Length() + (p2.Position - fo1.Pos.toVector2()).Length();
+            float disA = (p1.Position - (fo1.Pos + goalPos).toVector2()).Length() + (p2.Position - (fo2.Pos + goalPos).toVector2()).Length();
+            float disB = (p1.Position - (fo2.Pos + goalPos).toVector2()).Length() + (p2.Position - (fo1.Pos + goalPos).toVector2()).Length();
 
             if (disA <= disB)
                 return;

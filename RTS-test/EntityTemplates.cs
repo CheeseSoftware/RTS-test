@@ -86,7 +86,7 @@ namespace RTS_test
 
 
 
-            FarseerPhysics.Dynamics.Body body = FarseerPhysics.Factories.BodyFactory.CreateEllipse(world, 1.0f, 0.5f, 4, 1.0f);
+            FarseerPhysics.Dynamics.Body body = FarseerPhysics.Factories.BodyFactory.CreateCircle(world, 1.5f, 1f, 1.0f);
             body.BodyType = FarseerPhysics.Dynamics.BodyType.Dynamic;
             body.Position = pos;
             body.Friction = 0.0f;
@@ -96,9 +96,11 @@ namespace RTS_test
             body.LinearVelocity = velocity;
             body.LinearDamping = 5f;
 
+            entity.AddComponent(new component.Formation());
+            entity.AddComponent(new component.HealthComponent(500));
             entity.AddComponent(new component.Physics(entity, body));
             //entity.AddComponent(new component.MaxVelocity(0.90f));
-            entity.AddComponent(new component.Drawable(textureManager.getTexture(10)));
+            entity.AddComponent(new component.Drawable(textureManager.getTexture(9)));
             entity.AddComponent(new component.Unit(lord));
             return entity;
         }

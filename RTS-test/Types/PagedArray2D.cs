@@ -11,16 +11,17 @@ namespace RTS_test.Types
         public struct Page
         {
             public T[,] nodes;
+            public int numNodes;
         }
 
         private Dictionary<Point, Page> pages = new Dictionary<Point, Page>();
-        private T nullNode;
+        private T defaultValue;
         private int sizeX;
         private int sizeY;
 
-        public PagedArray2D(T nullNode, int sizeX, int sizeY)
+        public PagedArray2D(T defaultValue, int sizeX, int sizeY)
         {
-            this.nullNode = nullNode;
+            this.defaultValue = defaultValue;
             this.sizeX = sizeX;
             this.sizeY = sizeY;
         }
@@ -38,7 +39,7 @@ namespace RTS_test.Types
                     pagePos.Y--;
 
                 if (!pages.ContainsKey(pagePos))
-                    return nullNode;
+                    return defaultValue;
 
                 return pages[pagePos].nodes[localPos.X, localPos.Y];
             }
@@ -56,12 +57,24 @@ namespace RTS_test.Types
                 {
                     Page page = new Page();
                     page.nodes = new T[sizeX, sizeY];
+                    page.numNodes = 1;
                     page.nodes[localPos.X, localPos.Y] = value;
                     pages.Add(pagePos, page);
 
                 }
                 else
+                {
+                    //T oldValue = pages[pagePos].nodes[localPos.X, localPos.Y];
+                    //if (oldValue.Equals(defaultValue))
+                    //    pages[pagePos].numNodes++;
+                    //if (value == defaultValue)
+                    //    pages[pagePos].numNodes--;
+
                     pages[pagePos].nodes[localPos.X, localPos.Y] = value;
+
+                    //if (pages[pagePos].numNodes == 0)
+                    //    pages.Remove(pagePos);
+                }
             }
         }
 

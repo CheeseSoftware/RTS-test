@@ -139,8 +139,14 @@ namespace RTS_test
                     new Vector2(17 + 0.2f*i, 17 + 4f*(float)Math.Sin(0.5f*i)),
                 });
 
+            for (int i = 0; i < 3; ++i)
+                entityWorld.CreateEntityFromTemplate("Test2", new object[] {
+                    lord,
+                    new Vector2(17 + 0.2f*i, 17 + 4f*(float)Math.Sin(0.5f*i)),
+                });
+
             for (int i = 0; i < 10; ++i)
-                entityWorld.CreateEntityFromTemplate("Test", new object[] {
+                entityWorld.CreateEntityFromTemplate("Test2", new object[] {
                     enemyLord,
                     new Vector2(0.5f*tileMap.Size.x - 17 - 0.2f*i, 0.5f*tileMap.Size.y - 17 - 4f*(float)Math.Sin(0.5f*i)),
                 });

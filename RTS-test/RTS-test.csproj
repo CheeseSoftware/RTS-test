@@ -98,6 +98,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextureManager.cs" />
     <Compile Include="TileMap.cs" />
+    <Compile Include="Types\BSPTree.cs" />
     <Compile Include="Types\Event.cs" />
     <Compile Include="Types\PagedArray2D.cs" />
     <Compile Include="UnitController.cs" />
